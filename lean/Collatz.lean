@@ -4,6 +4,7 @@ import Collatz.Conditional
 import Collatz.OrbitMin
 import Collatz.LogDensity
 import Collatz.Tao
+import Collatz.Korec
 import Collatz.BB
 import Collatz.Bigfoot
 import Collatz.Holdout153
