@@ -153,17 +153,15 @@ end Reduction
 
 /-- 🚧 **Phase D obligation**: a concrete Bigfoot reduction.
 
-The encoding `enc := bigfootEnc` is concrete and verified against the
-Quick_Sim micro-trace at TM step 69 (see `Collatz/Bigfoot/Encoding.lean`).
-The remaining sorries are on `cost`, `cost_pos`, `bootstrap`, and `sim` -
-each a labelled, type-checked obligation. Cf. the *monolithic* `sorry`
-in the original `MachineNeverHalts`, which gave a future reader no
-entry point. -/
+The `enc` field is `bigfootEnc` (concrete + verified against the
+Quick_Sim micro-trace at TM step 69). The `bootstrap` field is
+discharged by `bootstrap_full`. Remaining sorries: `cost`, `cost_pos`,
+`sim`. See `Collatz/Bigfoot/Encoding.lean`. -/
 noncomputable def bigfootReduction : Reduction where
   enc := bigfootEnc
   cost := sorry
   cost_pos := sorry
-  bootstrap := sorry
+  bootstrap := bootstrap_full
   sim := sorry
 
 /-- **The Bigfoot non-halting theorem** (target of Phase D).

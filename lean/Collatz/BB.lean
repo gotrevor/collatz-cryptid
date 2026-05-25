@@ -52,6 +52,7 @@ def write (t : Tape) (i : ℤ) (s : Sym) : Tape :=
 end Tape
 
 /-- A configuration: state, tape, head position. -/
+@[ext]
 structure Cfg where
   state : State
   tape : Tape
