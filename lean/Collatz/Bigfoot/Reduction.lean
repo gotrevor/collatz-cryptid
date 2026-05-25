@@ -159,8 +159,8 @@ discharged by `bootstrap_full`. Remaining sorries: `cost`, `cost_pos`,
 `sim`. See `Collatz/Bigfoot/Encoding.lean`. -/
 noncomputable def bigfootReduction : Reduction where
   enc := bigfootEnc
-  cost := sorry
-  cost_pos := sorry
+  cost := bigfootCost
+  cost_pos := bigfootCost_pos
   bootstrap := bootstrap_full
   sim := sorry
 

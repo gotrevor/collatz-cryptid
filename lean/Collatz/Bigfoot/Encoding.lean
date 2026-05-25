@@ -33,6 +33,37 @@ gets rewritten on the next TM step.
 
 namespace Collatz.Bigfoot
 
+/-! ## Cost function
+
+Per Quick_Sim's verbose-prover analysis of Bigfoot, the dominant macro
+rule for the `<A` configuration is:
+
+```text
+Diff Rule 0
+Initial: 0^∞ 12^(a+1) 11^(b+7) <A (11) 11^(c+1) 0^∞
+Steps:   24·c + 176
+```
+
+That is, for any `Dyn` state with `b ≥ 7`, one Dyn step costs exactly
+`24·(c + 1) + 152 = 24·c + 176` TM micro-steps, where the rule's `c`
+parameter is one less than Dyn's `c` (after accounting for the `(11)`
+adjacent to `<A`).
+
+Below the b ≥ 7 threshold, the rule doesn't match and each Dyn step
+has its own (varying) micro-step count - computable but case-specific.
+For now we use `24·c + 176` as the cost function: exact for large b,
+a placeholder for small b. Discharging `sim` will pin down whether
+this is exactly right or needs case-splitting on small b.
+-/
+
+/-- The number of TM micro-steps in one Dyn step. Matches Quick_Sim's
+`Diff Rule 0` formula (`24·c + 176`) for the large-b regime; may need
+refinement for small-b edge cases. -/
+def bigfootCost (d : Dyn) : ℕ := 24 * d.c + 176
+
+theorem bigfootCost_pos (d : Dyn) : 0 < bigfootCost d := by
+  unfold bigfootCost; omega
+
 /-- The Bigfoot encoding: a `Dyn` state `A(a, b, c)` becomes the TM
 configuration with tape `0^∞ 12^a 11^(b+c) 0^∞`, anchored so the
 start of the `11^(b+c)` block is at position `0` (matching where the
