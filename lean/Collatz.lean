@@ -1,6 +1,9 @@
 import Collatz.Basic
 import Collatz.Conjecture
 import Collatz.Conditional
+import Collatz.OrbitMin
+import Collatz.LogDensity
+import Collatz.Tao
 import Collatz.BB
 import Collatz.Bigfoot
 import Collatz.Holdout153
