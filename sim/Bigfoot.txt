@@ -1,0 +1,12 @@
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 2
+Failed proofs: 0
+Prover num past configs: 24
+Tape copies: 354
+Elapsed time: 0.01569819450378418
+00^inf 12^23 22^~10^16.96124 (22) A> 12^1 00^inf
+Num Nonzeros: ~10^17.26227  =  182_924_152_103_355_736
+
+
+Maximum number of loops (5000) reached

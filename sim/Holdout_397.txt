@@ -1,0 +1,12 @@
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 5_000
+Tape copies: 0
+Elapsed time: 0.014588117599487305
+0000^inf 0012^1 2112^1 2221^1 1112^1 1122^1 1222^1 1221^1 1222^1 1122^1 2212^1 2222^1 (1222) B> 2220^129 2100^1 0000^inf
+Num Nonzeros: 435  =  435
+
+
+Maximum number of loops (5000) reached

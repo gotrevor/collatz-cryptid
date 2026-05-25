@@ -1,0 +1,14 @@
+# Lean build cache (6.9 GB of oleans / native code)
+lean/.lake/
+
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Editor
+.vscode/
+*.swp

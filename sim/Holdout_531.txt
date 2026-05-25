@@ -1,0 +1,12 @@
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 5_000
+Tape copies: 0
+Elapsed time: 0.013423919677734375
+00^inf 12^293 <A (22) 22^3 12^1 22^2 21^2 22^1 12^1 21^1 22^1 11^1 22^1 00^inf
+Num Nonzeros: 616  =  616
+
+
+Maximum number of loops (5000) reached

@@ -1,0 +1,12 @@
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 16
+Failed proofs: 0
+Prover num past configs: 7
+Tape copies: 917
+Elapsed time: 0.02002406120300293
+00^inf 01^1 (01) A> 20^235 21^1 11^278 12^1 00^inf
+Num Nonzeros: 797  =  797
+
+
+Maximum number of loops (5000) reached

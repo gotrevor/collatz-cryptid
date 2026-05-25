@@ -1,0 +1,749 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 0LB | 0RC |
+   +---+-----+-----+-----+
+   | B | 2LC | 2LA | 1RA |
+   +---+-----+-----+-----+
+   | C | 1RA | 1LC | --- |
+   +---+-----+-----+-----+
+
+
+BF: Searching for optimal block size
+BF: Least compressed tape at step 10156 : 1010101010101010101010101020202020202020202020202020202020202020202020202020202020202020202011111112
+BF: Optimal tape compression block size 2 tape size 8
+BF: Searching for optimal mult for block size 2
+BF: * 1 8.395852664703272
+BF: * 2 11.827483411866526
+BF: * 3 4.82230262970455
+BF: Block Finder finished
+
+best_block_size: 2
+elapsed_time_us: 40008
+least_compressed_loop: 9985
+least_compressed_tape_size_chain: 96
+least_compressed_tape_size_raw: 100
+best_compression_block_size: 2
+best_compression_tape_size: 8
+best_mult: 1
+best_chain_factor: 8.39585304
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 2.09808349609375e-05
+00^inf (00) A> 00^inf
+Num Nonzeros: 0
+
+   ** Testing new rule **
+   Original config: 00^inf 10^2 <B (02) 02^6 01^1 11^1 20^1 00^inf
+   Start loop: 48 Loops: 2
+          0  00^inf 10^(a + 2) <B (02) 02^(b + 6) 01^1 11^1 20^1 00^inf (0, 0)
+          1  00^inf 10^(a + 1) <C (12) 02^(b + 7) 01^1 11^1 20^1 00^inf (2, 2)
+          2  00^inf 10^(a) <B (02) 02^(b + 8) 01^1 11^1 20^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 0
+   Initial Config: 00^inf 10^(a + 3) <B (02) 02^(b + 1) 01^1 11^1 20^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+
+   ++ Applying Rule ++
+   Loop: 48 Rule ID: 0
+   Rule: Diff Rule 0
+         Initial Config: 00^inf 10^(a + 3) <B (02) 02^(b + 1) 01^1 11^1 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^2 <B (02) 02^6 01^1 11^1 20^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(a + 3)
+
+
+   ** Testing new rule **
+   Original config: 00^inf 10^2 11^8 (11) B> 21^1 11^2 20^1 00^inf
+   Start loop: 93 Loops: 8
+          0  00^inf 10^(c + 2) 11^(d + 8) (11) B> 21^1 11^(e + 2) 20^1 00^inf (0, 0)
+          1  00^inf 10^(c + 2) 11^(d + 8) <A (20) 20^1 11^(e + 2) 20^1 00^inf (5, 5)
+          2  00^inf 10^(c + 2) <A (20) 20^(d + 9) 11^(e + 2) 20^1 00^inf ((2 d + 16), (2 d + 21))
+          3  00^inf 10^(c + 1) 11^1 (11) B> 20^(d + 9) 11^(e + 2) 20^1 00^inf (3, (2 d + 24))
+          4  00^inf 10^(c + 1) 11^(d + 10) (11) B> 11^(e + 2) 20^1 00^inf ((2 d + 18), (4 d + 42))
+          5  00^inf 10^(c + 1) 11^(d + 10) <A (20) 21^1 11^(e + 1) 20^1 00^inf (3, (4 d + 45))
+          6  00^inf 10^(c + 1) <A (20) 20^(d + 10) 21^1 11^(e + 1) 20^1 00^inf ((2 d + 20), (6 d + 65))
+          7  00^inf 10^(c) 11^1 (11) B> 20^(d + 10) 21^1 11^(e + 1) 20^1 00^inf (3, (6 d + 68))
+          8  00^inf 10^(c) 11^(d + 11) (11) B> 21^1 11^(e + 1) 20^1 00^inf ((2 d + 20), (8 d + 88))
+
+   ** New rule proven **
+   Diff Rule 1
+   Initial Config: 00^inf 10^(c + 3) 11^(d + 1) (11) B> 21^1 11^(e + 2) 20^1 00^inf
+   Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 20^0 00^inf
+   Steps: (8 d + 32), Loops: 8
+   Level: 1
+   States last seen: {1: (8 d + 30), 0: (8 d + 31)}
+
+
+   ++ Applying Rule ++
+   Loop: 93 Rule ID: 1
+   Rule: Diff Rule 1
+         Initial Config: 00^inf 10^(c + 3) 11^(d + 1) (11) B> 21^1 11^(e + 2) 20^1 00^inf
+         Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 20^0 00^inf
+         Steps: (8 d + 32), Loops: 8
+         Level: 1
+         States last seen: {1: (8 d + 30), 0: (8 d + 31)}
+   Config: 00^inf 10^2 11^8 (11) B> 21^1 11^2 20^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(c + 3)
+
+
+   ** Testing new rule **
+   Original config: 00^inf 01^10 <C (20) 20^6 00^inf
+   Start loop: 115 Loops: 2
+          0  00^inf 01^(f + 10) <C (20) 20^(g + 6) 00^inf (0, 0)
+          1  00^inf 01^(f + 9) <A (20) 20^(g + 7) 00^inf (4, 4)
+          2  00^inf 01^(f + 8) <C (20) 20^(g + 8) 00^inf (2, 6)
+
+   ** New rule proven **
+   Diff Rule 2
+   Initial Config: 00^inf 01^(f + 3) <C (20) 20^(g + 1) 00^inf
+   Diff Config:    00^inf 01^-2 <C (20) 20^2 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {2: 1, 0: 4, 1: 5}
+
+
+   ++ Applying Rule ++
+   Loop: 115 Rule ID: 2
+   Rule: Diff Rule 2
+         Initial Config: 00^inf 01^(f + 3) <C (20) 20^(g + 1) 00^inf
+         Diff Config:    00^inf 01^-2 <C (20) 20^2 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {2: 1, 0: 4, 1: 5}
+   Config: 00^inf 01^10 <C (20) 20^6 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 4
+   Diff steps: 24
+   Resulting tape: 00^inf 01^2 <C (20) 20^14 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 116 Rule ID: 2
+   Rule: Diff Rule 2
+         Initial Config: 00^inf 01^(f + 3) <C (20) 20^(g + 1) 00^inf
+         Diff Config:    00^inf 01^-2 <C (20) 20^2 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {2: 1, 0: 4, 1: 5}
+   Config: 00^inf 01^2 <C (20) 20^14 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 01^2
+   Rule initial block: 01^(f + 3)
+
+
+   ** Testing new rule **
+   Original config: 00^inf 01^11 <A (20) 20^6 12^1 00^inf
+   Start loop: 127 Loops: 2
+          0  00^inf 01^(i + 11) <A (20) 20^(j + 6) 12^1 00^inf (0, 0)
+          1  00^inf 01^(i + 10) <C (20) 20^(j + 7) 12^1 00^inf (2, 2)
+          2  00^inf 01^(i + 9) <A (20) 20^(j + 8) 12^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 3
+   Initial Config: 00^inf 01^(i + 3) <A (20) 20^(j + 1) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+
+   ++ Applying Rule ++
+   Loop: 127 Rule ID: 3
+   Rule: Diff Rule 3
+         Initial Config: 00^inf 01^(i + 3) <A (20) 20^(j + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^11 <A (20) 20^6 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 5
+   Diff steps: 30
+   Resulting tape: 00^inf 01^1 <A (20) 20^16 12^1 00^inf
+
+
+   ** Testing new rule **
+   Original config: 00^inf 01^11 <A (20) 20^6 11^2 12^1 00^inf
+   Start loop: 141 Loops: 2
+          0  00^inf 01^(l + 11) <A (20) 20^(n + 6) 11^(m + 2) 12^1 00^inf (0, 0)
+          1  00^inf 01^(l + 10) <C (20) 20^(n + 7) 11^(m + 2) 12^1 00^inf (2, 2)
+          2  00^inf 01^(l + 9) <A (20) 20^(n + 8) 11^(m + 2) 12^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 4
+   Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+
+   ++ Applying Rule ++
+   Loop: 141 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^11 <A (20) 20^6 11^2 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 5
+   Diff steps: 30
+   Resulting tape: 00^inf 01^1 <A (20) 20^16 11^2 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 165 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^11 <A (20) 20^2 11^8 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 5
+   Diff steps: 30
+   Resulting tape: 00^inf 01^1 <A (20) 20^12 11^8 12^1 00^inf
+
+
+   ** Testing new rule **
+   Original config: 00^inf 01^9 11^8 (11) A> 11^5 12^1 00^inf
+   Start loop: 188 Loops: 8
+          0  00^inf 01^(q + 9) 11^(r + 8) (11) A> 11^(s + 5) 12^1 00^inf (0, 0)
+          1  00^inf 01^(q + 9) 11^(r + 8) <B (02) 01^1 11^(s + 4) 12^1 00^inf (3, 3)
+          2  00^inf 01^(q + 9) <B (02) 02^(r + 8) 01^1 11^(s + 4) 12^1 00^inf ((2 r + 16), (2 r + 19))
+          3  00^inf 01^(q + 8) 11^1 (11) A> 02^(r + 8) 01^1 11^(s + 4) 12^1 00^inf (5, (2 r + 24))
+          4  00^inf 01^(q + 8) 11^(r + 9) (11) A> 01^1 11^(s + 4) 12^1 00^inf ((2 r + 16), (4 r + 40))
+          5  00^inf 01^(q + 8) 11^(r + 9) <B (02) 02^1 11^(s + 4) 12^1 00^inf (5, (4 r + 45))
+          6  00^inf 01^(q + 8) <B (02) 02^(r + 10) 11^(s + 4) 12^1 00^inf ((2 r + 18), (6 r + 63))
+          7  00^inf 01^(q + 7) 11^1 (11) A> 02^(r + 10) 11^(s + 4) 12^1 00^inf (5, (6 r + 68))
+          8  00^inf 01^(q + 7) 11^(r + 11) (11) A> 11^(s + 4) 12^1 00^inf ((2 r + 20), (8 r + 88))
+
+   ** New rule proven **
+   Diff Rule 5
+   Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+   Steps: (8 r + 32), Loops: 8
+   Level: 1
+   States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+
+
+   ++ Applying Rule ++
+   Loop: 188 Rule ID: 5
+   Rule: Diff Rule 5
+         Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+         Steps: (8 r + 32), Loops: 8
+         Level: 1
+         States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+   Config: 00^inf 01^9 11^8 (11) A> 11^5 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 4
+   Diff steps: 496
+   Resulting tape: 00^inf 01^1 11^20 (11) A> 11^1 12^1 00^inf
+
+
+   ** Testing new rule **
+   Original config: 00^inf 10^18 <C (12) 02^6 00^inf
+   Start loop: 203 Loops: 2
+          0  00^inf 10^(u + 18) <C (12) 02^(v + 6) 00^inf (0, 0)
+          1  00^inf 10^(u + 17) <B (02) 02^(v + 7) 00^inf (4, 4)
+          2  00^inf 10^(u + 16) <C (12) 02^(v + 8) 00^inf (2, 6)
+
+   ** New rule proven **
+   Diff Rule 6
+   Initial Config: 00^inf 10^(u + 3) <C (12) 02^(v + 1) 00^inf
+   Diff Config:    00^inf 10^-2 <C (12) 02^2 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {2: 5, 0: 3, 1: 4}
+
+
+   ++ Applying Rule ++
+   Loop: 203 Rule ID: 6
+   Rule: Diff Rule 6
+         Initial Config: 00^inf 10^(u + 3) <C (12) 02^(v + 1) 00^inf
+         Diff Config:    00^inf 10^-2 <C (12) 02^2 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {2: 5, 0: 3, 1: 4}
+   Config: 00^inf 10^18 <C (12) 02^6 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 8
+   Diff steps: 48
+   Resulting tape: 00^inf 10^2 <C (12) 02^22 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 204 Rule ID: 6
+   Rule: Diff Rule 6
+         Initial Config: 00^inf 10^(u + 3) <C (12) 02^(v + 1) 00^inf
+         Diff Config:    00^inf 10^-2 <C (12) 02^2 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {2: 5, 0: 3, 1: 4}
+   Config: 00^inf 10^2 <C (12) 02^22 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(u + 3)
+
+
+   ++ Applying Rule ++
+   Loop: 242 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^7 <A (20) 20^2 11^21 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 3
+   Diff steps: 18
+   Resulting tape: 00^inf 01^1 <A (20) 20^8 11^21 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 249 Rule ID: 5
+   Rule: Diff Rule 5
+         Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+         Steps: (8 r + 32), Loops: 8
+         Level: 1
+         States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+   Config: 00^inf 01^9 11^2 (11) A> 11^20 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 4
+   Diff steps: 304
+   Resulting tape: 00^inf 01^1 11^14 (11) A> 11^16 12^1 00^inf
+
+
+   ** Testing new rule **
+   Original config: 00^inf 10^11 <B (02) 02^6 01^1 11^14 12^1 00^inf
+   Start loop: 265 Loops: 2
+          0  00^inf 10^(z + 11) <B (02) 02^(<x27> + 6) 01^1 11^(<x26> + 14) 12^1 00^inf (0, 0)
+          1  00^inf 10^(z + 10) <C (12) 02^(<x27> + 7) 01^1 11^(<x26> + 14) 12^1 00^inf (2, 2)
+          2  00^inf 10^(z + 9) <B (02) 02^(<x27> + 8) 01^1 11^(<x26> + 14) 12^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 7
+   Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+
+   ++ Applying Rule ++
+   Loop: 265 Rule ID: 7
+   Rule: Diff Rule 7
+         Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^11 <B (02) 02^6 01^1 11^14 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 5
+   Diff steps: 30
+   Resulting tape: 00^inf 10^1 <B (02) 02^16 01^1 11^14 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 276 Rule ID: 7
+   Rule: Diff Rule 7
+         Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^18 <B (02) 02^2 01^1 11^13 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 8
+   Diff steps: 48
+   Resulting tape: 00^inf 10^2 <B (02) 02^18 01^1 11^13 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 277 Rule ID: 7
+   Rule: Diff Rule 7
+         Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^2 <B (02) 02^18 01^1 11^13 12^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(z + 3)
+
+
+   ** Testing new rule **
+   Original config: 00^inf 10^16 11^8 (11) B> 21^1 11^10 12^1 00^inf
+   Start loop: 302 Loops: 8
+          0  00^inf 10^(<x30> + 16) 11^(<x31> + 8) (11) B> 21^1 11^(<x32> + 10) 12^1 00^inf (0, 0)
+          1  00^inf 10^(<x30> + 16) 11^(<x31> + 8) <A (20) 20^1 11^(<x32> + 10) 12^1 00^inf (5, 5)
+          2  00^inf 10^(<x30> + 16) <A (20) 20^(<x31> + 9) 11^(<x32> + 10) 12^1 00^inf ((2 <x31> + 16), (2 <x31> + 21))
+          3  00^inf 10^(<x30> + 15) 11^1 (11) B> 20^(<x31> + 9) 11^(<x32> + 10) 12^1 00^inf (3, (2 <x31> + 24))
+          4  00^inf 10^(<x30> + 15) 11^(<x31> + 10) (11) B> 11^(<x32> + 10) 12^1 00^inf ((2 <x31> + 18), (4 <x31> + 42))
+          5  00^inf 10^(<x30> + 15) 11^(<x31> + 10) <A (20) 21^1 11^(<x32> + 9) 12^1 00^inf (3, (4 <x31> + 45))
+          6  00^inf 10^(<x30> + 15) <A (20) 20^(<x31> + 10) 21^1 11^(<x32> + 9) 12^1 00^inf ((2 <x31> + 20), (6 <x31> + 65))
+          7  00^inf 10^(<x30> + 14) 11^1 (11) B> 20^(<x31> + 10) 21^1 11^(<x32> + 9) 12^1 00^inf (3, (6 <x31> + 68))
+          8  00^inf 10^(<x30> + 14) 11^(<x31> + 11) (11) B> 21^1 11^(<x32> + 9) 12^1 00^inf ((2 <x31> + 20), (8 <x31> + 88))
+
+   ** New rule proven **
+   Diff Rule 8
+   Initial Config: 00^inf 10^(<x30> + 3) 11^(<x31> + 1) (11) B> 21^1 11^(<x32> + 2) 12^1 00^inf
+   Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 12^0 00^inf
+   Steps: (8 <x31> + 32), Loops: 8
+   Level: 1
+   States last seen: {1: (8 <x31> + 30), 0: (8 <x31> + 31)}
+
+
+   ++ Applying Rule ++
+   Loop: 302 Rule ID: 8
+   Rule: Diff Rule 8
+         Initial Config: 00^inf 10^(<x30> + 3) 11^(<x31> + 1) (11) B> 21^1 11^(<x32> + 2) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 12^0 00^inf
+         Steps: (8 <x31> + 32), Loops: 8
+         Level: 1
+         States last seen: {1: (8 <x31> + 30), 0: (8 <x31> + 31)}
+   Config: 00^inf 10^16 11^8 (11) B> 21^1 11^10 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 7
+   Diff steps: 1120
+   Resulting tape: 00^inf 10^2 11^29 (11) B> 21^1 11^3 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 303 Rule ID: 8
+   Rule: Diff Rule 8
+         Initial Config: 00^inf 10^(<x30> + 3) 11^(<x31> + 1) (11) B> 21^1 11^(<x32> + 2) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 12^0 00^inf
+         Steps: (8 <x31> + 32), Loops: 8
+         Level: 1
+         States last seen: {1: (8 <x31> + 30), 0: (8 <x31> + 31)}
+   Config: 00^inf 10^2 11^29 (11) B> 21^1 11^3 12^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(<x30> + 3)
+
+
+   ** Testing new rule **
+   Original config: 00^inf 01^30 <A (20) 20^6 11^1 12^1 00^inf
+   Start loop: 326 Loops: 2
+          0  00^inf 01^(<x34> + 30) <A (20) 20^(<x35> + 6) 11^1 12^1 00^inf (0, 0)
+          1  00^inf 01^(<x34> + 29) <C (20) 20^(<x35> + 7) 11^1 12^1 00^inf (2, 2)
+          2  00^inf 01^(<x34> + 28) <A (20) 20^(<x35> + 8) 11^1 12^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 9
+   Initial Config: 00^inf 01^(<x34> + 3) <A (20) 20^(<x35> + 1) 11^1 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+
+   ++ Applying Rule ++
+   Loop: 326 Rule ID: 9
+   Rule: Diff Rule 9
+         Initial Config: 00^inf 01^(<x34> + 3) <A (20) 20^(<x35> + 1) 11^1 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^30 <A (20) 20^6 11^1 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 14
+   Diff steps: 84
+   Resulting tape: 00^inf 01^2 <A (20) 20^34 11^1 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 327 Rule ID: 9
+   Rule: Diff Rule 9
+         Initial Config: 00^inf 01^(<x34> + 3) <A (20) 20^(<x35> + 1) 11^1 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^2 <A (20) 20^34 11^1 12^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 01^2
+   Rule initial block: 01^(<x34> + 3)
+
+
+   ++ Applying Rule ++
+   Loop: 338 Rule ID: 3
+   Rule: Diff Rule 3
+         Initial Config: 00^inf 01^(i + 3) <A (20) 20^(j + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^37 <A (20) 20^2 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 18
+   Diff steps: 108
+   Resulting tape: 00^inf 01^1 <A (20) 20^38 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 348 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^37 <A (20) 20^2 11^2 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 18
+   Diff steps: 108
+   Resulting tape: 00^inf 01^1 <A (20) 20^38 11^2 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 372 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^33 <A (20) 20^2 11^8 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 16
+   Diff steps: 96
+   Resulting tape: 00^inf 01^1 <A (20) 20^34 11^8 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 379 Rule ID: 5
+   Rule: Diff Rule 5
+         Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+         Steps: (8 r + 32), Loops: 8
+         Level: 1
+         States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+   Config: 00^inf 01^35 11^2 (11) A> 11^7 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 6
+   Diff steps: 600
+   Resulting tape: 00^inf 01^23 11^20 (11) A> 11^1 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 397 Rule ID: 4
+   Rule: Diff Rule 4
+         Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {0: 4, 1: 5, 2: 3}
+   Config: 00^inf 01^17 <A (20) 20^2 11^26 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 8
+   Diff steps: 48
+   Resulting tape: 00^inf 01^1 <A (20) 20^18 11^26 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 404 Rule ID: 5
+   Rule: Diff Rule 5
+         Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+         Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+         Steps: (8 r + 32), Loops: 8
+         Level: 1
+         States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+   Config: 00^inf 01^19 11^2 (11) A> 11^25 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 9
+   Diff steps: 1224
+   Resulting tape: 00^inf 01^1 11^29 (11) A> 11^16 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 416 Rule ID: 7
+   Rule: Diff Rule 7
+         Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^30 <B (02) 02^2 01^1 11^14 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 14
+   Diff steps: 84
+   Resulting tape: 00^inf 10^2 <B (02) 02^30 01^1 11^14 12^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 417 Rule ID: 7
+   Rule: Diff Rule 7
+         Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^2 <B (02) 02^30 01^1 11^14 12^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(z + 3)
+
+
+   ++ Applying Rule ++
+   Loop: 426 Rule ID: 8
+   Rule: Diff Rule 8
+         Initial Config: 00^inf 10^(<x30> + 3) 11^(<x31> + 1) (11) B> 21^1 11^(<x32> + 2) 12^1 00^inf
+         Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 12^0 00^inf
+         Steps: (8 <x31> + 32), Loops: 8
+         Level: 1
+         States last seen: {1: (8 <x31> + 30), 0: (8 <x31> + 31)}
+   Config: 00^inf 10^32 11^2 (11) B> 21^1 11^13 12^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 12
+   Diff steps: 2064
+   Resulting tape: 00^inf 10^8 11^38 (11) B> 21^1 11^1 12^1 00^inf
+
+
+   ** Testing new rule **
+   Original config: 00^inf 10^43 <B (02) 02^6 01^1 11^2 20^1 00^inf
+   Start loop: 465 Loops: 2
+          0  00^inf 10^(<x45> + 43) <B (02) 02^(<x47> + 6) 01^1 11^(<x46> + 2) 20^1 00^inf (0, 0)
+          1  00^inf 10^(<x45> + 42) <C (12) 02^(<x47> + 7) 01^1 11^(<x46> + 2) 20^1 00^inf (2, 2)
+          2  00^inf 10^(<x45> + 41) <B (02) 02^(<x47> + 8) 01^1 11^(<x46> + 2) 20^1 00^inf (4, 6)
+
+   ** New rule proven **
+   Diff Rule 10
+   Initial Config: 00^inf 10^(<x45> + 3) <B (02) 02^(<x47> + 1) 01^1 11^(<x46> + 1) 20^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+
+   ++ Applying Rule ++
+   Loop: 465 Rule ID: 10
+   Rule: Diff Rule 10
+         Initial Config: 00^inf 10^(<x45> + 3) <B (02) 02^(<x47> + 1) 01^1 11^(<x46> + 1) 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^43 <B (02) 02^6 01^1 11^2 20^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 21
+   Diff steps: 126
+   Resulting tape: 00^inf 10^1 <B (02) 02^48 01^1 11^2 20^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 476 Rule ID: 0
+   Rule: Diff Rule 0
+         Initial Config: 00^inf 10^(a + 3) <B (02) 02^(b + 1) 01^1 11^1 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^50 <B (02) 02^2 01^1 11^1 20^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 24
+   Diff steps: 144
+   Resulting tape: 00^inf 10^2 <B (02) 02^50 01^1 11^1 20^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 477 Rule ID: 0
+   Rule: Diff Rule 0
+         Initial Config: 00^inf 10^(a + 3) <B (02) 02^(b + 1) 01^1 11^1 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^2 <B (02) 02^50 01^1 11^1 20^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(a + 3)
+
+
+   ++ Applying Rule ++
+   Loop: 495 Rule ID: 10
+   Rule: Diff Rule 10
+         Initial Config: 00^inf 10^(<x45> + 3) <B (02) 02^(<x47> + 1) 01^1 11^(<x46> + 1) 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^48 <B (02) 02^2 01^1 11^5 20^1 00^inf
+   ++ Rule successfully applied ++
+   Times applied: 23
+   Diff steps: 138
+   Resulting tape: 00^inf 10^2 <B (02) 02^48 01^1 11^5 20^1 00^inf
+
+
+   ++ Applying Rule ++
+   Loop: 496 Rule ID: 10
+   Rule: Diff Rule 10
+         Initial Config: 00^inf 10^(<x45> + 3) <B (02) 02^(<x47> + 1) 01^1 11^(<x46> + 1) 20^1 00^inf
+         Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+         Steps: 6, Loops: 2
+         Level: 1
+         States last seen: {1: 4, 2: 2, 0: 5}
+   Config: 00^inf 10^2 <B (02) 02^48 01^1 11^5 20^1 00^inf
+   ++ Current config is below rule minimum ++
+   Config block: 10^2
+   Rule initial block: 10^(<x45> + 3)
+
+
+         Steps:                     Times Applied:
+Total:   12_628                                500
+Macro:   1_234                                 318
+Chain:   4_392                                 159
+Rule:    7_002                                  23
+Rules proven: 11
+  Level 1 rules: 11
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 11
+Failed proofs: 0
+Prover num past configs: 3
+Tape copies: 89
+Elapsed time: 0.004604816436767578
+00^inf 10^51 (10) C> 01^1 11^5 20^1 00^inf
+Num Nonzeros: 64  =  64
+
+
+Maximum number of loops (500) reached

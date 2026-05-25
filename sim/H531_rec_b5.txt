@@ -1,0 +1,50 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 2LA | 1LA |
+   +---+-----+-----+-----+
+   | B | 2LA | 0RA | 2RC |
+   +---+-----+-----+-----+
+   | C | --- | 0LC | 2RA |
+   +---+-----+-----+-----+
+
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 1.9073486328125e-05
+00000^inf (00000) A> 00000^inf
+Num Nonzeros: 0
+
+         Steps:                     Times Applied:
+Total:   154_246                             20000
+Macro:   154_150                             19988
+Chain:   96                                     12
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 20_000
+Tape copies: 0
+Elapsed time: 0.11475515365600586
+00000^inf 00001^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 (21212) C> 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 12121^1 21212^1 11122^1 21212^2 12121^1 11112^1 20000^1 00000^inf
+Num Nonzeros: 342  =  342
+
+
+Maximum number of loops (20000) reached

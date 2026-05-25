@@ -1,0 +1,142 @@
+   ** New rule proven **
+   Diff Rule 0
+   Initial Config: 00^inf 10^(a + 3) <B (02) 02^(b + 1) 01^1 11^1 20^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 1
+   Initial Config: 00^inf 10^(c + 3) 11^(d + 1) (11) B> 21^1 11^(e + 2) 20^1 00^inf
+   Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 20^0 00^inf
+   Steps: (8 d + 32), Loops: 8
+   Level: 1
+   States last seen: {1: (8 d + 30), 0: (8 d + 31)}
+
+--
+   ** New rule proven **
+   Diff Rule 2
+   Initial Config: 00^inf 01^(f + 3) <C (20) 20^(g + 1) 00^inf
+   Diff Config:    00^inf 01^-2 <C (20) 20^2 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {2: 1, 0: 4, 1: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 3
+   Initial Config: 00^inf 01^(i + 3) <A (20) 20^(j + 1) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+--
+   ** New rule proven **
+   Diff Rule 4
+   Initial Config: 00^inf 01^(l + 3) <A (20) 20^(n + 1) 11^(m + 1) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+--
+   ** New rule proven **
+   Diff Rule 5
+   Initial Config: 00^inf 01^(q + 3) 11^(r + 1) (11) A> 11^(s + 2) 12^1 00^inf
+   Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 12^0 00^inf
+   Steps: (8 r + 32), Loops: 8
+   Level: 1
+   States last seen: {0: (8 r + 30), 1: (8 r + 31)}
+
+--
+   ** New rule proven **
+   Diff Rule 6
+   Initial Config: 00^inf 10^(u + 3) <C (12) 02^(v + 1) 00^inf
+   Diff Config:    00^inf 10^-2 <C (12) 02^2 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {2: 5, 0: 3, 1: 4}
+
+--
+   ** New rule proven **
+   Diff Rule 7
+   Initial Config: 00^inf 10^(z + 3) <B (02) 02^(<x27> + 1) 01^1 11^(<x26> + 1) 12^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 8
+   Initial Config: 00^inf 10^(<x30> + 3) 11^(<x31> + 1) (11) B> 21^1 11^(<x32> + 2) 12^1 00^inf
+   Diff Config:    00^inf 10^-2 11^3 (11) B> 21^0 11^-1 12^0 00^inf
+   Steps: (8 <x31> + 32), Loops: 8
+   Level: 1
+   States last seen: {1: (8 <x31> + 30), 0: (8 <x31> + 31)}
+
+--
+   ** New rule proven **
+   Diff Rule 9
+   Initial Config: 00^inf 01^(<x34> + 3) <A (20) 20^(<x35> + 1) 11^1 12^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+--
+   ** New rule proven **
+   Diff Rule 10
+   Initial Config: 00^inf 10^(<x45> + 3) <B (02) 02^(<x47> + 1) 01^1 11^(<x46> + 1) 20^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 11
+   Initial Config: 00^inf 01^(<x56> + 3) <A (20) 20^(<x58> + 1) 11^(<x57> + 1) 20^1 00^inf
+   Diff Config:    00^inf 01^-2 <A (20) 20^2 11^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {0: 4, 1: 5, 2: 3}
+
+--
+   ** New rule proven **
+   Diff Rule 12
+   Initial Config: 00^inf 01^(<x60> + 3) 11^(<x61> + 1) (11) A> 11^(<x62> + 2) 20^1 00^inf
+   Diff Config:    00^inf 01^-2 11^3 (11) A> 11^-1 20^0 00^inf
+   Steps: (8 <x61> + 32), Loops: 8
+   Level: 1
+   States last seen: {0: (8 <x61> + 30), 1: (8 <x61> + 31)}
+
+--
+   ** New rule proven **
+   Diff Rule 13
+   Initial Config: 00^inf 10^(<x85> + 3) <B (02) 02^(<x86> + 1) 01^1 20^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 20^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 14
+   Initial Config: 00^inf 10^(<x215> + 3) <B (02) 02^(<x216> + 1) 01^1 11^1 12^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 11^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}
+
+--
+   ** New rule proven **
+   Diff Rule 15
+   Initial Config: 00^inf 10^(<x218> + 3) <B (02) 02^(<x219> + 1) 01^1 12^1 00^inf
+   Diff Config:    00^inf 10^-2 <B (02) 02^2 01^0 12^0 00^inf
+   Steps: 6, Loops: 2
+   Level: 1
+   States last seen: {1: 4, 2: 2, 0: 5}

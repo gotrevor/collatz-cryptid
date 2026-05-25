@@ -1,0 +1,3633 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 2LA | 1LA |
+   +---+-----+-----+-----+
+   | B | 2LA | 0RA | 2RC |
+   +---+-----+-----+-----+
+   | C | --- | 0LC | 2RA |
+   +---+-----+-----+-----+
+
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 1.7881393432617188e-05
+00^inf (00) A> 00^inf
+Num Nonzeros: 0
+      1  00^inf 01^1 (22) A> 00^inf (6, 6)
+
+         Steps:                     Times Applied:
+Total:   6                                       1
+Macro:   6                                       1
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 1
+Tape copies: 0
+Elapsed time: 9.012222290039062e-05
+00^inf 01^1 (22) A> 00^inf
+Num Nonzeros: 3  =  3
+      2  00^inf 01^1 <A (11) 22^1 00^inf (5, 11)
+
+         Steps:                     Times Applied:
+Total:   11                                      2
+Macro:   11                                      2
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 2
+Tape copies: 0
+Elapsed time: 0.00012993812561035156
+00^inf 01^1 <A (11) 22^1 00^inf
+Num Nonzeros: 5  =  5
+      3  00^inf 12^1 (10) A> 22^1 00^inf (7, 18)
+
+         Steps:                     Times Applied:
+Total:   18                                      3
+Macro:   18                                      3
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 3
+Tape copies: 0
+Elapsed time: 0.00016689300537109375
+00^inf 12^1 (10) A> 22^1 00^inf
+Num Nonzeros: 5  =  5
+      4  00^inf 12^1 11^1 (10) A> 00^inf (6, 24)
+
+         Steps:                     Times Applied:
+Total:   24                                      4
+Macro:   18                                      3
+Chain:   6                                       1
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 4
+Tape copies: 0
+Elapsed time: 0.00020194053649902344
+00^inf 12^1 11^1 (10) A> 00^inf
+Num Nonzeros: 5  =  5
+      5  00^inf 12^1 11^2 (22) A> 00^inf (6, 30)
+
+         Steps:                     Times Applied:
+Total:   30                                      5
+Macro:   24                                      4
+Chain:   6                                       1
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 5
+Tape copies: 0
+Elapsed time: 0.0002238750457763672
+00^inf 12^1 11^2 (22) A> 00^inf
+Num Nonzeros: 8  =  8
+      6  00^inf 12^1 11^2 <A (11) 22^1 00^inf (5, 35)
+
+         Steps:                     Times Applied:
+Total:   35                                      6
+Macro:   29                                      5
+Chain:   6                                       1
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 6
+Tape copies: 0
+Elapsed time: 0.0002410411834716797
+00^inf 12^1 11^2 <A (11) 22^1 00^inf
+Num Nonzeros: 10  =  10
+      7  00^inf 12^1 11^1 <A (22) 11^1 22^1 00^inf (2, 37)
+
+         Steps:                     Times Applied:
+Total:   37                                      7
+Macro:   31                                      6
+Chain:   6                                       1
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 7
+Tape copies: 0
+Elapsed time: 0.00026488304138183594
+00^inf 12^1 11^1 <A (22) 11^1 22^1 00^inf
+Num Nonzeros: 10  =  10
+      8  00^inf 12^1 <A (22) 22^1 11^1 22^1 00^inf (2, 39)
+
+         Steps:                     Times Applied:
+Total:   39                                      8
+Macro:   31                                      6
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 8
+Tape copies: 0
+Elapsed time: 0.0002880096435546875
+00^inf 12^1 <A (22) 22^1 11^1 22^1 00^inf
+Num Nonzeros: 10  =  10
+      9  00^inf <A (21) 22^2 11^1 22^1 00^inf (2, 41)
+
+         Steps:                     Times Applied:
+Total:   41                                      9
+Macro:   33                                      7
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 9
+Tape copies: 0
+Elapsed time: 0.0003108978271484375
+00^inf <A (21) 22^2 11^1 22^1 00^inf
+Num Nonzeros: 10  =  10
+     10  00^inf 01^1 (21) B> 22^2 11^1 22^1 00^inf (5, 46)
+
+         Steps:                     Times Applied:
+Total:   46                                     10
+Macro:   38                                      8
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 10
+Tape copies: 0
+Elapsed time: 0.00033593177795410156
+00^inf 01^1 (21) B> 22^2 11^1 22^1 00^inf
+Num Nonzeros: 11  =  11
+     11  00^inf 01^1 21^1 (22) A> 22^1 11^1 22^1 00^inf (2, 48)
+
+         Steps:                     Times Applied:
+Total:   48                                     11
+Macro:   40                                      9
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 11
+Tape copies: 0
+Elapsed time: 0.00035881996154785156
+00^inf 01^1 21^1 (22) A> 22^1 11^1 22^1 00^inf
+Num Nonzeros: 11  =  11
+     12  00^inf 01^1 21^1 <A (11) 12^1 11^1 22^1 00^inf (3, 51)
+
+         Steps:                     Times Applied:
+Total:   51                                     12
+Macro:   43                                     10
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 12
+Tape copies: 0
+Elapsed time: 0.0003819465637207031
+00^inf 01^1 21^1 <A (11) 12^1 11^1 22^1 00^inf
+Num Nonzeros: 11  =  11
+     13  00^inf 01^1 <A (12) 11^1 12^1 11^1 22^1 00^inf (2, 53)
+
+         Steps:                     Times Applied:
+Total:   53                                     13
+Macro:   45                                     11
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 13
+Tape copies: 0
+Elapsed time: 0.00040602684020996094
+00^inf 01^1 <A (12) 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 11  =  11
+     14  00^inf 12^1 (12) C> 11^1 12^1 11^1 22^1 00^inf (7, 60)
+
+         Steps:                     Times Applied:
+Total:   60                                     14
+Macro:   52                                     12
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 14
+Tape copies: 0
+Elapsed time: 0.00044417381286621094
+00^inf 12^1 (12) C> 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     15  00^inf 12^2 (10) A> 12^1 11^1 22^1 00^inf (4, 64)
+
+         Steps:                     Times Applied:
+Total:   64                                     15
+Macro:   56                                     13
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 15
+Tape copies: 0
+Elapsed time: 0.0004668235778808594
+00^inf 12^2 (10) A> 12^1 11^1 22^1 00^inf
+Num Nonzeros: 11  =  11
+     16  00^inf 12^2 11^1 (22) A> 11^1 22^1 00^inf (4, 68)
+
+         Steps:                     Times Applied:
+Total:   68                                     16
+Macro:   60                                     14
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 16
+Tape copies: 0
+Elapsed time: 0.0004909038543701172
+00^inf 12^2 11^1 (22) A> 11^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     17  00^inf 12^2 11^1 <A (11) 21^1 22^1 00^inf (3, 71)
+
+         Steps:                     Times Applied:
+Total:   71                                     17
+Macro:   63                                     15
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 17
+Tape copies: 0
+Elapsed time: 0.0005140304565429688
+00^inf 12^2 11^1 <A (11) 21^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     18  00^inf 12^2 <A (22) 11^1 21^1 22^1 00^inf (2, 73)
+
+         Steps:                     Times Applied:
+Total:   73                                     18
+Macro:   65                                     16
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 18
+Tape copies: 0
+Elapsed time: 0.0005319118499755859
+00^inf 12^2 <A (22) 11^1 21^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     19  00^inf 12^1 <A (21) 22^1 11^1 21^1 22^1 00^inf (2, 75)
+
+         Steps:                     Times Applied:
+Total:   75                                     19
+Macro:   67                                     17
+Chain:   8                                       2
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 19
+Tape copies: 0
+Elapsed time: 0.0005490779876708984
+00^inf 12^1 <A (21) 22^1 11^1 21^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     20  00^inf <A (21) 21^1 22^1 11^1 21^1 22^1 00^inf (2, 77)
+
+         Steps:                     Times Applied:
+Total:   77                                     20
+Macro:   67                                     17
+Chain:   10                                      3
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 20
+Tape copies: 0
+Elapsed time: 0.0005710124969482422
+00^inf <A (21) 21^1 22^1 11^1 21^1 22^1 00^inf
+Num Nonzeros: 12  =  12
+     21  00^inf 01^1 (21) B> 21^1 22^1 11^1 21^1 22^1 00^inf (5, 82)
+
+         Steps:                     Times Applied:
+Total:   82                                     21
+Macro:   72                                     18
+Chain:   10                                      3
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 21
+Tape copies: 0
+Elapsed time: 0.0005900859832763672
+00^inf 01^1 (21) B> 21^1 22^1 11^1 21^1 22^1 00^inf
+Num Nonzeros: 13  =  13
+     22  00^inf 01^1 21^1 (21) B> 22^1 11^1 21^1 22^1 00^inf (4, 86)
+
+         Steps:                     Times Applied:
+Total:   86                                     22
+Macro:   72                                     18
+Chain:   14                                      4
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 22
+Tape copies: 0
+Elapsed time: 0.0006129741668701172
+00^inf 01^1 21^1 (21) B> 22^1 11^1 21^1 22^1 00^inf
+Num Nonzeros: 13  =  13
+     23  00^inf 01^1 21^2 (22) A> 11^1 21^1 22^1 00^inf (2, 88)
+
+         Steps:                     Times Applied:
+Total:   88                                     23
+Macro:   74                                     19
+Chain:   14                                      4
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 23
+Tape copies: 0
+Elapsed time: 0.0006308555603027344
+00^inf 01^1 21^2 (22) A> 11^1 21^1 22^1 00^inf
+Num Nonzeros: 13  =  13
+     24  00^inf 01^1 21^2 <A (11) 21^2 22^1 00^inf (3, 91)
+
+         Steps:                     Times Applied:
+Total:   91                                     24
+Macro:   77                                     20
+Chain:   14                                      4
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 24
+Tape copies: 0
+Elapsed time: 0.0006489753723144531
+00^inf 01^1 21^2 <A (11) 21^2 22^1 00^inf
+Num Nonzeros: 13  =  13
+     25  00^inf 01^1 21^1 <A (12) 11^1 21^2 22^1 00^inf (2, 93)
+
+         Steps:                     Times Applied:
+Total:   93                                     25
+Macro:   79                                     21
+Chain:   14                                      4
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 25
+Tape copies: 0
+Elapsed time: 0.0006659030914306641
+00^inf 01^1 21^1 <A (12) 11^1 21^2 22^1 00^inf
+Num Nonzeros: 13  =  13
+     26  00^inf 01^1 <A (12) 12^1 11^1 21^2 22^1 00^inf (2, 95)
+
+         Steps:                     Times Applied:
+Total:   95                                     26
+Macro:   79                                     21
+Chain:   16                                      5
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 26
+Tape copies: 0
+Elapsed time: 0.0006890296936035156
+00^inf 01^1 <A (12) 12^1 11^1 21^2 22^1 00^inf
+Num Nonzeros: 13  =  13
+     27  00^inf 12^1 (12) C> 12^1 11^1 21^2 22^1 00^inf (7, 102)
+
+         Steps:                     Times Applied:
+Total:   102                                    27
+Macro:   86                                     22
+Chain:   16                                      5
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 27
+Tape copies: 0
+Elapsed time: 0.0007119178771972656
+00^inf 12^1 (12) C> 12^1 11^1 21^2 22^1 00^inf
+Num Nonzeros: 14  =  14
+     28  00^inf 12^2 (12) C> 11^1 21^2 22^1 00^inf (4, 106)
+
+         Steps:                     Times Applied:
+Total:   106                                    28
+Macro:   86                                     22
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 28
+Tape copies: 0
+Elapsed time: 0.0007369518280029297
+00^inf 12^2 (12) C> 11^1 21^2 22^1 00^inf
+Num Nonzeros: 14  =  14
+     29  00^inf 12^3 (10) A> 21^2 22^1 00^inf (4, 110)
+
+         Steps:                     Times Applied:
+Total:   110                                    29
+Macro:   90                                     23
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 29
+Tape copies: 0
+Elapsed time: 0.0007538795471191406
+00^inf 12^3 (10) A> 21^2 22^1 00^inf
+Num Nonzeros: 13  =  13
+     30  00^inf 12^3 11^1 (12) C> 21^1 22^1 00^inf (6, 116)
+
+         Steps:                     Times Applied:
+Total:   116                                    30
+Macro:   96                                     24
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 30
+Tape copies: 0
+Elapsed time: 0.0007798671722412109
+00^inf 12^3 11^1 (12) C> 21^1 22^1 00^inf
+Num Nonzeros: 14  =  14
+     31  00^inf 12^3 11^1 <A (21) 12^1 22^1 00^inf (5, 121)
+
+         Steps:                     Times Applied:
+Total:   121                                    31
+Macro:   101                                    25
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 31
+Tape copies: 0
+Elapsed time: 0.0008051395416259766
+00^inf 12^3 11^1 <A (21) 12^1 22^1 00^inf
+Num Nonzeros: 14  =  14
+     32  00^inf 12^3 <A (22) 21^1 12^1 22^1 00^inf (2, 123)
+
+         Steps:                     Times Applied:
+Total:   123                                    32
+Macro:   103                                    26
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 32
+Tape copies: 0
+Elapsed time: 0.0008249282836914062
+00^inf 12^3 <A (22) 21^1 12^1 22^1 00^inf
+Num Nonzeros: 14  =  14
+     33  00^inf 12^2 <A (21) 22^1 21^1 12^1 22^1 00^inf (2, 125)
+
+         Steps:                     Times Applied:
+Total:   125                                    33
+Macro:   105                                    27
+Chain:   20                                      6
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 33
+Tape copies: 0
+Elapsed time: 0.0008428096771240234
+00^inf 12^2 <A (21) 22^1 21^1 12^1 22^1 00^inf
+Num Nonzeros: 14  =  14
+     34  00^inf <A (21) 21^2 22^1 21^1 12^1 22^1 00^inf (4, 129)
+
+         Steps:                     Times Applied:
+Total:   129                                    34
+Macro:   105                                    27
+Chain:   24                                      7
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 34
+Tape copies: 0
+Elapsed time: 0.0008609294891357422
+00^inf <A (21) 21^2 22^1 21^1 12^1 22^1 00^inf
+Num Nonzeros: 14  =  14
+     35  00^inf 01^1 (21) B> 21^2 22^1 21^1 12^1 22^1 00^inf (5, 134)
+
+         Steps:                     Times Applied:
+Total:   134                                    35
+Macro:   110                                    28
+Chain:   24                                      7
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 35
+Tape copies: 0
+Elapsed time: 0.0008790493011474609
+00^inf 01^1 (21) B> 21^2 22^1 21^1 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     36  00^inf 01^1 21^2 (21) B> 22^1 21^1 12^1 22^1 00^inf (8, 142)
+
+         Steps:                     Times Applied:
+Total:   142                                    36
+Macro:   110                                    28
+Chain:   32                                      8
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 36
+Tape copies: 0
+Elapsed time: 0.0008969306945800781
+00^inf 01^1 21^2 (21) B> 22^1 21^1 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     37  00^inf 01^1 21^3 (22) A> 21^1 12^1 22^1 00^inf (2, 144)
+
+         Steps:                     Times Applied:
+Total:   144                                    37
+Macro:   112                                    29
+Chain:   32                                      8
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 37
+Tape copies: 0
+Elapsed time: 0.0009148120880126953
+00^inf 01^1 21^3 (22) A> 21^1 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     38  00^inf 01^1 21^3 <A (11) 11^1 12^1 22^1 00^inf (3, 147)
+
+         Steps:                     Times Applied:
+Total:   147                                    38
+Macro:   115                                    30
+Chain:   32                                      8
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 38
+Tape copies: 0
+Elapsed time: 0.0009367465972900391
+00^inf 01^1 21^3 <A (11) 11^1 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     39  00^inf 01^1 21^2 <A (12) 11^2 12^1 22^1 00^inf (2, 149)
+
+         Steps:                     Times Applied:
+Total:   149                                    39
+Macro:   117                                    31
+Chain:   32                                      8
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 39
+Tape copies: 0
+Elapsed time: 0.0009551048278808594
+00^inf 01^1 21^2 <A (12) 11^2 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     40  00^inf 01^1 <A (12) 12^2 11^2 12^1 22^1 00^inf (4, 153)
+
+         Steps:                     Times Applied:
+Total:   153                                    40
+Macro:   117                                    31
+Chain:   36                                      9
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 40
+Tape copies: 0
+Elapsed time: 0.0009720325469970703
+00^inf 01^1 <A (12) 12^2 11^2 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     41  00^inf 12^1 (12) C> 12^2 11^2 12^1 22^1 00^inf (7, 160)
+
+         Steps:                     Times Applied:
+Total:   160                                    41
+Macro:   124                                    32
+Chain:   36                                      9
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 41
+Tape copies: 0
+Elapsed time: 0.000993967056274414
+00^inf 12^1 (12) C> 12^2 11^2 12^1 22^1 00^inf
+Num Nonzeros: 16  =  16
+     42  00^inf 12^3 (12) C> 11^2 12^1 22^1 00^inf (8, 168)
+
+         Steps:                     Times Applied:
+Total:   168                                    42
+Macro:   124                                    32
+Chain:   44                                     10
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 42
+Tape copies: 0
+Elapsed time: 0.0010118484497070312
+00^inf 12^3 (12) C> 11^2 12^1 22^1 00^inf
+Num Nonzeros: 16  =  16
+     43  00^inf 12^4 (10) A> 11^1 12^1 22^1 00^inf (4, 172)
+
+         Steps:                     Times Applied:
+Total:   172                                    43
+Macro:   128                                    33
+Chain:   44                                     10
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 43
+Tape copies: 0
+Elapsed time: 0.0010290145874023438
+00^inf 12^4 (10) A> 11^1 12^1 22^1 00^inf
+Num Nonzeros: 15  =  15
+     44  00^inf 12^4 11^1 (21) B> 12^1 22^1 00^inf (6, 178)
+
+         Steps:                     Times Applied:
+Total:   178                                    44
+Macro:   134                                    34
+Chain:   44                                     10
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 44
+Tape copies: 0
+Elapsed time: 0.0010499954223632812
+00^inf 12^4 11^1 (21) B> 12^1 22^1 00^inf
+Num Nonzeros: 16  =  16
+     45  00^inf 12^4 11^1 21^1 (10) A> 22^1 00^inf (4, 182)
+
+         Steps:                     Times Applied:
+Total:   182                                    45
+Macro:   138                                    35
+Chain:   44                                     10
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 45
+Tape copies: 0
+Elapsed time: 0.0010709762573242188
+00^inf 12^4 11^1 21^1 (10) A> 22^1 00^inf
+Num Nonzeros: 15  =  15
+     46  00^inf 12^4 11^1 21^1 11^1 (10) A> 00^inf (6, 188)
+
+         Steps:                     Times Applied:
+Total:   188                                    46
+Macro:   138                                    35
+Chain:   50                                     11
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 46
+Tape copies: 0
+Elapsed time: 0.0010879039764404297
+00^inf 12^4 11^1 21^1 11^1 (10) A> 00^inf
+Num Nonzeros: 15  =  15
+     47  00^inf 12^4 11^1 21^1 11^2 (22) A> 00^inf (6, 194)
+
+         Steps:                     Times Applied:
+Total:   194                                    47
+Macro:   144                                    36
+Chain:   50                                     11
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 47
+Tape copies: 0
+Elapsed time: 0.001104116439819336
+00^inf 12^4 11^1 21^1 11^2 (22) A> 00^inf
+Num Nonzeros: 18  =  18
+     48  00^inf 12^4 11^1 21^1 11^2 <A (11) 22^1 00^inf (5, 199)
+
+         Steps:                     Times Applied:
+Total:   199                                    48
+Macro:   149                                    37
+Chain:   50                                     11
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 48
+Tape copies: 0
+Elapsed time: 0.0011210441589355469
+00^inf 12^4 11^1 21^1 11^2 <A (11) 22^1 00^inf
+Num Nonzeros: 20  =  20
+     49  00^inf 12^4 11^1 21^1 11^1 <A (22) 11^1 22^1 00^inf (2, 201)
+
+         Steps:                     Times Applied:
+Total:   201                                    49
+Macro:   151                                    38
+Chain:   50                                     11
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 49
+Tape copies: 0
+Elapsed time: 0.0011398792266845703
+00^inf 12^4 11^1 21^1 11^1 <A (22) 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     50  00^inf 12^4 11^1 21^1 <A (22) 22^1 11^1 22^1 00^inf (2, 203)
+
+         Steps:                     Times Applied:
+Total:   203                                    50
+Macro:   151                                    38
+Chain:   52                                     12
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 50
+Tape copies: 0
+Elapsed time: 0.001157999038696289
+00^inf 12^4 11^1 21^1 <A (22) 22^1 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     51  00^inf 12^4 11^1 <A (12) 22^2 11^1 22^1 00^inf (2, 205)
+
+         Steps:                     Times Applied:
+Total:   205                                    51
+Macro:   153                                    39
+Chain:   52                                     12
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 51
+Tape copies: 0
+Elapsed time: 0.0011796951293945312
+00^inf 12^4 11^1 <A (12) 22^2 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     52  00^inf 12^4 <A (22) 12^1 22^2 11^1 22^1 00^inf (2, 207)
+
+         Steps:                     Times Applied:
+Total:   207                                    52
+Macro:   155                                    40
+Chain:   52                                     12
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 52
+Tape copies: 0
+Elapsed time: 0.001199960708618164
+00^inf 12^4 <A (22) 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     53  00^inf 12^3 <A (21) 22^1 12^1 22^2 11^1 22^1 00^inf (2, 209)
+
+         Steps:                     Times Applied:
+Total:   209                                    53
+Macro:   157                                    41
+Chain:   52                                     12
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 53
+Tape copies: 0
+Elapsed time: 0.0012178421020507812
+00^inf 12^3 <A (21) 22^1 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     54  00^inf <A (21) 21^3 22^1 12^1 22^2 11^1 22^1 00^inf (6, 215)
+
+         Steps:                     Times Applied:
+Total:   215                                    54
+Macro:   157                                    41
+Chain:   58                                     13
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 54
+Tape copies: 0
+Elapsed time: 0.0012509822845458984
+00^inf <A (21) 21^3 22^1 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 20  =  20
+     55  00^inf 01^1 (21) B> 21^3 22^1 12^1 22^2 11^1 22^1 00^inf (5, 220)
+
+         Steps:                     Times Applied:
+Total:   220                                    55
+Macro:   162                                    42
+Chain:   58                                     13
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 55
+Tape copies: 0
+Elapsed time: 0.0012760162353515625
+00^inf 01^1 (21) B> 21^3 22^1 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     56  00^inf 01^1 21^3 (21) B> 22^1 12^1 22^2 11^1 22^1 00^inf (12, 232)
+
+         Steps:                     Times Applied:
+Total:   232                                    56
+Macro:   162                                    42
+Chain:   70                                     14
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 56
+Tape copies: 0
+Elapsed time: 0.0012969970703125
+00^inf 01^1 21^3 (21) B> 22^1 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     57  00^inf 01^1 21^4 (22) A> 12^1 22^2 11^1 22^1 00^inf (2, 234)
+
+         Steps:                     Times Applied:
+Total:   234                                    57
+Macro:   164                                    43
+Chain:   70                                     14
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 57
+Tape copies: 0
+Elapsed time: 0.001316070556640625
+00^inf 01^1 21^4 (22) A> 12^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     58  00^inf 01^1 21^4 <A (11) 22^3 11^1 22^1 00^inf (3, 237)
+
+         Steps:                     Times Applied:
+Total:   237                                    58
+Macro:   167                                    44
+Chain:   70                                     14
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 58
+Tape copies: 0
+Elapsed time: 0.0013380050659179688
+00^inf 01^1 21^4 <A (11) 22^3 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     59  00^inf 01^1 21^3 <A (12) 11^1 22^3 11^1 22^1 00^inf (2, 239)
+
+         Steps:                     Times Applied:
+Total:   239                                    59
+Macro:   169                                    45
+Chain:   70                                     14
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 59
+Tape copies: 0
+Elapsed time: 0.0013570785522460938
+00^inf 01^1 21^3 <A (12) 11^1 22^3 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     60  00^inf 01^1 <A (12) 12^3 11^1 22^3 11^1 22^1 00^inf (6, 245)
+
+         Steps:                     Times Applied:
+Total:   245                                    60
+Macro:   169                                    45
+Chain:   76                                     15
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 60
+Tape copies: 0
+Elapsed time: 0.001374959945678711
+00^inf 01^1 <A (12) 12^3 11^1 22^3 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     61  00^inf 12^1 (12) C> 12^3 11^1 22^3 11^1 22^1 00^inf (7, 252)
+
+         Steps:                     Times Applied:
+Total:   252                                    61
+Macro:   176                                    46
+Chain:   76                                     15
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 61
+Tape copies: 0
+Elapsed time: 0.0013937950134277344
+00^inf 12^1 (12) C> 12^3 11^1 22^3 11^1 22^1 00^inf
+Num Nonzeros: 22  =  22
+     62  00^inf 12^4 (12) C> 11^1 22^3 11^1 22^1 00^inf (12, 264)
+
+         Steps:                     Times Applied:
+Total:   264                                    62
+Macro:   176                                    46
+Chain:   88                                     16
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 62
+Tape copies: 0
+Elapsed time: 0.001413106918334961
+00^inf 12^4 (12) C> 11^1 22^3 11^1 22^1 00^inf
+Num Nonzeros: 22  =  22
+     63  00^inf 12^5 (10) A> 22^3 11^1 22^1 00^inf (4, 268)
+
+         Steps:                     Times Applied:
+Total:   268                                    63
+Macro:   180                                    47
+Chain:   88                                     16
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 63
+Tape copies: 0
+Elapsed time: 0.0014300346374511719
+00^inf 12^5 (10) A> 22^3 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     64  00^inf 12^5 11^3 (10) A> 11^1 22^1 00^inf (18, 286)
+
+         Steps:                     Times Applied:
+Total:   286                                    64
+Macro:   180                                    47
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 64
+Tape copies: 0
+Elapsed time: 0.0014467239379882812
+00^inf 12^5 11^3 (10) A> 11^1 22^1 00^inf
+Num Nonzeros: 21  =  21
+     65  00^inf 12^5 11^4 (21) B> 22^1 00^inf (6, 292)
+
+         Steps:                     Times Applied:
+Total:   292                                    65
+Macro:   186                                    48
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 65
+Tape copies: 0
+Elapsed time: 0.0014629364013671875
+00^inf 12^5 11^4 (21) B> 22^1 00^inf
+Num Nonzeros: 22  =  22
+     66  00^inf 12^5 11^4 21^1 (22) A> 00^inf (2, 294)
+
+         Steps:                     Times Applied:
+Total:   294                                    66
+Macro:   188                                    49
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 66
+Tape copies: 0
+Elapsed time: 0.001477956771850586
+00^inf 12^5 11^4 21^1 (22) A> 00^inf
+Num Nonzeros: 22  =  22
+     67  00^inf 12^5 11^4 21^1 <A (11) 22^1 00^inf (5, 299)
+
+         Steps:                     Times Applied:
+Total:   299                                    67
+Macro:   193                                    50
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 67
+Tape copies: 0
+Elapsed time: 0.0014939308166503906
+00^inf 12^5 11^4 21^1 <A (11) 22^1 00^inf
+Num Nonzeros: 24  =  24
+     68  00^inf 12^5 11^4 <A (12) 11^1 22^1 00^inf (2, 301)
+
+         Steps:                     Times Applied:
+Total:   301                                    68
+Macro:   195                                    51
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 68
+Tape copies: 0
+Elapsed time: 0.0015108585357666016
+00^inf 12^5 11^4 <A (12) 11^1 22^1 00^inf
+Num Nonzeros: 24  =  24
+     69  00^inf 12^5 11^3 <A (22) 12^1 11^1 22^1 00^inf (2, 303)
+
+         Steps:                     Times Applied:
+Total:   303                                    69
+Macro:   197                                    52
+Chain:   106                                    17
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 69
+Tape copies: 0
+Elapsed time: 0.0015320777893066406
+00^inf 12^5 11^3 <A (22) 12^1 11^1 22^1 00^inf
+Num Nonzeros: 24  =  24
+     70  00^inf 12^5 <A (22) 22^3 12^1 11^1 22^1 00^inf (6, 309)
+
+         Steps:                     Times Applied:
+Total:   309                                    70
+Macro:   197                                    52
+Chain:   112                                    18
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 70
+Tape copies: 0
+Elapsed time: 0.0015499591827392578
+00^inf 12^5 <A (22) 22^3 12^1 11^1 22^1 00^inf
+Num Nonzeros: 24  =  24
+     71  00^inf 12^4 <A (21) 22^4 12^1 11^1 22^1 00^inf (2, 311)
+
+         Steps:                     Times Applied:
+Total:   311                                    71
+Macro:   199                                    53
+Chain:   112                                    18
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 71
+Tape copies: 0
+Elapsed time: 0.001567840576171875
+00^inf 12^4 <A (21) 22^4 12^1 11^1 22^1 00^inf
+Num Nonzeros: 24  =  24
+     72  00^inf <A (21) 21^4 22^4 12^1 11^1 22^1 00^inf (8, 319)
+
+         Steps:                     Times Applied:
+Total:   319                                    72
+Macro:   199                                    53
+Chain:   120                                    19
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 72
+Tape copies: 0
+Elapsed time: 0.0015857219696044922
+00^inf <A (21) 21^4 22^4 12^1 11^1 22^1 00^inf
+Num Nonzeros: 24  =  24
+     73  00^inf 01^1 (21) B> 21^4 22^4 12^1 11^1 22^1 00^inf (5, 324)
+
+         Steps:                     Times Applied:
+Total:   324                                    73
+Macro:   204                                    54
+Chain:   120                                    19
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 73
+Tape copies: 0
+Elapsed time: 0.0016040802001953125
+00^inf 01^1 (21) B> 21^4 22^4 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     74  00^inf 01^1 21^4 (21) B> 22^4 12^1 11^1 22^1 00^inf (16, 340)
+
+         Steps:                     Times Applied:
+Total:   340                                    74
+Macro:   204                                    54
+Chain:   136                                    20
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 74
+Tape copies: 0
+Elapsed time: 0.0016219615936279297
+00^inf 01^1 21^4 (21) B> 22^4 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     75  00^inf 01^1 21^5 (22) A> 22^3 12^1 11^1 22^1 00^inf (2, 342)
+
+         Steps:                     Times Applied:
+Total:   342                                    75
+Macro:   206                                    55
+Chain:   136                                    20
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 75
+Tape copies: 0
+Elapsed time: 0.0016398429870605469
+00^inf 01^1 21^5 (22) A> 22^3 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     76  00^inf 01^1 21^5 <A (11) 12^1 22^2 12^1 11^1 22^1 00^inf (3, 345)
+
+         Steps:                     Times Applied:
+Total:   345                                    76
+Macro:   209                                    56
+Chain:   136                                    20
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 76
+Tape copies: 0
+Elapsed time: 0.0016591548919677734
+00^inf 01^1 21^5 <A (11) 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     77  00^inf 01^1 21^4 <A (12) 11^1 12^1 22^2 12^1 11^1 22^1 00^inf (2, 347)
+
+         Steps:                     Times Applied:
+Total:   347                                    77
+Macro:   211                                    57
+Chain:   136                                    20
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 77
+Tape copies: 0
+Elapsed time: 0.0016789436340332031
+00^inf 01^1 21^4 <A (12) 11^1 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     78  00^inf 01^1 <A (12) 12^4 11^1 12^1 22^2 12^1 11^1 22^1 00^inf (8, 355)
+
+         Steps:                     Times Applied:
+Total:   355                                    78
+Macro:   211                                    57
+Chain:   144                                    21
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 78
+Tape copies: 0
+Elapsed time: 0.0016999244689941406
+00^inf 01^1 <A (12) 12^4 11^1 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     79  00^inf 12^1 (12) C> 12^4 11^1 12^1 22^2 12^1 11^1 22^1 00^inf (7, 362)
+
+         Steps:                     Times Applied:
+Total:   362                                    79
+Macro:   218                                    58
+Chain:   144                                    21
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 79
+Tape copies: 0
+Elapsed time: 0.0017199516296386719
+00^inf 12^1 (12) C> 12^4 11^1 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     80  00^inf 12^5 (12) C> 11^1 12^1 22^2 12^1 11^1 22^1 00^inf (16, 378)
+
+         Steps:                     Times Applied:
+Total:   378                                    80
+Macro:   218                                    58
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 80
+Tape copies: 0
+Elapsed time: 0.0017418861389160156
+00^inf 12^5 (12) C> 11^1 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     81  00^inf 12^6 (10) A> 12^1 22^2 12^1 11^1 22^1 00^inf (4, 382)
+
+         Steps:                     Times Applied:
+Total:   382                                    81
+Macro:   222                                    59
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 81
+Tape copies: 0
+Elapsed time: 0.0017619132995605469
+00^inf 12^6 (10) A> 12^1 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 25  =  25
+     82  00^inf 12^6 11^1 (22) A> 22^2 12^1 11^1 22^1 00^inf (4, 386)
+
+         Steps:                     Times Applied:
+Total:   386                                    82
+Macro:   226                                    60
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 82
+Tape copies: 0
+Elapsed time: 0.0017859935760498047
+00^inf 12^6 11^1 (22) A> 22^2 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     83  00^inf 12^6 11^1 <A (11) 12^1 22^1 12^1 11^1 22^1 00^inf (3, 389)
+
+         Steps:                     Times Applied:
+Total:   389                                    83
+Macro:   229                                    61
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 83
+Tape copies: 0
+Elapsed time: 0.0018069744110107422
+00^inf 12^6 11^1 <A (11) 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     84  00^inf 12^6 <A (22) 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (2, 391)
+
+         Steps:                     Times Applied:
+Total:   391                                    84
+Macro:   231                                    62
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 84
+Tape copies: 0
+Elapsed time: 0.0018270015716552734
+00^inf 12^6 <A (22) 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     85  00^inf 12^5 <A (21) 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (2, 393)
+
+         Steps:                     Times Applied:
+Total:   393                                    85
+Macro:   233                                    63
+Chain:   160                                    22
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 85
+Tape copies: 0
+Elapsed time: 0.0018470287322998047
+00^inf 12^5 <A (21) 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     86  00^inf <A (21) 21^5 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (10, 403)
+
+         Steps:                     Times Applied:
+Total:   403                                    86
+Macro:   233                                    63
+Chain:   170                                    23
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 86
+Tape copies: 0
+Elapsed time: 0.0018689632415771484
+00^inf <A (21) 21^5 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 26  =  26
+     87  00^inf 01^1 (21) B> 21^5 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (5, 408)
+
+         Steps:                     Times Applied:
+Total:   408                                    87
+Macro:   238                                    64
+Chain:   170                                    23
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 87
+Tape copies: 0
+Elapsed time: 0.001889944076538086
+00^inf 01^1 (21) B> 21^5 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     88  00^inf 01^1 21^5 (21) B> 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (20, 428)
+
+         Steps:                     Times Applied:
+Total:   428                                    88
+Macro:   238                                    64
+Chain:   190                                    24
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 88
+Tape copies: 0
+Elapsed time: 0.0019118785858154297
+00^inf 01^1 21^5 (21) B> 22^1 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     89  00^inf 01^1 21^6 (22) A> 11^1 12^1 22^1 12^1 11^1 22^1 00^inf (2, 430)
+
+         Steps:                     Times Applied:
+Total:   430                                    89
+Macro:   240                                    65
+Chain:   190                                    24
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 89
+Tape copies: 0
+Elapsed time: 0.0019328594207763672
+00^inf 01^1 21^6 (22) A> 11^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     90  00^inf 01^1 21^6 <A (11) 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (3, 433)
+
+         Steps:                     Times Applied:
+Total:   433                                    90
+Macro:   243                                    66
+Chain:   190                                    24
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 90
+Tape copies: 0
+Elapsed time: 0.0019528865814208984
+00^inf 01^1 21^6 <A (11) 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     91  00^inf 01^1 21^5 <A (12) 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (2, 435)
+
+         Steps:                     Times Applied:
+Total:   435                                    91
+Macro:   245                                    67
+Chain:   190                                    24
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 91
+Tape copies: 0
+Elapsed time: 0.001973867416381836
+00^inf 01^1 21^5 <A (12) 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     92  00^inf 01^1 <A (12) 12^5 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (10, 445)
+
+         Steps:                     Times Applied:
+Total:   445                                    92
+Macro:   245                                    67
+Chain:   200                                    25
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 92
+Tape copies: 0
+Elapsed time: 0.0019960403442382812
+00^inf 01^1 <A (12) 12^5 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     93  00^inf 12^1 (12) C> 12^5 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (7, 452)
+
+         Steps:                     Times Applied:
+Total:   452                                    93
+Macro:   252                                    68
+Chain:   200                                    25
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 93
+Tape copies: 0
+Elapsed time: 0.0020170211791992188
+00^inf 12^1 (12) C> 12^5 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+     94  00^inf 12^6 (12) C> 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (20, 472)
+
+         Steps:                     Times Applied:
+Total:   472                                    94
+Macro:   252                                    68
+Chain:   220                                    26
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 94
+Tape copies: 0
+Elapsed time: 0.0020389556884765625
+00^inf 12^6 (12) C> 11^1 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+     95  00^inf 12^7 (10) A> 21^1 12^1 22^1 12^1 11^1 22^1 00^inf (4, 476)
+
+         Steps:                     Times Applied:
+Total:   476                                    95
+Macro:   256                                    69
+Chain:   220                                    26
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 95
+Tape copies: 0
+Elapsed time: 0.002062082290649414
+00^inf 12^7 (10) A> 21^1 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 27  =  27
+     96  00^inf 12^7 11^1 (12) C> 12^1 22^1 12^1 11^1 22^1 00^inf (6, 482)
+
+         Steps:                     Times Applied:
+Total:   482                                    96
+Macro:   262                                    70
+Chain:   220                                    26
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 96
+Tape copies: 0
+Elapsed time: 0.002084016799926758
+00^inf 12^7 11^1 (12) C> 12^1 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+     97  00^inf 12^7 11^1 12^1 (12) C> 22^1 12^1 11^1 22^1 00^inf (4, 486)
+
+         Steps:                     Times Applied:
+Total:   486                                    97
+Macro:   262                                    70
+Chain:   224                                    27
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 97
+Tape copies: 0
+Elapsed time: 0.002104043960571289
+00^inf 12^7 11^1 12^1 (12) C> 22^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+     98  00^inf 12^7 11^1 12^1 <A (21) 11^1 12^1 11^1 22^1 00^inf (5, 491)
+
+         Steps:                     Times Applied:
+Total:   491                                    98
+Macro:   267                                    71
+Chain:   224                                    27
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 98
+Tape copies: 0
+Elapsed time: 0.002132892608642578
+00^inf 12^7 11^1 12^1 <A (21) 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+     99  00^inf 12^7 11^1 <A (21) 21^1 11^1 12^1 11^1 22^1 00^inf (2, 493)
+
+         Steps:                     Times Applied:
+Total:   493                                    99
+Macro:   267                                    71
+Chain:   226                                    28
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 99
+Tape copies: 0
+Elapsed time: 0.0021529197692871094
+00^inf 12^7 11^1 <A (21) 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+    100  00^inf 12^7 <A (22) 21^2 11^1 12^1 11^1 22^1 00^inf (2, 495)
+
+         Steps:                     Times Applied:
+Total:   495                                   100
+Macro:   269                                    72
+Chain:   226                                    28
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 100
+Tape copies: 0
+Elapsed time: 0.0021719932556152344
+00^inf 12^7 <A (22) 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+    101  00^inf 12^6 <A (21) 22^1 21^2 11^1 12^1 11^1 22^1 00^inf (2, 497)
+
+         Steps:                     Times Applied:
+Total:   497                                   101
+Macro:   271                                    73
+Chain:   226                                    28
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 101
+Tape copies: 0
+Elapsed time: 0.0021920204162597656
+00^inf 12^6 <A (21) 22^1 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+    102  00^inf <A (21) 21^6 22^1 21^2 11^1 12^1 11^1 22^1 00^inf (12, 509)
+
+         Steps:                     Times Applied:
+Total:   509                                   102
+Macro:   271                                    73
+Chain:   238                                    29
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 102
+Tape copies: 0
+Elapsed time: 0.0022110939025878906
+00^inf <A (21) 21^6 22^1 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 28  =  28
+    103  00^inf 01^1 (21) B> 21^6 22^1 21^2 11^1 12^1 11^1 22^1 00^inf (5, 514)
+
+         Steps:                     Times Applied:
+Total:   514                                   103
+Macro:   276                                    74
+Chain:   238                                    29
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 103
+Tape copies: 0
+Elapsed time: 0.0022308826446533203
+00^inf 01^1 (21) B> 21^6 22^1 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    104  00^inf 01^1 21^6 (21) B> 22^1 21^2 11^1 12^1 11^1 22^1 00^inf (24, 538)
+
+         Steps:                     Times Applied:
+Total:   538                                   104
+Macro:   276                                    74
+Chain:   262                                    30
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 104
+Tape copies: 0
+Elapsed time: 0.002251863479614258
+00^inf 01^1 21^6 (21) B> 22^1 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    105  00^inf 01^1 21^7 (22) A> 21^2 11^1 12^1 11^1 22^1 00^inf (2, 540)
+
+         Steps:                     Times Applied:
+Total:   540                                   105
+Macro:   278                                    75
+Chain:   262                                    30
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 105
+Tape copies: 0
+Elapsed time: 0.002271890640258789
+00^inf 01^1 21^7 (22) A> 21^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    106  00^inf 01^1 21^7 <A (11) 11^1 21^1 11^1 12^1 11^1 22^1 00^inf (3, 543)
+
+         Steps:                     Times Applied:
+Total:   543                                   106
+Macro:   281                                    76
+Chain:   262                                    30
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 106
+Tape copies: 0
+Elapsed time: 0.0022919178009033203
+00^inf 01^1 21^7 <A (11) 11^1 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    107  00^inf 01^1 21^6 <A (12) 11^2 21^1 11^1 12^1 11^1 22^1 00^inf (2, 545)
+
+         Steps:                     Times Applied:
+Total:   545                                   107
+Macro:   283                                    77
+Chain:   262                                    30
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 107
+Tape copies: 0
+Elapsed time: 0.002312898635864258
+00^inf 01^1 21^6 <A (12) 11^2 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    108  00^inf 01^1 <A (12) 12^6 11^2 21^1 11^1 12^1 11^1 22^1 00^inf (12, 557)
+
+         Steps:                     Times Applied:
+Total:   557                                   108
+Macro:   283                                    77
+Chain:   274                                    31
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 108
+Tape copies: 0
+Elapsed time: 0.002332925796508789
+00^inf 01^1 <A (12) 12^6 11^2 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    109  00^inf 12^1 (12) C> 12^6 11^2 21^1 11^1 12^1 11^1 22^1 00^inf (7, 564)
+
+         Steps:                     Times Applied:
+Total:   564                                   109
+Macro:   290                                    78
+Chain:   274                                    31
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 109
+Tape copies: 0
+Elapsed time: 0.0023589134216308594
+00^inf 12^1 (12) C> 12^6 11^2 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    110  00^inf 12^7 (12) C> 11^2 21^1 11^1 12^1 11^1 22^1 00^inf (24, 588)
+
+         Steps:                     Times Applied:
+Total:   588                                   110
+Macro:   290                                    78
+Chain:   298                                    32
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 110
+Tape copies: 0
+Elapsed time: 0.002379894256591797
+00^inf 12^7 (12) C> 11^2 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    111  00^inf 12^8 (10) A> 11^1 21^1 11^1 12^1 11^1 22^1 00^inf (4, 592)
+
+         Steps:                     Times Applied:
+Total:   592                                   111
+Macro:   294                                    79
+Chain:   298                                    32
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 111
+Tape copies: 0
+Elapsed time: 0.002398967742919922
+00^inf 12^8 (10) A> 11^1 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 29  =  29
+    112  00^inf 12^8 11^1 (21) B> 21^1 11^1 12^1 11^1 22^1 00^inf (6, 598)
+
+         Steps:                     Times Applied:
+Total:   598                                   112
+Macro:   300                                    80
+Chain:   298                                    32
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 112
+Tape copies: 0
+Elapsed time: 0.0024178028106689453
+00^inf 12^8 11^1 (21) B> 21^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    113  00^inf 12^8 11^1 21^1 (21) B> 11^1 12^1 11^1 22^1 00^inf (4, 602)
+
+         Steps:                     Times Applied:
+Total:   602                                   113
+Macro:   300                                    80
+Chain:   302                                    33
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 113
+Tape copies: 0
+Elapsed time: 0.002438068389892578
+00^inf 12^8 11^1 21^1 (21) B> 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    114  00^inf 12^8 11^1 21^2 (12) C> 12^1 11^1 22^1 00^inf (4, 606)
+
+         Steps:                     Times Applied:
+Total:   606                                   114
+Macro:   304                                    81
+Chain:   302                                    33
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 114
+Tape copies: 0
+Elapsed time: 0.0024607181549072266
+00^inf 12^8 11^1 21^2 (12) C> 12^1 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    115  00^inf 12^8 11^1 21^2 12^1 (12) C> 11^1 22^1 00^inf (4, 610)
+
+         Steps:                     Times Applied:
+Total:   610                                   115
+Macro:   304                                    81
+Chain:   306                                    34
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 115
+Tape copies: 0
+Elapsed time: 0.002480030059814453
+00^inf 12^8 11^1 21^2 12^1 (12) C> 11^1 22^1 00^inf
+Num Nonzeros: 30  =  30
+    116  00^inf 12^8 11^1 21^2 12^2 (10) A> 22^1 00^inf (4, 614)
+
+         Steps:                     Times Applied:
+Total:   614                                   116
+Macro:   308                                    82
+Chain:   306                                    34
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 116
+Tape copies: 0
+Elapsed time: 0.0024979114532470703
+00^inf 12^8 11^1 21^2 12^2 (10) A> 22^1 00^inf
+Num Nonzeros: 29  =  29
+    117  00^inf 12^8 11^1 21^2 12^2 11^1 (10) A> 00^inf (6, 620)
+
+         Steps:                     Times Applied:
+Total:   620                                   117
+Macro:   308                                    82
+Chain:   312                                    35
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 117
+Tape copies: 0
+Elapsed time: 0.0025157928466796875
+00^inf 12^8 11^1 21^2 12^2 11^1 (10) A> 00^inf
+Num Nonzeros: 29  =  29
+    118  00^inf 12^8 11^1 21^2 12^2 11^2 (22) A> 00^inf (6, 626)
+
+         Steps:                     Times Applied:
+Total:   626                                   118
+Macro:   314                                    83
+Chain:   312                                    35
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 118
+Tape copies: 0
+Elapsed time: 0.0025348663330078125
+00^inf 12^8 11^1 21^2 12^2 11^2 (22) A> 00^inf
+Num Nonzeros: 32  =  32
+    119  00^inf 12^8 11^1 21^2 12^2 11^2 <A (11) 22^1 00^inf (5, 631)
+
+         Steps:                     Times Applied:
+Total:   631                                   119
+Macro:   319                                    84
+Chain:   312                                    35
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 119
+Tape copies: 0
+Elapsed time: 0.0025529861450195312
+00^inf 12^8 11^1 21^2 12^2 11^2 <A (11) 22^1 00^inf
+Num Nonzeros: 34  =  34
+    120  00^inf 12^8 11^1 21^2 12^2 11^1 <A (22) 11^1 22^1 00^inf (2, 633)
+
+         Steps:                     Times Applied:
+Total:   633                                   120
+Macro:   321                                    85
+Chain:   312                                    35
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 120
+Tape copies: 0
+Elapsed time: 0.0025708675384521484
+00^inf 12^8 11^1 21^2 12^2 11^1 <A (22) 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    121  00^inf 12^8 11^1 21^2 12^2 <A (22) 22^1 11^1 22^1 00^inf (2, 635)
+
+         Steps:                     Times Applied:
+Total:   635                                   121
+Macro:   321                                    85
+Chain:   314                                    36
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 121
+Tape copies: 0
+Elapsed time: 0.0025908946990966797
+00^inf 12^8 11^1 21^2 12^2 <A (22) 22^1 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    122  00^inf 12^8 11^1 21^2 12^1 <A (21) 22^2 11^1 22^1 00^inf (2, 637)
+
+         Steps:                     Times Applied:
+Total:   637                                   122
+Macro:   323                                    86
+Chain:   314                                    36
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 122
+Tape copies: 0
+Elapsed time: 0.0026140213012695312
+00^inf 12^8 11^1 21^2 12^1 <A (21) 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    123  00^inf 12^8 11^1 21^2 <A (21) 21^1 22^2 11^1 22^1 00^inf (2, 639)
+
+         Steps:                     Times Applied:
+Total:   639                                   123
+Macro:   323                                    86
+Chain:   316                                    37
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 123
+Tape copies: 0
+Elapsed time: 0.002633810043334961
+00^inf 12^8 11^1 21^2 <A (21) 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    124  00^inf 12^8 11^1 21^1 <A (12) 21^2 22^2 11^1 22^1 00^inf (2, 641)
+
+         Steps:                     Times Applied:
+Total:   641                                   124
+Macro:   325                                    87
+Chain:   316                                    37
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 124
+Tape copies: 0
+Elapsed time: 0.0026569366455078125
+00^inf 12^8 11^1 21^1 <A (12) 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    125  00^inf 12^8 11^1 <A (12) 12^1 21^2 22^2 11^1 22^1 00^inf (2, 643)
+
+         Steps:                     Times Applied:
+Total:   643                                   125
+Macro:   325                                    87
+Chain:   318                                    38
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 125
+Tape copies: 0
+Elapsed time: 0.0026769638061523438
+00^inf 12^8 11^1 <A (12) 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    126  00^inf 12^8 <A (22) 12^2 21^2 22^2 11^1 22^1 00^inf (2, 645)
+
+         Steps:                     Times Applied:
+Total:   645                                   126
+Macro:   327                                    88
+Chain:   318                                    38
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 126
+Tape copies: 0
+Elapsed time: 0.002695798873901367
+00^inf 12^8 <A (22) 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    127  00^inf 12^7 <A (21) 22^1 12^2 21^2 22^2 11^1 22^1 00^inf (2, 647)
+
+         Steps:                     Times Applied:
+Total:   647                                   127
+Macro:   329                                    89
+Chain:   318                                    38
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 127
+Tape copies: 0
+Elapsed time: 0.0027151107788085938
+00^inf 12^7 <A (21) 22^1 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    128  00^inf <A (21) 21^7 22^1 12^2 21^2 22^2 11^1 22^1 00^inf (14, 661)
+
+         Steps:                     Times Applied:
+Total:   661                                   128
+Macro:   329                                    89
+Chain:   332                                    39
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 128
+Tape copies: 0
+Elapsed time: 0.0027348995208740234
+00^inf <A (21) 21^7 22^1 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 34  =  34
+    129  00^inf 01^1 (21) B> 21^7 22^1 12^2 21^2 22^2 11^1 22^1 00^inf (5, 666)
+
+         Steps:                     Times Applied:
+Total:   666                                   129
+Macro:   334                                    90
+Chain:   332                                    39
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 129
+Tape copies: 0
+Elapsed time: 0.0027549266815185547
+00^inf 01^1 (21) B> 21^7 22^1 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    130  00^inf 01^1 21^7 (21) B> 22^1 12^2 21^2 22^2 11^1 22^1 00^inf (28, 694)
+
+         Steps:                     Times Applied:
+Total:   694                                   130
+Macro:   334                                    90
+Chain:   360                                    40
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 130
+Tape copies: 0
+Elapsed time: 0.002775907516479492
+00^inf 01^1 21^7 (21) B> 22^1 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    131  00^inf 01^1 21^8 (22) A> 12^2 21^2 22^2 11^1 22^1 00^inf (2, 696)
+
+         Steps:                     Times Applied:
+Total:   696                                   131
+Macro:   336                                    91
+Chain:   360                                    40
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 131
+Tape copies: 0
+Elapsed time: 0.0027968883514404297
+00^inf 01^1 21^8 (22) A> 12^2 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    132  00^inf 01^1 21^8 <A (11) 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (3, 699)
+
+         Steps:                     Times Applied:
+Total:   699                                   132
+Macro:   339                                    92
+Chain:   360                                    40
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 132
+Tape copies: 0
+Elapsed time: 0.002816915512084961
+00^inf 01^1 21^8 <A (11) 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    133  00^inf 01^1 21^7 <A (12) 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (2, 701)
+
+         Steps:                     Times Applied:
+Total:   701                                   133
+Macro:   341                                    93
+Chain:   360                                    40
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 133
+Tape copies: 0
+Elapsed time: 0.0028378963470458984
+00^inf 01^1 21^7 <A (12) 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    134  00^inf 01^1 <A (12) 12^7 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (14, 715)
+
+         Steps:                     Times Applied:
+Total:   715                                   134
+Macro:   341                                    93
+Chain:   374                                    41
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 134
+Tape copies: 0
+Elapsed time: 0.002858877182006836
+00^inf 01^1 <A (12) 12^7 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    135  00^inf 12^1 (12) C> 12^7 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (7, 722)
+
+         Steps:                     Times Applied:
+Total:   722                                   135
+Macro:   348                                    94
+Chain:   374                                    41
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 135
+Tape copies: 0
+Elapsed time: 0.002885103225708008
+00^inf 12^1 (12) C> 12^7 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    136  00^inf 12^8 (12) C> 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (28, 750)
+
+         Steps:                     Times Applied:
+Total:   750                                   136
+Macro:   348                                    94
+Chain:   402                                    42
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 136
+Tape copies: 0
+Elapsed time: 0.0029077529907226562
+00^inf 12^8 (12) C> 11^1 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    137  00^inf 12^9 (10) A> 22^1 12^1 21^2 22^2 11^1 22^1 00^inf (4, 754)
+
+         Steps:                     Times Applied:
+Total:   754                                   137
+Macro:   352                                    95
+Chain:   402                                    42
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 137
+Tape copies: 0
+Elapsed time: 0.0029289722442626953
+00^inf 12^9 (10) A> 22^1 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    138  00^inf 12^9 11^1 (10) A> 12^1 21^2 22^2 11^1 22^1 00^inf (6, 760)
+
+         Steps:                     Times Applied:
+Total:   760                                   138
+Macro:   352                                    95
+Chain:   408                                    43
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 138
+Tape copies: 0
+Elapsed time: 0.0029489994049072266
+00^inf 12^9 11^1 (10) A> 12^1 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 35  =  35
+    139  00^inf 12^9 11^2 (22) A> 21^2 22^2 11^1 22^1 00^inf (4, 764)
+
+         Steps:                     Times Applied:
+Total:   764                                   139
+Macro:   356                                    96
+Chain:   408                                    43
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 139
+Tape copies: 0
+Elapsed time: 0.0029680728912353516
+00^inf 12^9 11^2 (22) A> 21^2 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    140  00^inf 12^9 11^2 <A (11) 11^1 21^1 22^2 11^1 22^1 00^inf (3, 767)
+
+         Steps:                     Times Applied:
+Total:   767                                   140
+Macro:   359                                    97
+Chain:   408                                    43
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 140
+Tape copies: 0
+Elapsed time: 0.002986907958984375
+00^inf 12^9 11^2 <A (11) 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    141  00^inf 12^9 11^1 <A (22) 11^2 21^1 22^2 11^1 22^1 00^inf (2, 769)
+
+         Steps:                     Times Applied:
+Total:   769                                   141
+Macro:   361                                    98
+Chain:   408                                    43
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 141
+Tape copies: 0
+Elapsed time: 0.0030057430267333984
+00^inf 12^9 11^1 <A (22) 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    142  00^inf 12^9 <A (22) 22^1 11^2 21^1 22^2 11^1 22^1 00^inf (2, 771)
+
+         Steps:                     Times Applied:
+Total:   771                                   142
+Macro:   361                                    98
+Chain:   410                                    44
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 142
+Tape copies: 0
+Elapsed time: 0.0030257701873779297
+00^inf 12^9 <A (22) 22^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    143  00^inf 12^8 <A (21) 22^2 11^2 21^1 22^2 11^1 22^1 00^inf (2, 773)
+
+         Steps:                     Times Applied:
+Total:   773                                   143
+Macro:   363                                    99
+Chain:   410                                    44
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 143
+Tape copies: 0
+Elapsed time: 0.0030450820922851562
+00^inf 12^8 <A (21) 22^2 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    144  00^inf <A (21) 21^8 22^2 11^2 21^1 22^2 11^1 22^1 00^inf (16, 789)
+
+         Steps:                     Times Applied:
+Total:   789                                   144
+Macro:   363                                    99
+Chain:   426                                    45
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 144
+Tape copies: 0
+Elapsed time: 0.0030639171600341797
+00^inf <A (21) 21^8 22^2 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 36  =  36
+    145  00^inf 01^1 (21) B> 21^8 22^2 11^2 21^1 22^2 11^1 22^1 00^inf (5, 794)
+
+         Steps:                     Times Applied:
+Total:   794                                   145
+Macro:   368                                   100
+Chain:   426                                    45
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 145
+Tape copies: 0
+Elapsed time: 0.003083944320678711
+00^inf 01^1 (21) B> 21^8 22^2 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    146  00^inf 01^1 21^8 (21) B> 22^2 11^2 21^1 22^2 11^1 22^1 00^inf (32, 826)
+
+         Steps:                     Times Applied:
+Total:   826                                   146
+Macro:   368                                   100
+Chain:   458                                    46
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 146
+Tape copies: 0
+Elapsed time: 0.003103971481323242
+00^inf 01^1 21^8 (21) B> 22^2 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    147  00^inf 01^1 21^9 (22) A> 22^1 11^2 21^1 22^2 11^1 22^1 00^inf (2, 828)
+
+         Steps:                     Times Applied:
+Total:   828                                   147
+Macro:   370                                   101
+Chain:   458                                    46
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 147
+Tape copies: 0
+Elapsed time: 0.003123760223388672
+00^inf 01^1 21^9 (22) A> 22^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    148  00^inf 01^1 21^9 <A (11) 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (3, 831)
+
+         Steps:                     Times Applied:
+Total:   831                                   148
+Macro:   373                                   102
+Chain:   458                                    46
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 148
+Tape copies: 0
+Elapsed time: 0.003144979476928711
+00^inf 01^1 21^9 <A (11) 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    149  00^inf 01^1 21^8 <A (12) 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (2, 833)
+
+         Steps:                     Times Applied:
+Total:   833                                   149
+Macro:   375                                   103
+Chain:   458                                    46
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 149
+Tape copies: 0
+Elapsed time: 0.0031709671020507812
+00^inf 01^1 21^8 <A (12) 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    150  00^inf 01^1 <A (12) 12^8 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (16, 849)
+
+         Steps:                     Times Applied:
+Total:   849                                   150
+Macro:   375                                   103
+Chain:   474                                    47
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 150
+Tape copies: 0
+Elapsed time: 0.0031919479370117188
+00^inf 01^1 <A (12) 12^8 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    151  00^inf 12^1 (12) C> 12^8 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (7, 856)
+
+         Steps:                     Times Applied:
+Total:   856                                   151
+Macro:   382                                   104
+Chain:   474                                    47
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 151
+Tape copies: 0
+Elapsed time: 0.0032138824462890625
+00^inf 12^1 (12) C> 12^8 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    152  00^inf 12^9 (12) C> 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (32, 888)
+
+         Steps:                     Times Applied:
+Total:   888                                   152
+Macro:   382                                   104
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 152
+Tape copies: 0
+Elapsed time: 0.00323486328125
+00^inf 12^9 (12) C> 11^1 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    153  00^inf 12^10 (10) A> 12^1 11^2 21^1 22^2 11^1 22^1 00^inf (4, 892)
+
+         Steps:                     Times Applied:
+Total:   892                                   153
+Macro:   386                                   105
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 153
+Tape copies: 0
+Elapsed time: 0.003256082534790039
+00^inf 12^10 (10) A> 12^1 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 37  =  37
+    154  00^inf 12^10 11^1 (22) A> 11^2 21^1 22^2 11^1 22^1 00^inf (4, 896)
+
+         Steps:                     Times Applied:
+Total:   896                                   154
+Macro:   390                                   106
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 154
+Tape copies: 0
+Elapsed time: 0.0032749176025390625
+00^inf 12^10 11^1 (22) A> 11^2 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    155  00^inf 12^10 11^1 <A (11) 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (3, 899)
+
+         Steps:                     Times Applied:
+Total:   899                                   155
+Macro:   393                                   107
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 155
+Tape copies: 0
+Elapsed time: 0.0032949447631835938
+00^inf 12^10 11^1 <A (11) 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    156  00^inf 12^10 <A (22) 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 901)
+
+         Steps:                     Times Applied:
+Total:   901                                   156
+Macro:   395                                   108
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 156
+Tape copies: 0
+Elapsed time: 0.0033159255981445312
+00^inf 12^10 <A (22) 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    157  00^inf 12^9 <A (21) 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 903)
+
+         Steps:                     Times Applied:
+Total:   903                                   157
+Macro:   397                                   109
+Chain:   506                                    48
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 157
+Tape copies: 0
+Elapsed time: 0.0033369064331054688
+00^inf 12^9 <A (21) 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    158  00^inf <A (21) 21^9 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (18, 921)
+
+         Steps:                     Times Applied:
+Total:   921                                   158
+Macro:   397                                   109
+Chain:   524                                    49
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 158
+Tape copies: 0
+Elapsed time: 0.0033578872680664062
+00^inf <A (21) 21^9 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 38  =  38
+    159  00^inf 01^1 (21) B> 21^9 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (5, 926)
+
+         Steps:                     Times Applied:
+Total:   926                                   159
+Macro:   402                                   110
+Chain:   524                                    49
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 159
+Tape copies: 0
+Elapsed time: 0.00337982177734375
+00^inf 01^1 (21) B> 21^9 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    160  00^inf 01^1 21^9 (21) B> 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (36, 962)
+
+         Steps:                     Times Applied:
+Total:   962                                   160
+Macro:   402                                   110
+Chain:   560                                    50
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 160
+Tape copies: 0
+Elapsed time: 0.0034029483795166016
+00^inf 01^1 21^9 (21) B> 22^1 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    161  00^inf 01^1 21^10 (22) A> 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 964)
+
+         Steps:                     Times Applied:
+Total:   964                                   161
+Macro:   404                                   111
+Chain:   560                                    50
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 161
+Tape copies: 0
+Elapsed time: 0.0034248828887939453
+00^inf 01^1 21^10 (22) A> 11^1 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    162  00^inf 01^1 21^10 <A (11) 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (3, 967)
+
+         Steps:                     Times Applied:
+Total:   967                                   162
+Macro:   407                                   112
+Chain:   560                                    50
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 162
+Tape copies: 0
+Elapsed time: 0.003454923629760742
+00^inf 01^1 21^10 <A (11) 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    163  00^inf 01^1 21^9 <A (12) 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (2, 969)
+
+         Steps:                     Times Applied:
+Total:   969                                   163
+Macro:   409                                   113
+Chain:   560                                    50
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 163
+Tape copies: 0
+Elapsed time: 0.0034759044647216797
+00^inf 01^1 21^9 <A (12) 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    164  00^inf 01^1 <A (12) 12^9 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (18, 987)
+
+         Steps:                     Times Applied:
+Total:   987                                   164
+Macro:   409                                   113
+Chain:   578                                    51
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 164
+Tape copies: 0
+Elapsed time: 0.0034978389739990234
+00^inf 01^1 <A (12) 12^9 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    165  00^inf 12^1 (12) C> 12^9 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (7, 994)
+
+         Steps:                     Times Applied:
+Total:   994                                   165
+Macro:   416                                   114
+Chain:   578                                    51
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 165
+Tape copies: 0
+Elapsed time: 0.0035200119018554688
+00^inf 12^1 (12) C> 12^9 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    166  00^inf 12^10 (12) C> 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (36, 1030)
+
+         Steps:                     Times Applied:
+Total:   1_030                                 166
+Macro:   416                                   114
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 166
+Tape copies: 0
+Elapsed time: 0.0035419464111328125
+00^inf 12^10 (12) C> 11^1 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    167  00^inf 12^11 (10) A> 21^2 11^1 21^1 22^2 11^1 22^1 00^inf (4, 1034)
+
+         Steps:                     Times Applied:
+Total:   1_034                                 167
+Macro:   420                                   115
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 167
+Tape copies: 0
+Elapsed time: 0.0035660266876220703
+00^inf 12^11 (10) A> 21^2 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 39  =  39
+    168  00^inf 12^11 11^1 (12) C> 21^1 11^1 21^1 22^2 11^1 22^1 00^inf (6, 1040)
+
+         Steps:                     Times Applied:
+Total:   1_040                                 168
+Macro:   426                                   116
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 168
+Tape copies: 0
+Elapsed time: 0.0035860538482666016
+00^inf 12^11 11^1 (12) C> 21^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    169  00^inf 12^11 11^1 <A (21) 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (5, 1045)
+
+         Steps:                     Times Applied:
+Total:   1_045                                 169
+Macro:   431                                   117
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 169
+Tape copies: 0
+Elapsed time: 0.0036170482635498047
+00^inf 12^11 11^1 <A (21) 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    170  00^inf 12^11 <A (22) 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 1047)
+
+         Steps:                     Times Applied:
+Total:   1_047                                 170
+Macro:   433                                   118
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 170
+Tape copies: 0
+Elapsed time: 0.003638029098510742
+00^inf 12^11 <A (22) 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    171  00^inf 12^10 <A (21) 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 1049)
+
+         Steps:                     Times Applied:
+Total:   1_049                                 171
+Macro:   435                                   119
+Chain:   614                                    52
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 171
+Tape copies: 0
+Elapsed time: 0.003659963607788086
+00^inf 12^10 <A (21) 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    172  00^inf <A (21) 21^10 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (20, 1069)
+
+         Steps:                     Times Applied:
+Total:   1_069                                 172
+Macro:   435                                   119
+Chain:   634                                    53
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 172
+Tape copies: 0
+Elapsed time: 0.0036809444427490234
+00^inf <A (21) 21^10 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 40  =  40
+    173  00^inf 01^1 (21) B> 21^10 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (5, 1074)
+
+         Steps:                     Times Applied:
+Total:   1_074                                 173
+Macro:   440                                   120
+Chain:   634                                    53
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 173
+Tape copies: 0
+Elapsed time: 0.003702878952026367
+00^inf 01^1 (21) B> 21^10 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    174  00^inf 01^1 21^10 (21) B> 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (40, 1114)
+
+         Steps:                     Times Applied:
+Total:   1_114                                 174
+Macro:   440                                   120
+Chain:   674                                    54
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 174
+Tape copies: 0
+Elapsed time: 0.0037260055541992188
+00^inf 01^1 21^10 (21) B> 22^1 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    175  00^inf 01^1 21^11 (22) A> 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 1116)
+
+         Steps:                     Times Applied:
+Total:   1_116                                 175
+Macro:   442                                   121
+Chain:   674                                    54
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 175
+Tape copies: 0
+Elapsed time: 0.0037529468536376953
+00^inf 01^1 21^11 (22) A> 21^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    176  00^inf 01^1 21^11 <A (11) 11^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (3, 1119)
+
+         Steps:                     Times Applied:
+Total:   1_119                                 176
+Macro:   445                                   122
+Chain:   674                                    54
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 176
+Tape copies: 0
+Elapsed time: 0.003774881362915039
+00^inf 01^1 21^11 <A (11) 11^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    177  00^inf 01^1 21^10 <A (12) 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (2, 1121)
+
+         Steps:                     Times Applied:
+Total:   1_121                                 177
+Macro:   447                                   123
+Chain:   674                                    54
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 177
+Tape copies: 0
+Elapsed time: 0.003796815872192383
+00^inf 01^1 21^10 <A (12) 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    178  00^inf 01^1 <A (12) 12^10 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (20, 1141)
+
+         Steps:                     Times Applied:
+Total:   1_141                                 178
+Macro:   447                                   123
+Chain:   694                                    55
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 178
+Tape copies: 0
+Elapsed time: 0.003818988800048828
+00^inf 01^1 <A (12) 12^10 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    179  00^inf 12^1 (12) C> 12^10 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (7, 1148)
+
+         Steps:                     Times Applied:
+Total:   1_148                                 179
+Macro:   454                                   124
+Chain:   694                                    55
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 179
+Tape copies: 0
+Elapsed time: 0.003840923309326172
+00^inf 12^1 (12) C> 12^10 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    180  00^inf 12^11 (12) C> 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (40, 1188)
+
+         Steps:                     Times Applied:
+Total:   1_188                                 180
+Macro:   454                                   124
+Chain:   734                                    56
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 180
+Tape copies: 0
+Elapsed time: 0.0038619041442871094
+00^inf 12^11 (12) C> 11^2 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    181  00^inf 12^12 (10) A> 11^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (4, 1192)
+
+         Steps:                     Times Applied:
+Total:   1_192                                 181
+Macro:   458                                   125
+Chain:   734                                    56
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 181
+Tape copies: 0
+Elapsed time: 0.003882884979248047
+00^inf 12^12 (10) A> 11^1 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    182  00^inf 12^12 11^1 (21) B> 12^1 11^1 21^1 22^2 11^1 22^1 00^inf (6, 1198)
+
+         Steps:                     Times Applied:
+Total:   1_198                                 182
+Macro:   464                                   126
+Chain:   734                                    56
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 182
+Tape copies: 0
+Elapsed time: 0.003902912139892578
+00^inf 12^12 11^1 (21) B> 12^1 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    183  00^inf 12^12 11^1 21^1 (10) A> 11^1 21^1 22^2 11^1 22^1 00^inf (4, 1202)
+
+         Steps:                     Times Applied:
+Total:   1_202                                 183
+Macro:   468                                   127
+Chain:   734                                    56
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 183
+Tape copies: 0
+Elapsed time: 0.003923892974853516
+00^inf 12^12 11^1 21^1 (10) A> 11^1 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 41  =  41
+    184  00^inf 12^12 11^1 21^1 11^1 (21) B> 21^1 22^2 11^1 22^1 00^inf (6, 1208)
+
+         Steps:                     Times Applied:
+Total:   1_208                                 184
+Macro:   474                                   128
+Chain:   734                                    56
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 184
+Tape copies: 0
+Elapsed time: 0.003943920135498047
+00^inf 12^12 11^1 21^1 11^1 (21) B> 21^1 22^2 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    185  00^inf 12^12 11^1 21^1 11^1 21^1 (21) B> 22^2 11^1 22^1 00^inf (4, 1212)
+
+         Steps:                     Times Applied:
+Total:   1_212                                 185
+Macro:   474                                   128
+Chain:   738                                    57
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 185
+Tape copies: 0
+Elapsed time: 0.003964900970458984
+00^inf 12^12 11^1 21^1 11^1 21^1 (21) B> 22^2 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    186  00^inf 12^12 11^1 21^1 11^1 21^2 (22) A> 22^1 11^1 22^1 00^inf (2, 1214)
+
+         Steps:                     Times Applied:
+Total:   1_214                                 186
+Macro:   476                                   129
+Chain:   738                                    57
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 186
+Tape copies: 0
+Elapsed time: 0.003985881805419922
+00^inf 12^12 11^1 21^1 11^1 21^2 (22) A> 22^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    187  00^inf 12^12 11^1 21^1 11^1 21^2 <A (11) 12^1 11^1 22^1 00^inf (3, 1217)
+
+         Steps:                     Times Applied:
+Total:   1_217                                 187
+Macro:   479                                   130
+Chain:   738                                    57
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 187
+Tape copies: 0
+Elapsed time: 0.004006147384643555
+00^inf 12^12 11^1 21^1 11^1 21^2 <A (11) 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    188  00^inf 12^12 11^1 21^1 11^1 21^1 <A (12) 11^1 12^1 11^1 22^1 00^inf (2, 1219)
+
+         Steps:                     Times Applied:
+Total:   1_219                                 188
+Macro:   481                                   131
+Chain:   738                                    57
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 188
+Tape copies: 0
+Elapsed time: 0.00403285026550293
+00^inf 12^12 11^1 21^1 11^1 21^1 <A (12) 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    189  00^inf 12^12 11^1 21^1 11^1 <A (12) 12^1 11^1 12^1 11^1 22^1 00^inf (2, 1221)
+
+         Steps:                     Times Applied:
+Total:   1_221                                 189
+Macro:   481                                   131
+Chain:   740                                    58
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 189
+Tape copies: 0
+Elapsed time: 0.004055023193359375
+00^inf 12^12 11^1 21^1 11^1 <A (12) 12^1 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    190  00^inf 12^12 11^1 21^1 <A (22) 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1223)
+
+         Steps:                     Times Applied:
+Total:   1_223                                 190
+Macro:   483                                   132
+Chain:   740                                    58
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 190
+Tape copies: 0
+Elapsed time: 0.0040760040283203125
+00^inf 12^12 11^1 21^1 <A (22) 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    191  00^inf 12^12 11^1 <A (12) 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1225)
+
+         Steps:                     Times Applied:
+Total:   1_225                                 191
+Macro:   485                                   133
+Chain:   740                                    58
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 191
+Tape copies: 0
+Elapsed time: 0.00409698486328125
+00^inf 12^12 11^1 <A (12) 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    192  00^inf 12^12 <A (22) 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1227)
+
+         Steps:                     Times Applied:
+Total:   1_227                                 192
+Macro:   487                                   134
+Chain:   740                                    58
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 192
+Tape copies: 0
+Elapsed time: 0.004117012023925781
+00^inf 12^12 <A (22) 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    193  00^inf 12^11 <A (21) 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1229)
+
+         Steps:                     Times Applied:
+Total:   1_229                                 193
+Macro:   489                                   135
+Chain:   740                                    58
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 193
+Tape copies: 0
+Elapsed time: 0.004137992858886719
+00^inf 12^11 <A (21) 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    194  00^inf <A (21) 21^11 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (22, 1251)
+
+         Steps:                     Times Applied:
+Total:   1_251                                 194
+Macro:   489                                   135
+Chain:   762                                    59
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 194
+Tape copies: 0
+Elapsed time: 0.0041599273681640625
+00^inf <A (21) 21^11 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 42  =  42
+    195  00^inf 01^1 (21) B> 21^11 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (5, 1256)
+
+         Steps:                     Times Applied:
+Total:   1_256                                 195
+Macro:   494                                   136
+Chain:   762                                    59
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 195
+Tape copies: 0
+Elapsed time: 0.004181861877441406
+00^inf 01^1 (21) B> 21^11 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+    196  00^inf 01^1 21^11 (21) B> 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (44, 1300)
+
+         Steps:                     Times Applied:
+Total:   1_300                                 196
+Macro:   494                                   136
+Chain:   806                                    60
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 196
+Tape copies: 0
+Elapsed time: 0.0042040348052978516
+00^inf 01^1 21^11 (21) B> 22^1 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+    197  00^inf 01^1 21^12 (22) A> 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1302)
+
+         Steps:                     Times Applied:
+Total:   1_302                                 197
+Macro:   496                                   137
+Chain:   806                                    60
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 197
+Tape copies: 0
+Elapsed time: 0.0042269229888916016
+00^inf 01^1 21^12 (22) A> 12^1 22^1 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+    198  00^inf 01^1 21^12 <A (11) 22^2 12^2 11^1 12^1 11^1 22^1 00^inf (3, 1305)
+
+         Steps:                     Times Applied:
+Total:   1_305                                 198
+Macro:   499                                   138
+Chain:   806                                    60
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 198
+Tape copies: 0
+Elapsed time: 0.004247903823852539
+00^inf 01^1 21^12 <A (11) 22^2 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+    199  00^inf 01^1 21^11 <A (12) 11^1 22^2 12^2 11^1 12^1 11^1 22^1 00^inf (2, 1307)
+
+         Steps:                     Times Applied:
+Total:   1_307                                 199
+Macro:   501                                   139
+Chain:   806                                    60
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 199
+Tape copies: 0
+Elapsed time: 0.0042688846588134766
+00^inf 01^1 21^11 <A (12) 11^1 22^2 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+    200  00^inf 01^1 <A (12) 12^11 11^1 22^2 12^2 11^1 12^1 11^1 22^1 00^inf (22, 1329)
+
+         Steps:                     Times Applied:
+Total:   1_329                                 200
+Macro:   501                                   139
+Chain:   828                                    61
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 200
+Tape copies: 0
+Elapsed time: 0.004294872283935547
+00^inf 01^1 <A (12) 12^11 11^1 22^2 12^2 11^1 12^1 11^1 22^1 00^inf
+Num Nonzeros: 43  =  43
+
+
+Maximum number of loops (200) reached

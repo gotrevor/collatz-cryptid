@@ -1,0 +1,50 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 1LB | 2LC |
+   +---+-----+-----+-----+
+   | B | 1LA | 2RB | 1RB |
+   +---+-----+-----+-----+
+   | C | --- | 0LA | 2LA |
+   +---+-----+-----+-----+
+
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 1.5020370483398438e-05
+000000^inf (000000) A> 000000^inf
+Num Nonzeros: 0
+
+         Steps:                     Times Applied:
+Total:   184_355                             20000
+Macro:   183_631                             19910
+Chain:   724                                    90
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 20_000
+Tape copies: 0
+Elapsed time: 0.10755300521850586
+000000^inf 122222^1 221111^1 122211^1 222212^1 212212^1 222212^2 221222^1 122212^1 221222^1 122212^1 221222^1 <A (022202) 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 220222^1 022202^1 100000^1 000000^inf
+Num Nonzeros: 302  =  302
+
+
+Maximum number of loops (20000) reached

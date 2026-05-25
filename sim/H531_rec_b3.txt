@@ -1,0 +1,50 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 2LA | 1LA |
+   +---+-----+-----+-----+
+   | B | 2LA | 0RA | 2RC |
+   +---+-----+-----+-----+
+   | C | --- | 0LC | 2RA |
+   +---+-----+-----+-----+
+
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 1.5974044799804688e-05
+000^inf (000) A> 000^inf
+Num Nonzeros: 0
+
+         Steps:                     Times Applied:
+Total:   92_210                              20000
+Macro:   91_908                              19950
+Chain:   302                                    50
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 20_000
+Tape copies: 0
+Elapsed time: 0.14124822616577148
+000^inf 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 (121) B> 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 212^1 121^1 222^1 211^1 121^2 221^2 212^1 211^1 220^1 000^inf
+Num Nonzeros: 269  =  269
+
+
+Maximum number of loops (20000) reached

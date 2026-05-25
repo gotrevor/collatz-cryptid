@@ -1,0 +1,50 @@
+Transition table:
+
+       +-----+-----+-----+
+       |  0  |  1  |  2  |
+   +---+-----+-----+-----+
+   | A | 1RB | 1LB | 2LC |
+   +---+-----+-----+-----+
+   | B | 1LA | 2RB | 1RB |
+   +---+-----+-----+-----+
+   | C | --- | 0LA | 2LA |
+   +---+-----+-----+-----+
+
+
+
+         Steps:                     Times Applied:
+Total:   0                                       0
+Macro:   0                                       0
+Chain:   0                                       0
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 0
+Tape copies: 0
+Elapsed time: 1.6927719116210938e-05
+0000^inf (0000) A> 0000^inf
+Num Nonzeros: 0
+
+         Steps:                     Times Applied:
+Total:   6_482_892                           20000
+Macro:   110_780                             15250
+Chain:   6_372_112                            4750
+Rule:    0                                       0
+Rules proven: 0
+Linear rules proven: 0
+Exponential rules proven: 0
+General rules proven: 0
+Collatz rules: 0
+Failed proofs: 0
+Prover num past configs: 20_000
+Tape copies: 0
+Elapsed time: 0.0556330680847168
+0000^inf 0012^1 2112^1 2222^1 2212^1 2121^1 1111^1 1112^1 2212^2 1222^1 2111^1 2221^1 1122^1 (2111) B> 0222^515 0210^1 0000^inf
+Num Nonzeros: 1_601  =  1_601
+
+
+Maximum number of loops (20000) reached

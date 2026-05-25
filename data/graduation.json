@@ -1,0 +1,142 @@
+[
+  {
+    "k": 1,
+    "species": 1,
+    "graduated": 0,
+    "ungraduated": 1,
+    "rate": 0.0
+  },
+  {
+    "k": 2,
+    "species": 3,
+    "graduated": 1,
+    "ungraduated": 2,
+    "rate": 0.3333333333333333
+  },
+  {
+    "k": 3,
+    "species": 7,
+    "graduated": 4,
+    "ungraduated": 3,
+    "rate": 0.5714285714285714
+  },
+  {
+    "k": 4,
+    "species": 15,
+    "graduated": 11,
+    "ungraduated": 4,
+    "rate": 0.7333333333333333
+  },
+  {
+    "k": 5,
+    "species": 31,
+    "graduated": 26,
+    "ungraduated": 5,
+    "rate": 0.8387096774193549
+  },
+  {
+    "k": 6,
+    "species": 63,
+    "graduated": 54,
+    "ungraduated": 9,
+    "rate": 0.8571428571428571
+  },
+  {
+    "k": 7,
+    "species": 127,
+    "graduated": 113,
+    "ungraduated": 14,
+    "rate": 0.889763779527559
+  },
+  {
+    "k": 8,
+    "species": 255,
+    "graduated": 235,
+    "ungraduated": 20,
+    "rate": 0.9215686274509803
+  },
+  {
+    "k": 9,
+    "species": 511,
+    "graduated": 472,
+    "ungraduated": 39,
+    "rate": 0.923679060665362
+  },
+  {
+    "k": 10,
+    "species": 1023,
+    "graduated": 958,
+    "ungraduated": 65,
+    "rate": 0.9364613880742912
+  },
+  {
+    "k": 11,
+    "species": 2047,
+    "graduated": 1918,
+    "ungraduated": 129,
+    "rate": 0.936980947728383
+  },
+  {
+    "k": 12,
+    "species": 4095,
+    "graduated": 3868,
+    "ungraduated": 227,
+    "rate": 0.9445665445665445
+  },
+  {
+    "k": 13,
+    "species": 8191,
+    "graduated": 7823,
+    "ungraduated": 368,
+    "rate": 0.9550726407032109
+  },
+  {
+    "k": 14,
+    "species": 16383,
+    "graduated": 15648,
+    "ungraduated": 735,
+    "rate": 0.9551364219007508
+  },
+  {
+    "k": 15,
+    "species": 32767,
+    "graduated": 31471,
+    "ungraduated": 1296,
+    "rate": 0.9604480117191077
+  },
+  {
+    "k": 16,
+    "species": 65535,
+    "graduated": 63420,
+    "ungraduated": 2115,
+    "rate": 0.9677271686884871
+  },
+  {
+    "k": 17,
+    "species": 131071,
+    "graduated": 126842,
+    "ungraduated": 4229,
+    "rate": 0.9677350443652677
+  },
+  {
+    "k": 18,
+    "species": 262143,
+    "graduated": 254647,
+    "ungraduated": 7496,
+    "rate": 0.9714049202153023
+  },
+  {
+    "k": 19,
+    "species": 524287,
+    "graduated": 509296,
+    "ungraduated": 14991,
+    "rate": 0.9714068821084635
+  },
+  {
+    "k": 20,
+    "species": 1048575,
+    "graduated": 1021246,
+    "ungraduated": 27329,
+    "rate": 0.9739370097513291
+  }
+]
