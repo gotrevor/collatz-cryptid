@@ -1,6 +1,7 @@
 import Collatz.Bigfoot.Machine
 import Collatz.Bigfoot.Dynamics
 import Collatz.Bigfoot.Hypothesis
+import Collatz.Bigfoot.Encoding
 
 /-!
 # The Bigfoot reduction interface
@@ -150,14 +151,20 @@ theorem toNeverHalts (R : Reduction) (h : Hypothesis) :
 
 end Reduction
 
-/-- 🚧 **Phase D obligation**: exhibit a concrete Bigfoot reduction.
+/-- 🚧 **Phase D obligation**: a concrete Bigfoot reduction.
 
-This is a `sorry` on a structured object: discharging it means producing
-four pieces - `enc`, `cost`, `cost_pos`, `bootstrap`, `sim` - each a
-labelled, type-checked mathematical object. Cf. the *monolithic* `sorry`
-in the old `MachineNeverHalts`, which gave a future reader no entry
-point. -/
-noncomputable def bigfootReduction : Reduction := sorry
+The encoding `enc := bigfootEnc` is concrete and verified against the
+Quick_Sim micro-trace at TM step 69 (see `Collatz/Bigfoot/Encoding.lean`).
+The remaining sorries are on `cost`, `cost_pos`, `bootstrap`, and `sim` -
+each a labelled, type-checked obligation. Cf. the *monolithic* `sorry`
+in the original `MachineNeverHalts`, which gave a future reader no
+entry point. -/
+noncomputable def bigfootReduction : Reduction where
+  enc := bigfootEnc
+  cost := sorry
+  cost_pos := sorry
+  bootstrap := sorry
+  sim := sorry
 
 /-- **The Bigfoot non-halting theorem** (target of Phase D).
 
