@@ -1,4 +1,7 @@
 import Collatz.BB
+import Collatz.BB.SideTape
+import Collatz.BB.Multistep
+import Collatz.BB.Iso
 import Collatz.Bigfoot.Machine
 import Collatz.Bigfoot.Dynamics
 
@@ -387,5 +390,33 @@ theorem bootstrap_full :
     · rw [hs, henc_state]
     · funext i; exact htape i
     · rw [hp, henc_pos]
+
+/-! ## Side-tape lift
+
+The `step_toSide` iso in `BB/Iso.lean` lets us reuse the ℤ-tape
+bootstrap as the starting point for a `Cfg2`-side proof — the natural
+home for the `busycoq`-style tactic library (`tm_step`, `tm_follow`,
+`progress_nonhalt_simple`).
+-/
+
+/-- The Bigfoot bootstrap, in side-tape form. After 69 micro-steps from
+`Cfg2.blank`, Bigfoot is at `Cfg.toSide (bigfootEnc Dyn.init)`. -/
+theorem bootstrap_cfg2 :
+    BB.stepN2 machine 69 BB.Cfg2.blank =
+      some (BB.Cfg.toSide (bigfootEnc Dyn.init)) := by
+  have h := bootstrap_full
+  have := BB.stepN2_of_stepN_toSide (M := machine) (n := 69)
+    (c := BB.Cfg.blank) (c' := bigfootEnc Dyn.init) h
+  rwa [BB.Cfg.toSide_blank] at this
+
+/-- The bootstrap promoted to the `Multistep` relational form used by
+`tm_follow` and friends. -/
+theorem bootstrap_multistep :
+    BB.Multistep machine BB.Cfg2.blank
+      (BB.Cfg.toSide (bigfootEnc Dyn.init)) := by
+  have h := bootstrap_full
+  have := BB.multistep_toSide (M := machine) (n := 69)
+    (c := BB.Cfg.blank) (c' := bigfootEnc Dyn.init) h
+  rwa [BB.Cfg.toSide_blank] at this
 
 end Collatz.Bigfoot

@@ -8,3 +8,5 @@ import Collatz.Korec
 import Collatz.BB
 import Collatz.Bigfoot
 import Collatz.Holdout153
+import Collatz.FatCoyote
+import Collatz.WilyCoyote

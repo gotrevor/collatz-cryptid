@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env -S uv run python3
 """Stream Quick_Sim on 397 for very long traces, extracting only the
 metrics we need - in O(1) memory and writing periodic checkpoints.
 
@@ -32,7 +32,8 @@ from pathlib import Path
 
 QS = os.path.expanduser("~/src/busy-beaver/Code/Quick_Sim.py")
 PY_BB = os.path.expanduser("~/.venvs/bb/bin/python")
-TM_397 = "1RB1LB2LC_1LA2RB1RB_---0LA2LA"
+TM_397 = "1RB1LB2LC_1LA2RB1RB_---0LA2LA"  # Fat Coyote — default for backwards compat
+TM_531 = "1RB2LA1LA_2LA0RA2RC_---0LC2RA"  # Wily Coyote
 OUT_DIR = Path(os.path.expanduser("~/src/collatz-cryptid/sim"))
 
 INDEXED = re.compile(
@@ -90,10 +91,13 @@ RIGHT_PATTERN = {
 
 
 class Burn:
-    def __init__(self, out_path, checkpoint_every=500_000, snapshot_every=200_000):
+    def __init__(self, out_path, checkpoint_every=500_000, snapshot_every=200_000,
+                 capture_reversals=False, reversal_sample_rate=1):
         self.out_path = out_path
         self.checkpoint_every = checkpoint_every
         self.snapshot_every = snapshot_every
+        self.capture_reversals = capture_reversals
+        self.reversal_sample_rate = reversal_sample_rate
         self.last_left_len = None
         self.last_action = None
         self.cur_run_kind = None
@@ -106,6 +110,11 @@ class Burn:
         self.N_history = []  # (loop, head_state, N)
         self.snapshots = []  # full config strings at snapshot points
         self.length_history = []  # (loop, |left|, |right|) sampled every snapshot_every
+        self.peaks = []   # push->pop reversal points (full configs, sampled)
+        self.valleys = []  # pop->push reversal points (full configs, sampled)
+        self.peaks_seen = 0  # total peaks observed (before sampling)
+        self.valleys_seen = 0  # total valleys observed (before sampling)
+        self.prev_config = None  # last seen config dict (for reversal capture)
 
     def feed(self, loop, tokens, raw_line):
         info = split_at_head(tokens)
@@ -118,6 +127,19 @@ class Burn:
         right_len = len(right)
 
         self.head_count[(head_dir, head_state, cell)] += 1
+
+        # Build current config dict (used for reversal capture)
+        current = None
+        if self.capture_reversals:
+            current = {
+                "loop": loop,
+                "tokens": tokens,
+                "head_dir": head_dir,
+                "head_state": head_state,
+                "cell": cell,
+                "left_len": left_len,
+                "right_len": right_len,
+            }
 
         # Action detection
         if self.last_left_len is not None:
@@ -135,13 +157,25 @@ class Burn:
                 else:
                     if self.cur_run_kind == "push":
                         self.push_runs.append(self.cur_run_len)
+                        # The just-ended push run's last config is a PEAK.
+                        if self.capture_reversals and self.prev_config is not None:
+                            self.peaks_seen += 1
+                            if self.peaks_seen % self.reversal_sample_rate == 0:
+                                self.peaks.append(self.prev_config)
                     elif self.cur_run_kind == "pop":
                         self.pop_runs.append(self.cur_run_len)
+                        # The just-ended pop run's last config is a VALLEY.
+                        if self.capture_reversals and self.prev_config is not None:
+                            self.valleys_seen += 1
+                            if self.valleys_seen % self.reversal_sample_rate == 0:
+                                self.valleys.append(self.prev_config)
                     self.cur_run_kind = action
                     self.cur_run_len = 1
 
         self.last_left_len = left_len
         self.loop_count = loop
+        if self.capture_reversals:
+            self.prev_config = current
 
         # Periodic sampling
         if loop % self.snapshot_every == 0 and loop > 0:
@@ -203,12 +237,28 @@ class Burn:
                        "head_count": [(list(k), v) for k, v in self.head_count.most_common()]
                        }, f)
 
+        # Reversal-capture side file matches sim/397_reversals.json format.
+        if self.capture_reversals:
+            side_rev = self.out_path.with_suffix(".reversals.json")
+            with open(side_rev, "w") as f:
+                json.dump({
+                    "peaks": self.peaks,
+                    "valleys": self.valleys,
+                    "peaks_seen": self.peaks_seen,
+                    "valleys_seen": self.valleys_seen,
+                    "sample_rate": self.reversal_sample_rate,
+                }, f)
+
         with open(self.out_path, "w") as f:
             json.dump(out, f, indent=2, default=str)
 
+        rev_msg = (f" peaks={len(self.peaks)}/{self.peaks_seen} "
+                   f"valleys={len(self.valleys)}/{self.valleys_seen} "
+                   f"(sample 1/{self.reversal_sample_rate})"
+                   if self.capture_reversals else "")
         print(f"[checkpoint at loop {self.loop_count}, t={out['elapsed_s']:.1f}s] "
               f"push={len(push_runs)} pop={len(pop_runs)} "
-              f"head_unique={len(self.head_count)}",
+              f"head_unique={len(self.head_count)}{rev_msg}",
               flush=True)
 
 
@@ -251,6 +301,18 @@ def main():
                         help="Output JSON path (also writes .runs.json and .snapshots.json siblings)")
     parser.add_argument("--checkpoint-every", type=int, default=500_000)
     parser.add_argument("--snapshot-every", type=int, default=200_000)
+    parser.add_argument("--capture-reversals", action="store_true",
+                        help="Also dump full configs at every push/pop reversal "
+                             "to <out>.reversals.json (matches 397_reversals.json format)")
+    parser.add_argument("--reversal-sample-rate", type=int, default=1,
+                        help="Capture 1-in-N reversals (default 1 = all). Use higher values "
+                             "for TMs with many short sweep cycles (e.g. 531 at ~60x rate of 397). "
+                             "Total counts still tracked in peaks_seen/valleys_seen.")
+    parser.add_argument("--tm", type=str, default=TM_397,
+                        help="TM string in bbchallenge notation. Default: 397 (Fat Coyote). "
+                             "RIGHT_PATTERN lookup is 397-specific; N_history will be -1 for "
+                             "unknown signatures, but reversal capture and run-length tracking "
+                             "are TM-agnostic.")
     args = parser.parse_args()
 
     out_path = Path(args.out)
@@ -265,14 +327,16 @@ def main():
         "--print-loops", "1",
         "--max-loops", str(args.max_loops),
         "--block-size", str(args.block_size),
-        TM_397,
+        args.tm,
     ]
     print(f"Launching: {' '.join(cmd)}", flush=True)
     print(f"Writing checkpoints to: {out_path}", flush=True)
 
     burn = Burn(out_path,
                 checkpoint_every=args.checkpoint_every,
-                snapshot_every=args.snapshot_every)
+                snapshot_every=args.snapshot_every,
+                capture_reversals=args.capture_reversals,
+                reversal_sample_rate=args.reversal_sample_rate)
 
     proc = subprocess.Popen(
         cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
