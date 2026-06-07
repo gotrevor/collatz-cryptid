@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Pre-commit green-build gate for a Lean project (generic).
+#
+# Why: a green build you saw five edits ago is not a green build at commit time.
+# This re-runs `lake build` synchronously when staged changes touch Lean sources
+# or build config, so a red tree cannot be committed regardless of how the commit
+# was issued (closes the "false-green trap" — commit batched ahead of the build).
+#
+# Cost: with mathlib oleans cached and the project already green, this is an
+# incremental no-op (seconds). It only does real work when your staged edit
+# actually invalidated something downstream — which is exactly when you want it.
+#
+# Bypass intentionally with `git commit --no-verify` (notes/HANDOFF-only commits)
+# — but NOT to dodge a real build failure.
+#
+# NOTE: setting core.hooksPath=.githooks replaces the global hook for this repo
+# (so the global "no commit to main" guard does not apply here — intended for
+# these solo research repos that work directly on their branch/master).
+
+set -euo pipefail
+
+repo_root="$(git rev-parse --show-toplevel)"
+cd "$repo_root"
+
+# Only build when staged changes touch Lean sources or the build config.
+if ! git diff --cached --name-only --diff-filter=ACM \
+     | grep -Eq '\.lean$|lakefile|lean-toolchain|lake-manifest'; then
+  echo "[pre-commit] No Lean changes staged — skipping build gate."
+  exit 0
+fi
+
+# Locate the Lean project (lakefile at root, or in a lean/ subdir), ignoring
+# the .lake/ package cache copies.
+if [ -f lakefile.toml ] || [ -f lakefile.lean ]; then
+  lean_dir="."
+elif [ -f lean/lakefile.toml ] || [ -f lean/lakefile.lean ]; then
+  lean_dir="lean"
+else
+  echo "[pre-commit] Could not locate a lakefile — skipping build gate." >&2
+  exit 0
+fi
+
+echo "[pre-commit] Lean sources changed — running 'lake build' in '$lean_dir/'..."
+log="$(mktemp)"
+if ( cd "$lean_dir" && lake build ) >"$log" 2>&1; then
+  jobs="$(grep -oE 'Build completed successfully \([0-9]+ jobs\)' "$log" || true)"
+  echo "[pre-commit] OK — ${jobs:-build completed}."
+  rm -f "$log"
+else
+  echo "[pre-commit] BUILD FAILED — commit aborted. First errors:" >&2
+  grep -E 'error:' "$log" | head -15 >&2 || true
+  echo "[pre-commit] (full log: $log) — fix it, or use --no-verify only if you are NOT claiming green." >&2
+  exit 1
+fi
