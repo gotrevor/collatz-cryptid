@@ -22,3 +22,7 @@ __pycache__/
 
 # Bulk burn-simulation JSON (~1GB, regeneratable from tools/sandbox)
 sim/*burn*.json
+
+# Reference PDFs — copyrighted full-text, kept locally for reading only.
+# Repo is eventually-public; commit summaries + provenance (papers/*.md), not binaries.
+papers/**/*.pdf
