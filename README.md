@@ -63,3 +63,7 @@ At K=20: **97.4%** of species have graduated; **2.6%** (27,329) are stubborn. St
 - **v0.x** Lean formalization of `T`, parity-vector bijection, residue determinism — once we know which lemma earns its keep
 
 No mathlib dependency yet. Pure Python until the data tells us what to formalize.
+
+## License
+
+[Apache License 2.0](LICENSE), Copyright 2026 Trevor Morris
