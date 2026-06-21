@@ -1,5 +1,5 @@
 # Lean build cache (6.9 GB of oleans / native code)
-lean/.lake/
+.lake/
 
 # Bulk verbose-simulator traces (regeneratable from tools/sandbox/bb33_complexity*.py)
 # - 397/531 at 200k loops is ~530 MB each

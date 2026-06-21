@@ -1,6 +1,10 @@
 name = "collatz-cryptid"
 version = "0.1.0"
 keywords = ["math"]
+# Lean source lives under lean/ (Python sim code sits at the repo root). Only the Lake
+# config trio (this file, lean-toolchain, lake-manifest.json) is hoisted to the root so the
+# fleet tooling's git-root == lake-dir assumption holds; srcDir keeps the modules buried.
+srcDir = "lean"
 defaultTargets = ["Collatz"]
 
 [leanOptions]
