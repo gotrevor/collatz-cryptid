@@ -23,7 +23,7 @@ repo_root="$(git rev-parse --show-toplevel)"
 cd "$repo_root"
 
 # Only build when staged changes touch Lean sources or the build config.
-if ! git diff --cached --name-only --diff-filter=ACM \
+if ! git diff --cached --name-only --no-renames \
      | grep -Eq '\.lean$|lakefile|lean-toolchain|lake-manifest'; then
   echo "[pre-commit] No Lean changes staged — skipping build gate."
   exit 0
