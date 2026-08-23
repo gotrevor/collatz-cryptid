@@ -388,7 +388,7 @@ theorem bootstrap_full :
       unfold bigfootEnc Dyn.init; rfl
     ext
     · rw [hs, henc_state]
-    · funext i; exact htape i
+    · exact htape _
     · rw [hp, henc_pos]
 
 /-! ## Side-tape lift

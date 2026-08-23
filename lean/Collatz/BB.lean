@@ -37,8 +37,9 @@ def Machine := State → Sym → Option Transition
 
 /-- Doubly-infinite tape as a function `ℤ → Sym`. Almost-all-blank is a
 property of *reachable* configurations from a blank start; we don't
-enforce it on the type. -/
-def Tape := ℤ → Sym
+enforce it on the type.  Reducible (`abbrev`): a pure type synonym, and v4.33's
+stricter `rw` motive check needs to see through it. -/
+abbrev Tape := ℤ → Sym
 
 namespace Tape
 

@@ -77,14 +77,15 @@ theorem step_toSide (M : Machine) (c : Cfg) :
         dsimp only
         have hne : c.pos - 1 ≠ c.pos := by omega
         push_cast
-        rw [if_neg hne]
+        -- `push_cast` rewrites the ite's proposition but leaves the stale Decidable
+        -- instance, so `rw [if_neg hne]` can't match; term-mode unification can.
+        exact (if_neg hne).symm
       · -- right
         funext n; dsimp only
         cases n with
         | zero =>
           push_cast
-          have heq : c.pos - 1 + (0 + 1 : ℤ) = c.pos := by ring
-          simp [heq]
+          simp
         | succ k =>
           push_cast
           have heq : c.pos - 1 + (((k : ℤ) + 1) + 1) = c.pos + ((k : ℤ) + 1) := by ring
@@ -98,8 +99,7 @@ theorem step_toSide (M : Machine) (c : Cfg) :
         cases n with
         | zero =>
           push_cast
-          have heq : c.pos + 1 - (0 + 1 : ℤ) = c.pos := by ring
-          simp [heq]
+          simp
         | succ k =>
           push_cast
           have heq : c.pos + 1 - (((k : ℤ) + 1) + 1) = c.pos - ((k : ℤ) + 1) := by ring
@@ -109,7 +109,7 @@ theorem step_toSide (M : Machine) (c : Cfg) :
         dsimp only
         have hne : c.pos + 1 ≠ c.pos := by omega
         push_cast
-        rw [if_neg hne]
+        exact (if_neg hne).symm
       · -- right
         funext n; dsimp only; push_cast
         have hne : c.pos + 1 + ((n : ℤ) + 1) ≠ c.pos := by omega
@@ -118,18 +118,18 @@ theorem step_toSide (M : Machine) (c : Cfg) :
 
 /-- The blank `BB.Cfg` corresponds to the blank `Cfg2`. -/
 @[simp] theorem Cfg.toSide_blank : Cfg.toSide Cfg.blank = Cfg2.blank := by
-  apply Cfg2.ext <;> first | rfl | (funext _; rfl)
+  apply Cfg2.ext <;> rfl
 
 /-- "Step first" form of `stepN`. Mirrors `stepN2_succ`'s shape. -/
 theorem stepN_step_first (M : Machine) (n : ℕ) (c : Cfg) :
     stepN M (n + 1) c = (step M c).bind (stepN M n) := by
   induction n generalizing c with
   | zero =>
-      show (stepN M 0 c).bind (step M) = (step M c).bind (stepN M 0)
-      show (some c).bind (step M) = (step M c).bind (fun c' => some c')
+      change (stepN M 0 c).bind (step M) = (step M c).bind (stepN M 0)
+      change (some c).bind (step M) = (step M c).bind (fun c' => some c')
       simp
   | succ n ih =>
-      show (stepN M (n + 1) c).bind (step M) =
+      change (stepN M (n + 1) c).bind (step M) =
         (step M c).bind (stepN M (n + 1))
       rw [ih c]
       cases hs : step M c with
