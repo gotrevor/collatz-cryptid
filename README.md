@@ -62,7 +62,18 @@ At K=20: **97.4%** of species have graduated; **2.6%** (27,329) are stubborn. St
 - **v0.4** push to `K=24` or `K=28`; revisit convergence rate
 - **v0.x** Lean formalization of `T`, parity-vector bijection, residue determinism — once we know which lemma earns its keep
 
-No mathlib dependency yet. Pure Python until the data tells us what to formalize.
+> ⚠️ **This roadmap is stale.**  It describes the v0.2 pure-Python phase.  The repo has since
+> grown a substantial Lean 4 + mathlib development — the BB(3,3) holdouts (Bigfoot, Fat Coyote,
+> Wily Coyote), a Lean port of busycoq's BB33_494 non-halting proof, an Erdős/Collatz/Mahler
+> bridge, and proofs of Beaver Math Olympiad problems 3 and 4.  Start at `lean/README.md` and
+> `HANDOFF.md`.
+
+## Provenance
+
+Most of the code and prose here was written by Claude (Anthropic) working with me, and the
+commit trailers record which model did what.  I direct the work, choose the targets and check
+the results; the Lean is machine-checked, so correctness rests on the kernel rather than on
+either of us.  Attribution for ported and quoted material is in [`THIRD-PARTY.md`](THIRD-PARTY.md).
 
 ## License
 

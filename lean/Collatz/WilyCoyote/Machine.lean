@@ -23,9 +23,8 @@ Feb-Mar 2026) which returned empty. Not officially declared a Cryptid.
 531 has `0LC`, 532 has `1RB`. The equivalence 531 ≡ 532 is *implicitly
 conditional* on the (C, 1) transition being unreachable from blank in
 both machines — a reachability-invariant proof, same shape as
-`Collatz.Bigfoot.V6KPos.InvB`. Per `claude/knowledge/core/projects/
-collatz-cryptid.md`, the equivalence has a convincing argument but is
-not Rocq-verified.
+`Collatz.Bigfoot.V6KPos.InvB`. The equivalence has a convincing
+argument but is not Rocq-verified.
 
 ## Empirical structure (`notes/14`, `notes/20`)
 

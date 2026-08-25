@@ -120,8 +120,8 @@ The realistic value of a Lean-side encoding:
    be the first Lean encoding of sweep-PDA-style BB analysis. Not a
    breakthrough; a Lean-side first.
 3. **Ceiling**: notice something the Rocq community missed. Small but
-   non-zero — see [[feedback-novelty-overclaim]] for the calibration we
-   just did on this.
+   non-zero, and deliberately calibrated: see the "Honest attribution"
+   sections in `notes/20` and `notes/21`.
 
 ## Next steps (in order)
 

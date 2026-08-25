@@ -1,7 +1,7 @@
 # Collatz Cryptid - Lean Formalization 🦄
 
-Lean 4 + mathlib `v4.29.1`. Toolchain matches `~/personal/lean-sandbox` so the
-mathlib oleans cache hits without re-downloading.
+Lean 4 + mathlib — the version is whatever `lean-toolchain` at the repo root
+pins; `lakefile.toml` pins the matching mathlib `rev`.
 
 ## Layout
 

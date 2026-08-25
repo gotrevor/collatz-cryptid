@@ -1,10 +1,11 @@
 # Reference Library 📚
 
-Canonical Collatz / 3x+1 papers, kept locally at `data/refs/`. Pulled from arXiv where possible.
+Canonical Collatz / 3x+1 papers.  Links go to arXiv; PDFs are kept **locally only** in
+`data/refs/` (gitignored) — this repo commits summaries and provenance, not copyrighted binaries.
 
 ## Headline modern result
 
-- **[Tao 2019](../data/refs/tao-2019-almost-all-orbits.pdf)** — "Almost all orbits of the Collatz map attain almost bounded values" (arXiv:1909.03562, v5 2022, 49pp).
+- **[Tao 2019](https://arxiv.org/abs/1909.03562)** — "Almost all orbits of the Collatz map attain almost bounded values" (arXiv:1909.03562, v5 2022, 49pp).
   - **Theorem 1.3**: For any function `f : ℕ+ → ℝ` with `lim_{N→∞} f(N) = +∞`, `Colmin(N) < f(N)` for almost all `N ∈ ℕ+` *in the sense of logarithmic density*.
   - Stronger than all prior "almost all" results (Terras, Everett, Allouche, Korec). Brings the bound from `N^θ` for some `θ < 1` down to any divergent `f` whatsoever, e.g. `log log log log N`.
   - Method: probability theory on 3-adic cyclic groups, characteristic function estimates, two-dimensional renewal process. The proof is *not* number-theoretic in flavour - it's probability + harmonic analysis on `ℤ/3ⁿℤ`.
@@ -12,12 +13,12 @@ Canonical Collatz / 3x+1 papers, kept locally at `data/refs/`. Pulled from arXiv
 
 ## Surveys / canonical references
 
-- **[Lagarias 1985-2011 Annotated Bibliography I](../data/refs/lagarias-2003-survey-1.pdf)** — "The 3x+1 Problem: An Annotated Bibliography (1963-1999)" (arXiv:math/0309224v13, 74pp). The definitive survey of the first ~35 years. Author-sorted, with one-paragraph summaries.
-- **[Lagarias 2006-2012 Annotated Bibliography II](../data/refs/lagarias-2006-survey-2.pdf)** — "The 3x+1 Problem: An Annotated Bibliography, II (2000-2009)" (arXiv:math/0608208v6, 42pp). Continuation of part I.
+- **[Lagarias 1985-2011 Annotated Bibliography I](https://arxiv.org/abs/math/0309224)** — "The 3x+1 Problem: An Annotated Bibliography (1963-1999)" (arXiv:math/0309224v13, 74pp). The definitive survey of the first ~35 years. Author-sorted, with one-paragraph summaries.
+- **[Lagarias 2006-2012 Annotated Bibliography II](https://arxiv.org/abs/math/0608208)** — "The 3x+1 Problem: An Annotated Bibliography, II (2000-2009)" (arXiv:math/0608208v6, 42pp). Continuation of part I.
 
 ## Best known computational / density bound
 
-- **[Krasikov-Lagarias 2003](../data/refs/krasikov-lagarias-2003-density.pdf)** — "Bounds for the 3x+1 Problem using Difference Inequalities" (arXiv:math/0205002, 21pp). Density bound: `#{N ≤ x : Colmin(N) = 1} ≫ x^{0.84}` for large `x`. Cited heavily in Tao 2019.
+- **[Krasikov-Lagarias 2003](https://arxiv.org/abs/math/0205002)** — "Bounds for the 3x+1 Problem using Difference Inequalities" (arXiv:math/0205002, 21pp). Density bound: `#{N ≤ x : Colmin(N) = 1} ≫ x^{0.84}` for large `x`. Cited heavily in Tao 2019.
 
 ## Not in repo (paywalled / pre-arXiv)
 
@@ -53,5 +54,5 @@ Pinning this here because it explains *why the theorem statement uses log densit
 
 ## Update / refresh
 
-- `data/refs/` files: PDFs frozen at arXiv versions cited above.
+- `data/refs/` local PDFs: frozen at the arXiv versions cited above.  Not committed.
 - `notes/refs.md`: keep this index current as new references are added.

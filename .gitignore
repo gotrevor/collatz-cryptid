@@ -24,5 +24,13 @@ __pycache__/
 sim/*burn*.json
 
 # Reference PDFs — copyrighted full-text, kept locally for reading only.
-# Repo is eventually-public; commit summaries + provenance (papers/*.md), not binaries.
-papers/**/*.pdf
+# Repo is eventually-public; commit summaries + provenance (notes/refs.md), not binaries.
+# Unanchored on purpose so it catches every directory, not just papers/.  Belt-and-braces
+# with the same rule in ~/.config/git/ignore.  Commit a deliberate PDF with `git add -f`.
+*.pdf
+
+# Obsidian vault config — per-vault workspace/plugin state
+.obsidian/
+
+# Scratch paste buffer (also globally ignored)
+x.txt

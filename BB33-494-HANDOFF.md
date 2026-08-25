@@ -91,7 +91,7 @@ lean/Collatz/
   Bigfoot/                [existing; separate project]
 ```
 
-All build clean under `lake build Collatz` against mathlib v4.29.1 (modulo `no_halt` and `step_toSide`).
+All build clean under `lake build Collatz` against the mathlib pinned at the time of writing (v4.29.1; modulo `no_halt` and `step_toSide`).
 
 ---
 

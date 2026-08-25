@@ -3,13 +3,11 @@
 **Last session**: 2026-05-26 late evening (`V6KPos.lean` lands: strengthened invariant `InvB` with 9 b-counter clauses, sorry-free; `k_pos_orbit_of` is a sorry-free reduction; `k_pos_orbit` factored to 2 named cascade obligations, each a single sorry).
 **Previous**: 2026-05-26 evening (`V6Rule.lean` closed sorry-free; V6 ↔ Shawn bijection found; V6 k_pos identified as the remaining open content).
 **Earlier**: 2026-05-25 night (v5/v6 pure rule; 1B-cycle empirical no-halt).
-**Branch**: `init` (no remote; local-only repo).
+**Branch**: `init`.
 **Build**: `cd lean && lake build` — clean, **3 sorry warnings** in default build (Tao, Korec, Bigfoot.sim). Default build does NOT include V6Rule or V6KPos (not in `Collatz/Bigfoot.lean` imports). Explicit `lake build Collatz.Bigfoot.V6KPos` adds 2 cascade-obligation sorries (`k_at_9_ge_2_orbit`, `k_at_3_ge_2_orbit`).
 
 **🌟 START HERE (for next session)**:
 1. Read [`BIGFOOT-HANDOFF.md`](BIGFOOT-HANDOFF.md) — comprehensive Bigfoot writeup (669 lines): the machine, V6 recurrence, bijection to Shawn, 11-clause InvB, cascade structure, b mod 12 → terminus map, empirical findings, next-swing options. **This is the canonical reference for resuming Bigfoot work.**
-2. Read [`~/personal/claude/knowledge/inbox/2026-05-27-dig-v6-kpos-parity.md`](~/personal/claude/knowledge/inbox/2026-05-27-dig-v6-kpos-parity.md) — the parity-dig findings (last night).
-2. Read [`~/personal/claude/knowledge/inbox/2026-05-26-handoff-collatz-cryptid-k-pos.md`](~/personal/claude/knowledge/inbox/2026-05-26-handoff-collatz-cryptid-k-pos.md) — earlier handoff (V6Rule, factoring story).
 3. Then `notes/18-v6-k-pos-attempt.md` — by-hand cascade analysis.
 4. Then `lean/Collatz/Bigfoot/V6KPos.lean` — strengthened invariant (11 clauses) + factored open obligations.
 5. **Current state**: the open content of Bigfoot is precisely 2 Lean sorries (`k_at_9_ge_2_orbit`, `k_at_3_ge_2_orbit`) plus the V6 ↔ TM correspondence (still unformalized). InvB has 11 sorry-free clauses including parity + (P1, 3, 5) and (P1, 6, < 6) ruled out.
@@ -331,7 +329,8 @@ That last point is what would make this contribution NEW: even Shawn doesn't see
 
 ### Reference
 
-Full session detail at: [~/personal/claude/knowledge/inbox/2026-05-25-wrap-collatz-cryptid-bigfoot-v6-lean.md](~/personal/claude/knowledge/inbox/2026-05-25-wrap-collatz-cryptid-bigfoot-v6-lean.md)
+Full session detail is in the author's private working notes; the load-bearing
+content is reproduced in `BIGFOOT-HANDOFF.md` and `notes/17`.
 
 ## Other moves (secondary now)
 
@@ -356,8 +355,8 @@ collatz-cryptid/
 ├── HANDOFF.md                  # this file
 ├── README.md
 ├── species.py, stopping.py     # early Collatz exploration (pre-Lean)
-├── data/refs/                  # PDF library (Tao, Lagarias, Krasikov-Lagarias)
-├── lean/                       # Lean 4.29.1 + mathlib
+├── data/refs/                  # local-only PDF library (gitignored; see notes/refs.md)
+├── lean/                       # Lean 4 + mathlib (see lean-toolchain)
 │   ├── lakefile.toml, lean-toolchain
 │   └── Collatz/
 │       ├── Basic.lean          # T, sanity
@@ -401,12 +400,14 @@ collatz-cryptid/
 
 - **Lean build**: `cd lean && lake build`. ~3s incremental. **3 expected sorry warnings.**
 - **Lean check single file**: `lake build Collatz.Korec` (or any specific module).
-- **Sandbox scripts**: `sandbox /path/to/tools/sandbox/script.py` (absolute path; the `sandbox` wrapper sources nix env from `~/personal/tools/sandbox/`).
+- **Sandbox scripts**: run `tools/sandbox/*.py` with `uv run` (or any Python 3.12+).
 - **Bigfoot Python series**: each VN runs and prints its own self-verification ("PASS" against v1) plus structural observations.
 - **Quick_Sim CLI**: `~/.venvs/bb/bin/python ~/src/busy-beaver/Code/Quick_Sim.py [opts] <tm>`. Shawn Ligocki's repo; venv at `~/.venvs/bb` (Python 3.14).
 - **Streaming burn on a TM**: `sandbox tools/sandbox/bb33_397_burn.py --max-loops N --out FILE.json`. Writes checkpoints every 500k loops. Per-loop wall-time grows with tape length — at scale of 2-3M loops, total wall-time is ~hours.
 
-## Key references (in `data/refs/`)
+## Key references
+
+PDFs are kept **locally only** in `data/refs/` (gitignored).  Links: `notes/refs.md`.
 
 | File | Content |
 |---|---|
@@ -415,7 +416,7 @@ collatz-cryptid/
 | lagarias-2006-survey-2.pdf | arXiv:math/0608208 v6. Annotated Bibliography II (2000-2009). 42pp. |
 | krasikov-lagarias-2003-density.pdf | arXiv:math/0205002. Density bound `x^0.84`. 21pp. |
 
-Index + Tao's conventions for Lean: `notes/refs.md`. Korec 1994 itself NOT in `data/refs/` — referenced via Lagarias surveys, which extensively cite it.
+Index + Tao's conventions for Lean: `notes/refs.md`. Korec 1994 itself is not held locally — referenced via the Lagarias surveys, which cite it extensively.
 
 ## Conventions & gotchas
 

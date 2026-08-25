@@ -40,7 +40,7 @@ supersedes the natural-density results of Terras, Everett, Allouche,
 and Korec (which gave `colMin N < N^θ` for `θ > log₂(3)/2 ≈ 0.79`),
 allowing `f` to grow arbitrarily slowly (e.g., `f(N) = log log log log N`).
 
-The proof is *not* attempted here. See `data/refs/tao-2019-almost-all-orbits.pdf`. -/
+The proof is *not* attempted here. See [arXiv:1909.03562](https://arxiv.org/abs/1909.03562). -/
 theorem tao2019 (f : ℕ → ℝ) (hf : Tendsto f atTop atTop) :
     AlmostAllPos (fun N => 1 ≤ N → ((colMin N : ℝ) < f N)) := by
   sorry

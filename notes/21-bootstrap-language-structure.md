@@ -183,7 +183,7 @@ The 100M burn at sample rate 100 will give ~117k samples (vs 11.7k at 10M). If t
 
 ## Honest attribution
 
-Per the calibration habit in [[feedback-novelty-overclaim]]:
+Calibrated deliberately, same habit as `notes/20`:
 
 * **Definitely not new to the bbchallenge Discord**: bounded bootstrap length for both holdouts, sweep-PDA structure, the basic distinct-words-grow observation. LegionMammal's abandoned 531 model presumably included some version of the suffix-anchored top-word structure.
 * **Probably not new**: the qualitative position-bias finding for 397 (people who looked at trace dumps would have noticed leading-symbol regularity).

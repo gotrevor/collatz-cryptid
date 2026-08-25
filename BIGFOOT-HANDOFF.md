@@ -644,10 +644,6 @@ approaches stall.
 * `notes/16-bigfoot-rewrite-series.md` — v1→v4 decompilation.
 * `notes/17-bigfoot-v5-recurrence.md` — v5/v6, 1B-cycle empirical no-halt.
 * `notes/18-v6-k-pos-attempt.md` — by-hand cascade analysis.
-* `~/personal/claude/knowledge/inbox/2026-05-26-handoff-collatz-cryptid-k-pos.md`
-  — prior session's handoff (V6Rule done, factoring story).
-* `~/personal/claude/knowledge/inbox/2026-05-27-dig-v6-kpos-parity.md`
-  — last night's parity-dig findings.
 
 ---
 
@@ -678,8 +674,9 @@ approaches stall.
   workspace root (Lake-aware).
 * **Lean probe files**: use the `Write` tool + `lake env lean <path>`,
   never `cat > foo.lean <<'EOF'` heredocs.
-* **Mathlib version**: pinned to `v4.29.1` in `lakefile.toml`. Do not
-  upgrade without checking — many proofs depend on subtle naming.
+* **Mathlib version**: follows the `rev` pinned in `lakefile.toml`, which
+  tracks the toolchain in `lean-toolchain`. Do not bump without checking —
+  many proofs depend on subtle naming.
 
 ---
 
