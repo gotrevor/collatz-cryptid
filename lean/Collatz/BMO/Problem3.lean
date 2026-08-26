@@ -34,8 +34,12 @@ exceeds `4 ^ k` by a factor of nearly five.  The two bounds cannot both hold.
 
 - [Beaver Math Olympiad wiki page](https://wiki.bbchallenge.org/wiki/Beaver_Math_Olympiad) (§3);
   the machine was found and informally proved non-halting by bbchallenge contributor
-  Daniel Yuan, June 2024.  A Lean proof was announced on the bbchallenge Discord but is not
-  in a public repository; the argument here was worked out independently.
+  Daniel Yuan, June 2024.  The wiki's §3 *Formalised solution* line links an initial
+  announcement, a Lean proof and an LLM-translated Rocq proof, but all four links are
+  bbchallenge Discord messages rather than a repository, and a public GitHub code search
+  for `beaver_math_olympiad` and for the machine's transition string finds no formalization
+  (both checked 2026-08-25).  The argument here was worked out independently rather than
+  ported.
 - Statement as posed in
   [`google-deepmind/formal-conjectures`](https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/Other/BeaverMathOlympiad.lean)
 -/
