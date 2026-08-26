@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Beaver Math Olympiad problem 3 — no term is a power of four
+# Beaver Math Olympiad problem 3: no term is a power of four
 
 BMO#3 is the mathematical reformulation of the non-halting of the 2-state 5-symbol Turing
 machine `1RB0RB3LA4LA2RA_2LB3RA---3RA4RB` from the all-0 tape.
@@ -12,7 +12,7 @@ valuation.  The question is whether any term is a power of four.  None is.
 ## The mechanism
 
 Terms alternate parity: an even term gains an odd amount, an odd term gains exactly `3`.
-So powers of four — even, for a positive exponent — can only occur at even indices, and it
+So powers of four (even, for a positive exponent) can only occur at even indices, and it
 suffices to study `T m = a (2 * m) / 2`, which satisfies the one-step recurrence
 `T (m + 1) = T m + 2 ^ (v₂ (T m) + 2) + 1`.
 
@@ -21,7 +21,7 @@ That halved sequence is *self-similar*:
 * `T (2 * m) + 1 = 2 * T m + 4 * m`
 * `T (2 * m + 1) = 2 * T m + 4 * m + 4`
 
-and those two identities force the **ruler lemma** `v₂ (T m) = v₂ (m + 1)` — the valuations
+and those two identities force the **ruler lemma** `v₂ (T m) = v₂ (m + 1)`: the valuations
 of `T` reproduce the ruler sequence `1, 2, 1, 3, 1, 2, 1, 4, …`.  All three facts are proved
 by a single strong induction, since each feeds the others.
 

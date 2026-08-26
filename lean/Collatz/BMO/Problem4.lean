@@ -1,7 +1,7 @@
 import Mathlib
 
 /-!
-# Beaver Math Olympiad problem 4 — Bonnie never finishes
+# Beaver Math Olympiad problem 4: Bonnie never finishes
 
 BMO#4 is the mathematical reformulation of the non-halting of the 2-state 5-symbol
 Turing machine `1RB3RB---1LB0LA_2LA4RA3LA4RB1LB` from the all-0 tape.
