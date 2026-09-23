@@ -34,3 +34,4 @@ sim/*burn*.json
 
 # Scratch paste buffer (also globally ignored)
 x.txt
+data/discord/
