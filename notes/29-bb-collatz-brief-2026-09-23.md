@@ -98,8 +98,9 @@ Headlines:
 1. **BMO#9 non-halting in Lean** (`1RB1LA_1RC0RD_1LA---_1RE1RD_1LF0LA_---0LE`).  Direct sequel to
    BMO3/4, called "very much solvable" (racheline), not in formal-conjectures, and structural
    rather than compute-heavy, so Lean's kernel speed doesn't bite.  ~70%.
-2. **Antihydra partial bound** via moonshot's Baker machinery - highest mathematical upside, most
-   speculative.  First step is a paper check of whether the bound is really Baker-shaped.
+2. ~~**Antihydra partial bound**~~ - withdrawn 2026-09-24: mfornet/antihydra-autoresearch already
+   ran both Baker (capped at log k + log log k) and the subspace theorem (odd/log → ∞, no rate);
+   the rest is an effective-subspace-theorem open problem.  See `notes/30`.
 3. ~~**int_y1's Hydra sorrys**~~ - withdrawn 2026-09-24: the reductions are done (see §4); what
    remains is Hydra-hard, one prop at a time.
 4. **Formalize TM (ir)regularity** - "nobody has formalized regularity in any proof system";
