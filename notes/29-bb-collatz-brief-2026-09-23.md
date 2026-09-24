@@ -85,8 +85,11 @@ Headlines:
    These look like |2^a − 3^b| questions, the linear-forms-in-logs ground of moonshot Front A.
    *Unchecked inference, ~40%.*
 2. **Lean reductions between Collatz-like problems.**  sligocki (6/10): "no direct reductions
-   between Collatz-like problems AFAIK".  Bigfoot's `Classification.lean` is that style; the 12
-   Hydra sorrys and their equivalences are natural targets.
+   between Collatz-like problems AFAIK".  Bigfoot's `Classification.lean` is that style.
+   ❌ **Corrected 2026-09-24 (Astra):** the 12 Hydra sorrys are NOT an equivalence opening -
+   int_y1 already did the reductions (92 → 12 via `Conjugacy.lean`) and reports "The 12 do not
+   collapse any further", all 66 pairs statistically independent
+   (`~/src/reservoir/int-y1/proofs/BBfLean/CLAUDE_SZ23_13.md`).
 3. **Tao-style "almost all" results do not transfer** - a machine has one start, so density-1
    statements say nothing.
 
@@ -97,7 +100,8 @@ Headlines:
    rather than compute-heavy, so Lean's kernel speed doesn't bite.  ~70%.
 2. **Antihydra partial bound** via moonshot's Baker machinery - highest mathematical upside, most
    speculative.  First step is a paper check of whether the bound is really Baker-shaped.
-3. **int_y1's Hydra sorrys** - Lean-native, collaborative, a live Lean contributor to work with.
+3. ~~**int_y1's Hydra sorrys**~~ - withdrawn 2026-09-24: the reductions are done (see §4); what
+   remains is Hydra-hard, one prop at a time.
 4. **Formalize TM (ir)regularity** - "nobody has formalized regularity in any proof system";
    sligocki 9/14: "a fun challenge if anyone is looking for a Rocq/Lean challenge".
 5. **Answer q64 with data** - our #494 port plus the speed numbers above.
