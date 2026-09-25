@@ -32,11 +32,28 @@ entry is `1 mod 3` in 986 cases, `0 mod 3` in 42, and `2 mod 3` in 44.  The firs
 is step 799, `(1, 74, 27, …)`, so the naive `1 mod 3` invariant fails on the actual orbit.
 This is finite evidence only, not a bound on later steps.
 
-## Next mathematical move
+## Source correction, 2026-09-25
 
-Study the **first-return map** on configurations whose first entry is `1`, with the
-remainder of the stream retained.  The immediate target is a condition on the tail that
-survives all four rules and rules out the second entry `2`.  Any candidate should be
-tested against step 799 and the later `0/2 mod 3` exceptions before formalization.  A
-condition only on the first two entries repeats the failed modular route; a condition
-on the full reachable tail could supply the missing mechanism.
+BMO #9 was announced solved on September 24.  The inspectable artifact is
+[`verify/BMO9.v`](https://github.com/ccz181078/busycoq/blob/605d26d30610615ebe09ec23fcea079d6ef6ef50/verify/BMO9.v) in ccz181078/busycoq, commit `605d26d`
+(September 24).  The 3,819-line Rocq file ends with `TM1.nonhalt : ~halts tm c0`,
+linking the rewrite dynamics to the named machine.  Our Lean file proves
+preliminary facts, not nonhalting.
+
+The proof compresses the four rewrite rules into even/odd `Prefix.Step` rules,
+treating the infinite zero tail via `Prefix.Exec`.  Its main bridge,
+`Prefix.single_returns`, reduces repeated progress from singleton states
+`[3*j]` to returns of special dyadic words `G k q` to singleton states.
+`CheckTable.base_structured` checks a structured table through index 65,536;
+`WordCheck.F2` checks that a specified continuing-word trace has length at
+most six.  `Closure.all_good` proves returns for all indices by induction once
+`FinalBudget.budget` supplies quantitative bounds at large scales.
+`TM1.nonhalt_of_returns` converts the singleton returns into an infinite
+machine run.  The file contains no `Admitted`, `Axiom`, or `Parameter`
+declaration; imported files and the complete Rocq build were not audited here.
+
+A Lean contribution would port known mathematics.  The smallest honest unit
+is the even/odd prefix semantics and singleton-return bridge, with a checked
+correspondence to the existing four-rule Lean model.  The finite tables and
+global bounds are the substantial remaining work.  The proposed tail
+condition below had no evidence beyond a finite probe and is withdrawn.
