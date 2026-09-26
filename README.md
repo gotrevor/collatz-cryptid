@@ -1,5 +1,7 @@
 # Collatz Cryptid 🦄
 
+> **Current project map (26 September 2026):** [overview and diagram](OVERVIEW.md) · [browser edition](OVERVIEW.html).  What is proved, where the gaps are, and where we are pressing.
+
 > A field guide to specimens of the Collatz dynamical system, organized by
 > *species* — residue classes mod `2^k` — rather than by record-breaking
 > magnitudes. No claim to prove the conjecture. We're here to map territory.

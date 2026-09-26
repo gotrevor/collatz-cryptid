@@ -1,0 +1,28 @@
+:root { color-scheme: light; --ink: #172a35; --muted: #53616c; --rule: #cbd3d9; --accent: #215b79; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: white; }
+body { max-width: 1160px; margin: 0 auto; padding: 46px 38px 64px; color: var(--ink); background: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.62; }
+header { border-top: 4px solid var(--ink); padding-top: 20px; }
+h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.13; letter-spacing: -.035em; margin: 0 0 26px; }
+body > p, body > ul, body > ol, body > h3 { max-width: 900px; }
+body > p:first-of-type { font-size: .87rem; color: var(--muted); margin-bottom: 30px; }
+h2 { margin: 44px 0 16px; padding-top: 17px; border-top: 1px solid var(--rule); font-size: 1.55rem; line-height: 1.25; letter-spacing: -.02em; break-after: avoid; }
+h3 { font-size: 1.17rem; line-height: 1.35; margin: 27px 0 10px; break-after: avoid; }
+p { margin: 12px 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 650; }
+ul, ol { padding-left: 26px; }
+li { padding-left: 5px; margin: 7px 0; }
+figure { margin: 24px 0 18px; padding: 15px 8px; border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+figure img { display: block; width: 100%; height: auto; min-width: 680px; }
+figcaption { display: none; }
+table { width: 100%; border-collapse: collapse; margin: 21px 0; font-size: .94rem; line-height: 1.5; }
+th { font-size: .8rem; text-transform: uppercase; letter-spacing: .045em; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
+th, td { text-align: left; vertical-align: top; padding: 13px 15px 13px 0; }
+td { border-bottom: 1px solid var(--rule); }
+td:first-child { width: 27%; }
+code { font-size: .87em; overflow-wrap: anywhere; }
+body > h2:last-of-type ~ p { font-size: .86rem; color: var(--muted); }
+@media (max-width: 700px) { body { padding: 25px 20px 45px; font-size: 16px; } h2 { margin-top: 34px; } table { font-size: .83rem; } th, td { padding-right: 10px; } figure { margin-inline: -9px; } }
+@media print { body { max-width: none; padding: 0; font-size: 10pt; color: black; } h1 { font-size: 25pt; } h2 { margin-top: 22pt; } h3 { font-size: 12pt; } figure { break-inside: avoid; border: 0; padding: 0; } figure img { min-width: 0; max-height: 650px; } table { font-size: 9pt; } tr { break-inside: avoid; } a { color: black; } }

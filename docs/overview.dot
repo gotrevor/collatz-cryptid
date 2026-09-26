@@ -1,0 +1,33 @@
+digraph BusyBeaver {
+  graph [rankdir=BT, newrank=true, bgcolor="white", pad=0.3, nodesep=0.3, ranksep=0.66, fontname="Helvetica", fontsize=15, compound=true];
+  node [shape=box, style="rounded", fontname="Helvetica", fontsize=14, margin="0.17,0.14", color="#59636e", penwidth=1.5];
+  edge [fontname="Helvetica", fontsize=11, color="#59636e", arrowsize=0.7];
+
+  subgraph cluster_bb33 {
+    label="THREE STATES · THREE SYMBOLS"; color="#ccd3d9"; margin=18; labelloc=b;
+    goal33 [label="DESTINATION · OPEN\nExact BB(3,3)\nAll classifications + longest halter", fontsize=17, penwidth=2.5, color="#152c3a"];
+    known [label="PROVED IN LEAN\n#494 never halts\nPort of a known result", color="#176852", penwidth=2];
+    other33 [label="OPEN\nOther behavior classes\nand the proposed champion", color="#995513", style="rounded,dashed"];
+    big [label="OPEN\nBigfoot machine never halts", color="#995513", style="rounded,dashed"];
+    recovery [label="OPEN · arithmetic\nTwo reachable-state\nrecovery bounds", color="#995513", style="rounded,dashed"];
+    sim [label="OPEN · correspondence\nCompressed rules → counters\nCounters → tape execution", color="#995513", style="rounded,dashed"];
+    rules [label="PROVED\nDyn: six arithmetic cases\nV6: nonhalting proved separately", color="#176852", penwidth=2];
+    known -> goal33;
+    other33 -> goal33;
+    big -> goal33 [label="one machine"];
+    recovery -> big [label="BOTH needed"];
+    sim -> big;
+    rules -> recovery [style=dashed, color="#995513"];
+    rules -> sim [style=dashed, color="#995513"];
+  }
+
+  subgraph cluster_bb6 {
+    label="SIX STATES · TWO SYMBOLS"; color="#ccd3d9"; margin=18; labelloc=b;
+    goal6 [label="DESTINATION · OPEN\nExact BB(6)\nAll classifications + longest halter", fontsize=17, penwidth=2.5, color="#152c3a"];
+    bmo [label="EXTERNAL PROOF · Rocq\nBMO#9 machine never halts\nLocal Lean port is preliminary", color="#176852", penwidth=2];
+    other6 [label="OPEN\nRemaining machines, including\nAntihydra, and longest halter", color="#995513", style="rounded,dashed"];
+    bmo -> goal6 [label="one machine"];
+    other6 -> goal6;
+  }
+  {rank=same; goal33; goal6;}
+}

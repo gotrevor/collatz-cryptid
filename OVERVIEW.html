@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Project overview</title>
+  <style>
+
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+
+ul.task-list[class]{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+font-size: inherit;
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">:root { color-scheme: light; --ink: #172a35; --muted: #53616c; --rule: #cbd3d9; --accent: #215b79; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; background: white; }
+body { max-width: 1160px; margin: 0 auto; padding: 46px 38px 64px; color: var(--ink); background: white; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 17px; line-height: 1.62; }
+header { border-top: 4px solid var(--ink); padding-top: 20px; }
+h1 { font-size: clamp(2rem, 4vw, 3rem); line-height: 1.13; letter-spacing: -.035em; margin: 0 0 26px; }
+body > p, body > ul, body > ol, body > h3 { max-width: 900px; }
+body > p:first-of-type { font-size: .87rem; color: var(--muted); margin-bottom: 30px; }
+h2 { margin: 44px 0 16px; padding-top: 17px; border-top: 1px solid var(--rule); font-size: 1.55rem; line-height: 1.25; letter-spacing: -.02em; break-after: avoid; }
+h3 { font-size: 1.17rem; line-height: 1.35; margin: 27px 0 10px; break-after: avoid; }
+p { margin: 12px 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+strong { font-weight: 650; }
+ul, ol { padding-left: 26px; }
+li { padding-left: 5px; margin: 7px 0; }
+figure { margin: 24px 0 18px; padding: 15px 8px; border: 1px solid var(--rule); border-radius: 8px; overflow-x: auto; }
+figure img { display: block; width: 100%; height: auto; min-width: 680px; }
+figcaption { display: none; }
+table { width: 100%; border-collapse: collapse; margin: 21px 0; font-size: .94rem; line-height: 1.5; }
+th { font-size: .8rem; text-transform: uppercase; letter-spacing: .045em; border-top: 2px solid var(--ink); border-bottom: 1px solid var(--ink); }
+th, td { text-align: left; vertical-align: top; padding: 13px 15px 13px 0; }
+td { border-bottom: 1px solid var(--rule); }
+td:first-child { width: 27%; }
+code { font-size: .87em; overflow-wrap: anywhere; }
+body > h2:last-of-type ~ p { font-size: .86rem; color: var(--muted); }
+@media (max-width: 700px) { body { padding: 25px 20px 45px; font-size: 16px; } h2 { margin-top: 34px; } table { font-size: .83rem; } th, td { padding-right: 10px; } figure { margin-inline: -9px; } }
+@media print { body { max-width: none; padding: 0; font-size: 10pt; color: black; } h1 { font-size: 25pt; } h2 { margin-top: 22pt; } h3 { font-size: 12pt; } figure { break-inside: avoid; border: 0; padding: 0; } figure img { min-width: 0; max-height: 650px; } table { font-size: 9pt; } tr { break-inside: avoid; } a { color: black; } }
+</style>
+</head>
+<body>
+<h1 id="busy-beaver-where-the-proof-stands">Busy Beaver: where the proof
+stands</h1>
+<p><strong>Project map · 26 September 2026</strong><br />
+<a href="OVERVIEW.html">Visual edition</a> · <a href="notes/31-research-trajectory-2026-09-25.md">Detailed research
+review</a></p>
+<h2 id="the-destination">The destination</h2>
+<p><strong>Determine exactly how long the longest halting machine of a
+fixed size can run.</strong> That means classifying every relevant
+machine and certifying the longest halter. This repo studies selected
+difficult machines in two separate problems:</p>
+<ul>
+<li><strong>BB(3,3):</strong> three states, three tape symbols. Bigfoot
+belongs here.</li>
+<li><strong>BB(6):</strong> six states, two tape symbols. Antihydra and
+BMO#9 belong here.</li>
+</ul>
+<p><strong>Neither exact value is proved here.</strong> A proof for one
+cryptid would remove a concrete obstruction, but it would not settle its
+entire Busy Beaver problem.</p>
+<h2 id="the-map">The map</h2>
+<figure>
+<img role="img" aria-label="Busy Beaver map: Bigfoot needs both arithmetic recovery and a faithful machine bridge; separate BB(3,3) and BB(6) classifications lead to separate exact-value goals." src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIKICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8IS0tIEdlbmVyYXRlZCBieSBncmFwaHZpeiB2ZXJzaW9uIDE1LjAuMCAoMjAyNjA1MjMuMTg0MikKIC0tPgo8IS0tIFRpdGxlOiBCdXN5QmVhdmVyIFBhZ2VzOiAxIC0tPgo8c3ZnIHdpZHRoPSIxMTU4cHQiIGhlaWdodD0iNTY2cHQiCiB2aWV3Qm94PSIwLjAwIDAuMDAgMTE1OC4wMCA1NjYuMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgo8ZyBpZD0iZ3JhcGgwIiBjbGFzcz0iZ3JhcGgiIHRyYW5zZm9ybT0ic2NhbGUoMSAxKSByb3RhdGUoMCkgdHJhbnNsYXRlKDIxLjYgNTQzLjk5KSI+Cjx0aXRsZT5CdXN5QmVhdmVyPC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0ibm9uZSIgcG9pbnRzPSItMjEuNiwyMS42IC0yMS42LC01NDMuOTkgMTEzNi42LC01NDMuOTkgMTEzNi42LDIxLjYgLTIxLjYsMjEuNiIvPgo8ZyBpZD0iY2x1c3QxIiBjbGFzcz0iY2x1c3RlciI+Cjx0aXRsZT5jbHVzdGVyX2JiMzM8L3RpdGxlPgo8cG9seWdvbiBmaWxsPSJ3aGl0ZSIgc3Ryb2tlPSIjY2NkM2Q5IiBwb2ludHM9IjgsLTggOCwtNTE0LjM5IDYyNywtNTE0LjM5IDYyNywtOCA4LC04Ii8+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMxNy41IiB5PSItNDk2LjE0IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTUuMDAiPlRIUkVFIFNUQVRFUyDCtyBUSFJFRSBTWU1CT0xTPC90ZXh0Pgo8L2c+CjxnIGlkPSJjbHVzdDIiIGNsYXNzPSJjbHVzdGVyIj4KPHRpdGxlPmNsdXN0ZXJfYmI2PC90aXRsZT4KPHBvbHlnb24gZmlsbD0id2hpdGUiIHN0cm9rZT0iI2NjZDNkOSIgcG9pbnRzPSI2MzUsLTI1NS4zMiA2MzUsLTUxNC4zOSAxMTA3LC01MTQuMzkgMTEwNywtMjU1LjMyIDYzNSwtMjU1LjMyIi8+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9Ijg3MSIgeT0iLTQ5Ni4xNCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE1LjAwIj5TSVggU1RBVEVTIMK3IFRXTyBTWU1CT0xTPC90ZXh0Pgo8L2c+CjwhLS0gZ29hbDMzIC0tPgo8ZyBpZD0ibm9kZTEiIGNsYXNzPSJub2RlIj4KPHRpdGxlPmdvYWwzMzwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE1MmMzYSIgc3Ryb2tlLXdpZHRoPSIyLjUiIGQ9Ik00MjQuMTIsLTQ3Mi42NEM0MjQuMTIsLTQ3Mi42NCAxNzMuODgsLTQ3Mi42NCAxNzMuODgsLTQ3Mi42NCAxNjcuODgsLTQ3Mi42NCAxNjEuODgsLTQ2Ni42NCAxNjEuODgsLTQ2MC42NCAxNjEuODgsLTQ2MC42NCAxNjEuODgsLTQxMC40OCAxNjEuODgsLTQxMC40OCAxNjEuODgsLTQwNC40OCAxNjcuODgsLTM5OC40OCAxNzMuODgsLTM5OC40OCAxNzMuODgsLTM5OC40OCA0MjQuMTIsLTM5OC40OCA0MjQuMTIsLTM5OC40OCA0MzAuMTIsLTM5OC40OCA0MzYuMTIsLTQwNC40OCA0MzYuMTIsLTQxMC40OCA0MzYuMTIsLTQxMC40OCA0MzYuMTIsLTQ2MC42NCA0MzYuMTIsLTQ2MC42NCA0MzYuMTIsLTQ2Ni42NCA0MzAuMTIsLTQ3Mi42NCA0MjQuMTIsLTQ3Mi42NCIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyOTkiIHk9Ii00NDYuNDEiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNy4wMCI+REVTVElOQVRJT04gwrcgT1BFTjwvdGV4dD4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMjk5IiB5PSItNDI4LjQxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTcuMDAiPkV4YWN0IEJCKDMsMyk8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjI5OSIgeT0iLTQxMC40MSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE3LjAwIj5BbGwgY2xhc3NpZmljYXRpb25zICsgbG9uZ2VzdCBoYWx0ZXI8L3RleHQ+CjwvZz4KPCEtLSBrbm93biAtLT4KPGcgaWQ9Im5vZGUyIiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5rbm93bjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3Njg1MiIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNMTY4LjQ5LC0zMzguNDhDMTY4LjQ5LC0zMzguNDggMzcuNTEsLTMzOC40OCAzNy41MSwtMzM4LjQ4IDMxLjUxLC0zMzguNDggMjUuNTEsLTMzMi40OCAyNS41MSwtMzI2LjQ4IDI1LjUxLC0zMjYuNDggMjUuNTEsLTI4NS4zMiAyNS41MSwtMjg1LjMyIDI1LjUxLC0yNzkuMzIgMzEuNTEsLTI3My4zMiAzNy41MSwtMjczLjMyIDM3LjUxLC0yNzMuMzIgMTY4LjQ5LC0yNzMuMzIgMTY4LjQ5LC0yNzMuMzIgMTc0LjQ5LC0yNzMuMzIgMTgwLjQ5LC0yNzkuMzIgMTgwLjQ5LC0yODUuMzIgMTgwLjQ5LC0yODUuMzIgMTgwLjQ5LC0zMjYuNDggMTgwLjQ5LC0zMjYuNDggMTgwLjQ5LC0zMzIuNDggMTc0LjQ5LC0zMzguNDggMTY4LjQ5LC0zMzguNDgiLz4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMTAzIiB5PSItMzE1LjEiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+UFJPVkVEIElOIExFQU48L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMyIgeT0iLTMwMC4xIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPiM0OTQgbmV2ZXIgaGFsdHM8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjEwMyIgeT0iLTI4NS4xIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlBvcnQgb2YgYSBrbm93biByZXN1bHQ8L3RleHQ+CjwvZz4KPCEtLSBrbm93biYjNDU7Jmd0O2dvYWwzMyAtLT4KPGcgaWQ9ImVkZ2UxIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5rbm93biYjNDU7Jmd0O2dvYWwzMzwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzU5NjM2ZSIgZD0iTTE1Mi45NywtMzM5LjQ0QzE3Ny44NSwtMzU1LjY1IDIwOC4yMiwtMzc1LjQzIDIzNC44MSwtMzkyLjc1Ii8+Cjxwb2x5Z29uIGZpbGw9IiM1OTYzNmUiIHN0cm9rZT0iIzU5NjM2ZSIgcG9pbnRzPSIyMzMuMzcsLTM5NC43NCAyNDAuNTcsLTM5Ni41IDIzNi4wNCwtMzkwLjYzIDIzMy4zNywtMzk0Ljc0Ii8+CjwvZz4KPCEtLSBvdGhlcjMzIC0tPgo8ZyBpZD0ibm9kZTMiIGNsYXNzPSJub2RlIj4KPHRpdGxlPm90aGVyMzM8L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiM5OTU1MTMiIHN0cm9rZS13aWR0aD0iMS41IiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik0zODMuMjQsLTMzOC40OEMzODMuMjQsLTMzOC40OCAyMTQuNzYsLTMzOC40OCAyMTQuNzYsLTMzOC40OCAyMDguNzYsLTMzOC40OCAyMDIuNzYsLTMzMi40OCAyMDIuNzYsLTMyNi40OCAyMDIuNzYsLTMyNi40OCAyMDIuNzYsLTI4NS4zMiAyMDIuNzYsLTI4NS4zMiAyMDIuNzYsLTI3OS4zMiAyMDguNzYsLTI3My4zMiAyMTQuNzYsLTI3My4zMiAyMTQuNzYsLTI3My4zMiAzODMuMjQsLTI3My4zMiAzODMuMjQsLTI3My4zMiAzODkuMjQsLTI3My4zMiAzOTUuMjQsLTI3OS4zMiAzOTUuMjQsLTI4NS4zMiAzOTUuMjQsLTI4NS4zMiAzOTUuMjQsLTMyNi40OCAzOTUuMjQsLTMyNi40OCAzOTUuMjQsLTMzMi40OCAzODkuMjQsLTMzOC40OCAzODMuMjQsLTMzOC40OCIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyOTkiIHk9Ii0zMTUuMSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5PUEVOPC90ZXh0Pgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyOTkiIHk9Ii0zMDAuMSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5PdGhlciBiZWhhdmlvciBjbGFzc2VzPC90ZXh0Pgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSIyOTkiIHk9Ii0yODUuMSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5hbmQgdGhlIHByb3Bvc2VkIGNoYW1waW9uPC90ZXh0Pgo8L2c+CjwhLS0gb3RoZXIzMyYjNDU7Jmd0O2dvYWwzMyAtLT4KPGcgaWQ9ImVkZ2UyIiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5vdGhlcjMzJiM0NTsmZ3Q7Z29hbDMzPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTk2MzZlIiBkPSJNMjk5LC0zMzkuMTFDMjk5LC0zNTQuMjEgMjk5LC0zNzIuNDYgMjk5LC0zODguOTUiLz4KPHBvbHlnb24gZmlsbD0iIzU5NjM2ZSIgc3Ryb2tlPSIjNTk2MzZlIiBwb2ludHM9IjI5Ni41NSwtMzg4Ljg2IDI5OSwtMzk1Ljg2IDMwMS40NSwtMzg4Ljg2IDI5Ni41NSwtMzg4Ljg2Ii8+CjwvZz4KPCEtLSBiaWcgLS0+CjxnIGlkPSJub2RlNCIgY2xhc3M9Im5vZGUiPgo8dGl0bGU+YmlnPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTk1NTEzIiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWRhc2hhcnJheT0iNSwyIiBkPSJNNTk2Ljg3LC0zMzAuOThDNTk2Ljg3LC0zMzAuOTggNDI5LjEzLC0zMzAuOTggNDI5LjEzLC0zMzAuOTggNDIzLjEzLC0zMzAuOTggNDE3LjEzLC0zMjQuOTggNDE3LjEzLC0zMTguOTggNDE3LjEzLC0zMTguOTggNDE3LjEzLC0yOTIuODIgNDE3LjEzLC0yOTIuODIgNDE3LjEzLC0yODYuODIgNDIzLjEzLC0yODAuODIgNDI5LjEzLC0yODAuODIgNDI5LjEzLC0yODAuODIgNTk2Ljg3LC0yODAuODIgNTk2Ljg3LC0yODAuODIgNjAyLjg3LC0yODAuODIgNjA4Ljg3LC0yODYuODIgNjA4Ljg3LC0yOTIuODIgNjA4Ljg3LC0yOTIuODIgNjA4Ljg3LC0zMTguOTggNjA4Ljg3LC0zMTguOTggNjA4Ljg3LC0zMjQuOTggNjAyLjg3LC0zMzAuOTggNTk2Ljg3LC0zMzAuOTgiLz4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTEzIiB5PSItMzA3LjYiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+T1BFTjwvdGV4dD4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNTEzIiB5PSItMjkyLjYiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QmlnZm9vdCBtYWNoaW5lIG5ldmVyIGhhbHRzPC90ZXh0Pgo8L2c+CjwhLS0gYmlnJiM0NTsmZ3Q7Z29hbDMzIC0tPgo8ZyBpZD0iZWRnZTMiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPmJpZyYjNDU7Jmd0O2dvYWwzMzwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzU5NjM2ZSIgZD0iTTQ3MS40OCwtMzMxLjY3QzQ0Mi4zMiwtMzQ5LjA2IDQwMi42MSwtMzcyLjc1IDM2OC42NSwtMzkzLjAxIi8+Cjxwb2x5Z29uIGZpbGw9IiM1OTYzNmUiIHN0cm9rZT0iIzU5NjM2ZSIgcG9pbnRzPSIzNjcuNTUsLTM5MC44MiAzNjIuNzksLTM5Ni41MSAzNzAuMDYsLTM5NS4wMiAzNjcuNTUsLTM5MC44MiIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI0NDkuNTYiIHk9Ii0zNjQuMDMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMS4wMCI+b25lIG1hY2hpbmU8L3RleHQ+CjwvZz4KPCEtLSByZWNvdmVyeSAtLT4KPGcgaWQ9Im5vZGU1IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5yZWNvdmVyeTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5NTUxMyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgZD0iTTM2Ny4zNywtMjA4LjMyQzM2Ny4zNywtMjA4LjMyIDI0NC42MywtMjA4LjMyIDI0NC42MywtMjA4LjMyIDIzOC42MywtMjA4LjMyIDIzMi42MywtMjAyLjMyIDIzMi42MywtMTk2LjMyIDIzMi42MywtMTk2LjMyIDIzMi42MywtMTU1LjE2IDIzMi42MywtMTU1LjE2IDIzMi42MywtMTQ5LjE2IDIzOC42MywtMTQzLjE2IDI0NC42MywtMTQzLjE2IDI0NC42MywtMTQzLjE2IDM2Ny4zNywtMTQzLjE2IDM2Ny4zNywtMTQzLjE2IDM3My4zNywtMTQzLjE2IDM3OS4zNywtMTQ5LjE2IDM3OS4zNywtMTU1LjE2IDM3OS4zNywtMTU1LjE2IDM3OS4zNywtMTk2LjMyIDM3OS4zNywtMTk2LjMyIDM3OS4zNywtMjAyLjMyIDM3My4zNywtMjA4LjMyIDM2Ny4zNywtMjA4LjMyIi8+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMwNiIgeT0iLTE4NC45NCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5PUEVOIMK3IGFyaXRobWV0aWM8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjMwNiIgeT0iLTE2OS45NCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5Ud28gcmVhY2hhYmxlJiM0NTtzdGF0ZTwvdGV4dD4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzA2IiB5PSItMTU0Ljk0IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPnJlY292ZXJ5IGJvdW5kczwvdGV4dD4KPC9nPgo8IS0tIHJlY292ZXJ5JiM0NTsmZ3Q7YmlnIC0tPgo8ZyBpZD0iZWRnZTQiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPnJlY292ZXJ5JiM0NTsmZ3Q7YmlnPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTk2MzZlIiBkPSJNMzU3Ljk3LC0yMDguOTFDMzkxLjE1LC0yMjkuNDYgNDMzLjgxLC0yNTUuODcgNDY1Ljk4LC0yNzUuNzkiLz4KPHBvbHlnb24gZmlsbD0iIzU5NjM2ZSIgc3Ryb2tlPSIjNTk2MzZlIiBwb2ludHM9IjQ2NC41NiwtMjc3Ljc5IDQ3MS44MSwtMjc5LjQgNDY3LjE0LC0yNzMuNjMgNDY0LjU2LC0yNzcuNzkiLz4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iNDUwLjU4IiB5PSItMjM2Ljg3IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTEuMDAiPkJPVEggbmVlZGVkPC90ZXh0Pgo8L2c+CjwhLS0gc2ltIC0tPgo8ZyBpZD0ibm9kZTYiIGNsYXNzPSJub2RlIj4KPHRpdGxlPnNpbTwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5NTUxMyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgZD0iTTU5Ny4xMiwtMjExLjMyQzU5Ny4xMiwtMjExLjMyIDQxMi44OCwtMjExLjMyIDQxMi44OCwtMjExLjMyIDQwNi44OCwtMjExLjMyIDQwMC44OCwtMjA1LjMyIDQwMC44OCwtMTk5LjMyIDQwMC44OCwtMTk5LjMyIDQwMC44OCwtMTUyLjE2IDQwMC44OCwtMTUyLjE2IDQwMC44OCwtMTQ2LjE2IDQwNi44OCwtMTQwLjE2IDQxMi44OCwtMTQwLjE2IDQxMi44OCwtMTQwLjE2IDU5Ny4xMiwtMTQwLjE2IDU5Ny4xMiwtMTQwLjE2IDYwMy4xMiwtMTQwLjE2IDYwOS4xMiwtMTQ2LjE2IDYwOS4xMiwtMTUyLjE2IDYwOS4xMiwtMTUyLjE2IDYwOS4xMiwtMTk5LjMyIDYwOS4xMiwtMTk5LjMyIDYwOS4xMiwtMjA1LjMyIDYwMy4xMiwtMjExLjMyIDU5Ny4xMiwtMjExLjMyIi8+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwNSIgeT0iLTE4Ny45NCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5PUEVOIMK3IGNvcnJlc3BvbmRlbmNlPC90ZXh0Pgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI1MDUiIHk9Ii0xNzIuOTQiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+Q29tcHJlc3NlZCBydWxlcyDihpIgY291bnRlcnM8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjUwNSIgeT0iLTE1NC45NCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5Db3VudGVycyDihpIgdGFwZSBleGVjdXRpb248L3RleHQ+CjwvZz4KPCEtLSBzaW0mIzQ1OyZndDtiaWcgLS0+CjxnIGlkPSJlZGdlNSIgY2xhc3M9ImVkZ2UiPgo8dGl0bGU+c2ltJiM0NTsmZ3Q7YmlnPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTk2MzZlIiBkPSJNNTA3LjE5LC0yMTEuNzZDNTA4LjM2LC0yMzAuNTMgNTA5Ljc5LC0yNTMuNTEgNTEwLjk0LC0yNzEuOTUiLz4KPHBvbHlnb24gZmlsbD0iIzU5NjM2ZSIgc3Ryb2tlPSIjNTk2MzZlIiBwb2ludHM9IjUwOC40NywtMjcxLjczIDUxMS4zNiwtMjc4LjU2IDUxMy4zNywtMjcxLjQzIDUwOC40NywtMjcxLjczIi8+CjwvZz4KPCEtLSBydWxlcyAtLT4KPGcgaWQ9Im5vZGU3IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5ydWxlczwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE3Njg1MiIgc3Ryb2tlLXdpZHRoPSIyIiBkPSJNNTA0Ljg3LC05MS4xNkM1MDQuODcsLTkxLjE2IDMwNy4xMywtOTEuMTYgMzA3LjEzLC05MS4xNiAzMDEuMTMsLTkxLjE2IDI5NS4xMywtODUuMTYgMjk1LjEzLC03OS4xNiAyOTUuMTMsLTc5LjE2IDI5NS4xMywtMzggMjk1LjEzLC0zOCAyOTUuMTMsLTMyIDMwMS4xMywtMjYgMzA3LjEzLC0yNiAzMDcuMTMsLTI2IDUwNC44NywtMjYgNTA0Ljg3LC0yNiA1MTAuODcsLTI2IDUxNi44NywtMzIgNTE2Ljg3LC0zOCA1MTYuODcsLTM4IDUxNi44NywtNzkuMTYgNTE2Ljg3LC03OS4xNiA1MTYuODcsLTg1LjE2IDUxMC44NywtOTEuMTYgNTA0Ljg3LC05MS4xNiIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI0MDYiIHk9Ii02Ny43OCIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5QUk9WRUQ8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQwNiIgeT0iLTUyLjc4IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkR5bjogc2l4IGFyaXRobWV0aWMgY2FzZXM8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9IjQwNiIgeT0iLTM3Ljc4IiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPlY2OiBub25oYWx0aW5nIHByb3ZlZCBzZXBhcmF0ZWx5PC90ZXh0Pgo8L2c+CjwhLS0gcnVsZXMmIzQ1OyZndDtyZWNvdmVyeSAtLT4KPGcgaWQ9ImVkZ2U2IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5ydWxlcyYjNDU7Jmd0O3JlY292ZXJ5PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTk1NTEzIiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik0zNzcuODgsLTkxLjk2QzM2NS44NSwtMTA1LjgyIDM1MS43MSwtMTIyLjEgMzM5LjE4LC0xMzYuNTQiLz4KPHBvbHlnb24gZmlsbD0iIzk5NTUxMyIgc3Ryb2tlPSIjOTk1NTEzIiBwb2ludHM9IjMzNy42NCwtMTM0LjU2IDMzNC45LC0xNDEuNDYgMzQxLjM0LC0xMzcuNzggMzM3LjY0LC0xMzQuNTYiLz4KPC9nPgo8IS0tIHJ1bGVzJiM0NTsmZ3Q7c2ltIC0tPgo8ZyBpZD0iZWRnZTciIGNsYXNzPSJlZGdlIj4KPHRpdGxlPnJ1bGVzJiM0NTsmZ3Q7c2ltPC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjOTk1NTEzIiBzdHJva2UtZGFzaGFycmF5PSI1LDIiIGQ9Ik00MzMuODQsLTkxLjk2QzQ0NC45NSwtMTA0Ljg5IDQ1Ny44NywtMTE5LjkyIDQ2OS42MywtMTMzLjYiLz4KPHBvbHlnb24gZmlsbD0iIzk5NTUxMyIgc3Ryb2tlPSIjOTk1NTEzIiBwb2ludHM9IjQ2Ny41NCwtMTM0LjkyIDQ3My45NiwtMTM4LjYzIDQ3MS4yNSwtMTMxLjcyIDQ2Ny41NCwtMTM0LjkyIi8+CjwvZz4KPCEtLSBnb2FsNiAtLT4KPGcgaWQ9Im5vZGU4IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5nb2FsNjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzE1MmMzYSIgc3Ryb2tlLXdpZHRoPSIyLjUiIGQ9Ik0xMDEyLjEyLC00NzIuNjRDMTAxMi4xMiwtNDcyLjY0IDc2MS44OCwtNDcyLjY0IDc2MS44OCwtNDcyLjY0IDc1NS44OCwtNDcyLjY0IDc0OS44OCwtNDY2LjY0IDc0OS44OCwtNDYwLjY0IDc0OS44OCwtNDYwLjY0IDc0OS44OCwtNDEwLjQ4IDc0OS44OCwtNDEwLjQ4IDc0OS44OCwtNDA0LjQ4IDc1NS44OCwtMzk4LjQ4IDc2MS44OCwtMzk4LjQ4IDc2MS44OCwtMzk4LjQ4IDEwMTIuMTIsLTM5OC40OCAxMDEyLjEyLC0zOTguNDggMTAxOC4xMiwtMzk4LjQ4IDEwMjQuMTIsLTQwNC40OCAxMDI0LjEyLC00MTAuNDggMTAyNC4xMiwtNDEwLjQ4IDEwMjQuMTIsLTQ2MC42NCAxMDI0LjEyLC00NjAuNjQgMTAyNC4xMiwtNDY2LjY0IDEwMTguMTIsLTQ3Mi42NCAxMDEyLjEyLC00NzIuNjQiLz4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iODg3IiB5PSItNDQ2LjQxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTcuMDAiPkRFU1RJTkFUSU9OIMK3IE9QRU48L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9Ijg4NyIgeT0iLTQyOC40MSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE3LjAwIj5FeGFjdCBCQig2KTwvdGV4dD4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iODg3IiB5PSItNDEwLjQxIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTcuMDAiPkFsbCBjbGFzc2lmaWNhdGlvbnMgKyBsb25nZXN0IGhhbHRlcjwvdGV4dD4KPC9nPgo8IS0tIGJtbyAtLT4KPGcgaWQ9Im5vZGU5IiBjbGFzcz0ibm9kZSI+Cjx0aXRsZT5ibW88L3RpdGxlPgo8cGF0aCBmaWxsPSJub25lIiBzdHJva2U9IiMxNzY4NTIiIHN0cm9rZS13aWR0aD0iMiIgZD0iTTg0Mi43NCwtMzM4LjQ4Qzg0Mi43NCwtMzM4LjQ4IDY2NS4yNiwtMzM4LjQ4IDY2NS4yNiwtMzM4LjQ4IDY1OS4yNiwtMzM4LjQ4IDY1My4yNiwtMzMyLjQ4IDY1My4yNiwtMzI2LjQ4IDY1My4yNiwtMzI2LjQ4IDY1My4yNiwtMjg1LjMyIDY1My4yNiwtMjg1LjMyIDY1My4yNiwtMjc5LjMyIDY1OS4yNiwtMjczLjMyIDY2NS4yNiwtMjczLjMyIDY2NS4yNiwtMjczLjMyIDg0Mi43NCwtMjczLjMyIDg0Mi43NCwtMjczLjMyIDg0OC43NCwtMjczLjMyIDg1NC43NCwtMjc5LjMyIDg1NC43NCwtMjg1LjMyIDg1NC43NCwtMjg1LjMyIDg1NC43NCwtMzI2LjQ4IDg1NC43NCwtMzI2LjQ4IDg1NC43NCwtMzMyLjQ4IDg0OC43NCwtMzM4LjQ4IDg0Mi43NCwtMzM4LjQ4Ii8+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9Ijc1NCIgeT0iLTMxNS4xIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkVYVEVSTkFMIFBST09GIMK3IFJvY3E8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9Ijc1NCIgeT0iLTMwMC4xIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkJNTyM5IG1hY2hpbmUgbmV2ZXIgaGFsdHM8L3RleHQ+Cjx0ZXh0IHhtbDpzcGFjZT0icHJlc2VydmUiIHRleHQtYW5jaG9yPSJtaWRkbGUiIHg9Ijc1NCIgeT0iLTI4NS4xIiBmb250LWZhbWlseT0iSGVsdmV0aWNhLHNhbnMtU2VyaWYiIGZvbnQtc2l6ZT0iMTQuMDAiPkxvY2FsIExlYW4gcG9ydCBpcyBwcmVsaW1pbmFyeTwvdGV4dD4KPC9nPgo8IS0tIGJtbyYjNDU7Jmd0O2dvYWw2IC0tPgo8ZyBpZD0iZWRnZTgiIGNsYXNzPSJlZGdlIj4KPHRpdGxlPmJtbyYjNDU7Jmd0O2dvYWw2PC90aXRsZT4KPHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTk2MzZlIiBkPSJNNzg3LjkxLC0zMzkuNDRDODA0LjUsLTM1NS4zNyA4MjQuNjksLTM3NC43NSA4NDIuNTEsLTM5MS44NiIvPgo8cG9seWdvbiBmaWxsPSIjNTk2MzZlIiBzdHJva2U9IiM1OTYzNmUiIHBvaW50cz0iODQwLjYxLC0zOTMuNDMgODQ3LjM2LC0zOTYuNTEgODQ0LjAxLC0zODkuOSA4NDAuNjEsLTM5My40MyIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI4NTEuMjUiIHk9Ii0zNjQuMDMiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxMS4wMCI+b25lIG1hY2hpbmU8L3RleHQ+CjwvZz4KPCEtLSBvdGhlcjYgLS0+CjxnIGlkPSJub2RlMTAiIGNsYXNzPSJub2RlIj4KPHRpdGxlPm90aGVyNjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzk5NTUxMyIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1kYXNoYXJyYXk9IjUsMiIgZD0iTTEwNzcuMzcsLTMzOC40OEMxMDc3LjM3LC0zMzguNDggODg4LjYzLC0zMzguNDggODg4LjYzLC0zMzguNDggODgyLjYzLC0zMzguNDggODc2LjYzLC0zMzIuNDggODc2LjYzLC0zMjYuNDggODc2LjYzLC0zMjYuNDggODc2LjYzLC0yODUuMzIgODc2LjYzLC0yODUuMzIgODc2LjYzLC0yNzkuMzIgODgyLjYzLC0yNzMuMzIgODg4LjYzLC0yNzMuMzIgODg4LjYzLC0yNzMuMzIgMTA3Ny4zNywtMjczLjMyIDEwNzcuMzcsLTI3My4zMiAxMDgzLjM3LC0yNzMuMzIgMTA4OS4zNywtMjc5LjMyIDEwODkuMzcsLTI4NS4zMiAxMDg5LjM3LC0yODUuMzIgMTA4OS4zNywtMzI2LjQ4IDEwODkuMzcsLTMyNi40OCAxMDg5LjM3LC0zMzIuNDggMTA4My4zNywtMzM4LjQ4IDEwNzcuMzcsLTMzOC40OCIvPgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI5ODMiIHk9Ii0zMTUuMSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5PUEVOPC90ZXh0Pgo8dGV4dCB4bWw6c3BhY2U9InByZXNlcnZlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiB4PSI5ODMiIHk9Ii0zMDAuMSIgZm9udC1mYW1pbHk9IkhlbHZldGljYSxzYW5zLVNlcmlmIiBmb250LXNpemU9IjE0LjAwIj5SZW1haW5pbmcgbWFjaGluZXMsIGluY2x1ZGluZzwvdGV4dD4KPHRleHQgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iOTgzIiB5PSItMjg1LjEiIGZvbnQtZmFtaWx5PSJIZWx2ZXRpY2Esc2Fucy1TZXJpZiIgZm9udC1zaXplPSIxNC4wMCI+QW50aWh5ZHJhLCBhbmQgbG9uZ2VzdCBoYWx0ZXI8L3RleHQ+CjwvZz4KPCEtLSBvdGhlcjYmIzQ1OyZndDtnb2FsNiAtLT4KPGcgaWQ9ImVkZ2U5IiBjbGFzcz0iZWRnZSI+Cjx0aXRsZT5vdGhlcjYmIzQ1OyZndDtnb2FsNjwvdGl0bGU+CjxwYXRoIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzU5NjM2ZSIgZD0iTTk1OC43OCwtMzM5LjExQzk0Ny4wMSwtMzU0Ljc2IDkzMi42OSwtMzczLjgxIDkxOS45NCwtMzkwLjc1Ii8+Cjxwb2x5Z29uIGZpbGw9IiM1OTYzNmUiIHN0cm9rZT0iIzU5NjM2ZSIgcG9pbnRzPSI5MTguMTIsLTM4OS4xIDkxNS44NywtMzk2LjE3IDkyMi4wNCwtMzkyLjA1IDkxOC4xMiwtMzg5LjEiLz4KPC9nPgo8L2c+Cjwvc3ZnPgo=" alt="Busy Beaver map: Bigfoot needs both arithmetic recovery and a faithful machine bridge; separate BB(3,3) and BB(6) classifications lead to separate exact-value goals." />
+<figcaption aria-hidden="true">Busy Beaver map: Bigfoot needs both
+arithmetic recovery and a faithful machine bridge; separate BB(3,3) and
+BB(6) classifications lead to separate exact-value goals.</figcaption>
+</figure>
+<p><strong>Reading the map:</strong> solid arrows feed a larger proof
+obligation; dashed arrows mark intended, unproved links. All incoming
+requirements must be met together; classifying one machine is not
+sufficient. “External” identifies a proof in another project’s proof
+assistant.</p>
+<h2 id="what-we-have-actually-established">What we have actually
+established</h2>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Result</th>
+<th>What it tells us</th>
+<th>Its boundary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Machine #494 never halts</strong></td>
+<td>A complete Lean port of a known BB(3,3) result, including the actual
+Turing-machine statement.</td>
+<td>It independently formalizes a settled machine.</td>
+</tr>
+<tr>
+<td><strong>Bigfoot has six residue-dependent arithmetic
+cases</strong></td>
+<td>The counter dynamics and the only arithmetic halt condition are
+explicit.</td>
+<td>Describing the rules does not prove the orbit avoids halting.</td>
+</tr>
+<tr>
+<td><strong>A derived Bigfoot rule system never halts</strong></td>
+<td>One simplified system has the required behavior.</td>
+<td>Its relationship to the actual orbit and Turing machine is
+unfinished.</td>
+</tr>
+<tr>
+<td><strong>BMO#3 and #4 formalized; #9 scaffold built</strong></td>
+<td>The #9 model isolates the fatal prefix and its only live
+predecessor.</td>
+<td>These local #9 lemmas do not prove nonhalting.</td>
+</tr>
+</tbody>
+</table>
+<p>“Collatz-like” means these machines produce integer recurrences with
+residue-dependent rules. No theorem here transfers a solution of
+ordinary Collatz to these machines, or vice versa.</p>
+<h2 id="where-we-are-pressing">Where we are pressing</h2>
+<h3 id="bigfoot-two-different-gaps-must-close">Bigfoot: two different
+gaps must close</h3>
+<p><strong>The arithmetic gap is recovery.</strong> In compressed
+coordinates, a counter can be spent through a cascade of transitions. We
+need an invariant showing that it recovers before it can fall too low.
+The current reduction isolates two precise bounds: whenever the
+reachable pattern and counter are <code>(P1,9)</code> or
+<code>(P1,3)</code>, the reserve <code>k</code> must be at least 2. Both
+remain open; the second is the harder cascade.</p>
+<p><strong>The correspondence gap connects that arithmetic to the real
+machine.</strong> We still need the bridge between the compressed V6
+rules and the original counter dynamics, and a proof that the counter
+macrosteps faithfully simulate tape execution. A theorem proves that the
+completed simulation plus arithmetic nonhalting would imply machine
+nonhalting. Its simulation input is not yet proved.</p>
+<p>These are concrete mathematical and formalization targets. The
+inspected September commits contain no new proof of the recovery
+cascade; this is a remaining frontier, not evidence of an advancing
+current campaign.</p>
+<h3 id="bmo9-the-recent-activity-now-has-a-known-destination">BMO#9: the
+recent activity now has a known destination</h3>
+<p>The local September 25 work added the rewrite model and finite
+probes. A subsequent source check identified a <strong>September 24 Rocq
+proof of the machine’s nonhalting</strong> in busycoq. Its proof uses
+singleton returns, finite tables, and a global induction controlling the
+return budget. The source has been inspected; its complete dependency
+build was not repeated here.</p>
+<p>A Lean port is therefore an available <strong>known-theorem
+formalization project</strong>, with an external proof to follow and a
+machine-level endpoint. It is substantial work, beyond the preliminary
+local lemmas. It would again provide an externally established theorem
+to follow through to a complete formal proof.</p>
+<h3 id="a-proposed-new-research-direction-prove-a-method-cannot-succeed">A
+proposed new research direction: prove a method cannot succeed</h3>
+<p>“Genuine irregularity” would prove that <strong>no regular closed
+tape-language certificate</strong> can certify a particular machine’s
+nonhalting. That could explain a whole class of decider failures. It is
+a recommendation from the review, with no local implementation or
+established reduction yet. It should not be mistaken for active
+progress.</p>
+<h2 id="what-would-count-as-a-change-in-position">What would count as a
+change in position?</h2>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr>
+<th>Next result</th>
+<th>What changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Close Bigfoot’s recovery bounds and both correspondence gaps</td>
+<td>A complete nonhalting proof for an individual hard machine.</td>
+</tr>
+<tr>
+<td>Port the BMO#9 proof through to the actual TM theorem</td>
+<td>A substantial finished formalization with an independently known
+answer.</td>
+</tr>
+<tr>
+<td>Prove universal irregularity for a named machine</td>
+<td>A structural result explaining a limit of regular-language
+methods.</td>
+</tr>
+<tr>
+<td>Classify all remaining machines and certify the longest halter</td>
+<td>An exact Busy Beaver value for the corresponding machine size.</td>
+</tr>
+</tbody>
+</table>
+<p>Other BB(3,3) behavior classes and the proposed champion still
+require proofs. Antihydra remains a separate BB(6) obstruction. Finite
+simulations and old unsuccessful parameter sweeps are useful evidence
+about methods, not proofs that an orbit remains safe forever.</p>
+<h2 id="evidence-and-upkeep">Evidence and upkeep</h2>
+<p>Snapshot: <code>init</code> at <code>6ec0fe0</code>. Read <a href="lean/Collatz/Bigfoot/Classification.lean">Bigfoot’s arithmetic
+rules</a>, <a href="lean/Collatz/Bigfoot/V6KPos.lean">recovery
+bounds</a>, <a href="lean/Collatz/Bigfoot/Reduction.lean">machine
+reduction</a>, <a href="lean/Collatz/BB33_494.lean">#494’s completed
+proof</a>, and <a href="notes/30-bmo9-first-pass-2026-09-25.md">the
+BMO#9 source correction and proof outline</a>. The root README’s older
+species roadmap is historical.</p>
+<p>This is the maintained reader’s map. Update it when a machine or a
+proof obligation changes status; retain detailed discoveries in
+<code>notes/</code>. Diagram source: <a href="docs/overview.dot">docs/overview.dot</a>. Rebuild the visual
+edition with <code>make -f docs/overview.mk</code>.</p>
+</body>
+</html>
