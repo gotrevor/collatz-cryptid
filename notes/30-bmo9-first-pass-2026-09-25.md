@@ -49,7 +49,11 @@ treating the infinite zero tail via `Prefix.Exec`.  Its main bridge,
 most six.  `Closure.all_good` proves returns for all indices by induction once
 `FinalBudget.budget` supplies quantitative bounds at large scales.
 `TM1.nonhalt_of_returns` converts the singleton returns into an infinite
-machine run.  The file contains no `Admitted`, `Axiom`, or `Parameter`
+machine run.  The universal return claim is a sufficient proof strategy, not
+the problem statement: starting from `[0]`, each safe return `[3*j]` to a
+larger singleton `[3*j']` supplies another segment of an endless orbit.
+Proving returns only for the singleton states actually reached would also
+suffice.  The file contains no `Admitted`, `Axiom`, or `Parameter`
 declaration; imported files and the complete Rocq build were not audited here.
 
 A Lean contribution would port known mathematics.  The smallest honest unit
