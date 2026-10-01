@@ -93,11 +93,4 @@ theorem G_returns_of (hbud : ∀ k, 65536 < k → Earlier k → Budget k) :
     (by omega) (1 + 2*(t:ℤ)) (by omega) ⟨t, by ring⟩
   simpa [Table.G, show (1 + 2*(t:ℤ)).toNat = 1 + 2*t by omega] using this
 
-/-- **Open crux.**  Rocq `FinalBudget.budget`. -/
-theorem budget : ∀ k, 65536 < k → Earlier k → Budget k := by
-  sorry
-
-theorem G_returns : ∀ k t, ∃ e m, Prefix.Exec e (Prefix.G (k+1) (1+2*t)) [m] :=
-  G_returns_of budget
-
 end BMO9.Closure

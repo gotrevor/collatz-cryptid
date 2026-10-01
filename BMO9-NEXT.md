@@ -61,3 +61,8 @@ Commit each green checkpoint, and record status at the bottom of this file as yo
   In flight (subagents): Word{Arith,Relation,Library,Check,Link}; Phase/Cubic/Stages;
   HighPath/Exponential/ScaleNumbers.  Remaining after: BoundaryBound, Closure, WordBlocks,
   Multiscale, SmallScale, LargeStep, GlobalBounds, FinalBudget.
+- 2026-10-01: **DONE.** All Rocq modules except TM1 ported (WordBlocks, Multiscale, SmallScale,
+  LargeStep, GlobalBounds, FinalBudget, Final added).  `lean/Collatz/BMO/` is sorry-free.
+  `#print axioms BMO9.beaver_math_olympiad_problem_9`: propext, Classical.choice, Quot.sound
+  + six native_decide axioms (CheckTable.{P16,bank_checked,finite_check},
+  WordCheck.{finite_bounds,finite_check}, WordLibrary.bank_checked).  No sorryAx.

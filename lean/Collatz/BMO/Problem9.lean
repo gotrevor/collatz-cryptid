@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
 import Collatz.BMO.Problem9.Bridge
-import Collatz.BMO.Problem9.Closure
+import Collatz.BMO.Problem9.Final
 
 /-!
 # BMO #9: the first obstruction
@@ -125,6 +125,6 @@ theorem beaver_math_olympiad_problem_9
     ¬ ∃ n, x n 0 = 1 ∧ x n 1 = 0 := by
   rintro ⟨n, hn⟩
   exact Bridge.forever x (fun n ↦ x_rec n) x_ini
-    (Prefix.single_returns Closure.G_returns) n hn
+    (Prefix.single_returns Final.G_returns) n hn
 
 end BMO9
