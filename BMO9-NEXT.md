@@ -55,3 +55,9 @@ Commit each green checkpoint, and record status at the bottom of this file as yo
   `Exec` safely (`Bridge.forever`).  The headline is proved modulo one sorry,
   `Closure.G_returns` (`∀ k t, ∃ e m, Exec e (G (k+1) (1+2t)) [m]`).  Not yet ported from Prefix:
   `run_last`, `F_to_G`, `odd_lookup` (needed by `Table`).  Next: skeleton `Block`, `Table`.
+- 2026-10-01 (later): ported sorry-free: Prefix (complete), Block, Table, UniqueTable,
+  CheckTable (`base_structured` via native_decide, ~3s; P16 matches Rocq), TableBridge
+  (= Rocq Bridge+Finite).  Convention: levels/depths/exponents are ℕ, everything else ℤ.
+  In flight (subagents): Word{Arith,Relation,Library,Check,Link}; Phase/Cubic/Stages;
+  HighPath/Exponential/ScaleNumbers.  Remaining after: BoundaryBound, Closure, WordBlocks,
+  Multiscale, SmallScale, LargeStep, GlobalBounds, FinalBudget.
