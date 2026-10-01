@@ -5,7 +5,7 @@ Authors: Trevor Morris
 -/
 import Collatz.BMO.Problem9.Prefix
 import Collatz.BMO.Problem9.Block
-import Collatz.BMO.Problem9.Table
+import Collatz.BMO.Problem9.CheckTable
 
 /-!
 # BMO #9, port of Rocq `Module Closure` (BMO9.v lines 2659-2740)
