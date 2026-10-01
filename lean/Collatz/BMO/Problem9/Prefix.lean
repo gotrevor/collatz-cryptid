@@ -187,3 +187,64 @@ theorem single_returns
       simp [G, F]; omega
     rw [hG] at hr
     simpa [hn] using ho.exec.trans hr
+
+theorem snoc_inj {p p' : List ℕ} {z z' : ℕ} (h : p ++ [z] = p' ++ [z']) : p = p' ∧ z = z' := by
+  have := List.append_inj' h rfl
+  exact ⟨this.1, by simpa using this.2⟩
+
+theorem Step.last {e xs ys} (h : Step e xs ys) (p : List ℕ) (z : ℕ) (hx : xs = p ++ [z]) :
+    ∃ q d, ys = q ++ [z+d] ∧ ∀ z', Step e (p ++ [z']) (q ++ [z'+d]) := by
+  cases h with
+  | E n v w r =>
+      rcases List.eq_nil_or_concat r with rfl | ⟨p0, z0, rfl⟩
+      · obtain ⟨rfl, rfl⟩ := snoc_inj (p := [2*n, v]) (by simpa using hx)
+        refine ⟨[], 2*n+v+3, by simp; omega, fun z' ↦ ?_⟩
+        rw [show z' + (2*n+v+3) = 2*n+v+z'+3 by omega]
+        exact Step.E n v z' []
+      · obtain ⟨rfl, rfl⟩ := snoc_inj (p := 2*n :: v :: w :: p0) (by simpa using hx)
+        exact ⟨(2*n+v+w+3) :: p0, 0, by simp, fun z' ↦ by simpa using Step.E n v w (p0 ++ [z'])⟩
+  | O n v w r hs =>
+      rcases List.eq_nil_or_concat r with rfl | ⟨p0, z0, rfl⟩
+      · obtain ⟨rfl, rfl⟩ := snoc_inj (p := [2*n+1, v]) (by simpa using hx)
+        refine ⟨[n+v-1, 0, 1], n+1, by simp; omega, fun z' ↦ ?_⟩
+        rw [show z' + (n+1) = z'+n+1 by omega]
+        exact Step.O n v z' [] hs
+      · obtain ⟨rfl, rfl⟩ := snoc_inj (p := (2*n+1) :: v :: w :: p0) (by simpa using hx)
+        exact ⟨(n+v-1) :: 0 :: 1 :: (w+n+1) :: p0, 0, by simp,
+          fun z' ↦ by simpa using Step.O n v w (p0 ++ [z']) hs⟩
+
+theorem Run.last {e xs ys} (h : Run e xs ys) :
+    ∀ (p : List ℕ) (z : ℕ), xs = p ++ [z] →
+      ∃ q d, ys = q ++ [z+d] ∧ ∀ z', Run e (p ++ [z']) (q ++ [z'+d]) := by
+  induction h with
+  | refl xs => intro p z hx; exact ⟨p, 0, by simpa using hx, fun z' ↦ by simpa using Run.refl _⟩
+  | cons hs _ ih =>
+      intro p z hx
+      obtain ⟨p1, d1, hy, hstep⟩ := hs.last p z hx
+      obtain ⟨p2, d2, hz, hrun⟩ := ih p1 (z+d1) hy
+      refine ⟨p2, d1+d2, by rw [hz, Nat.add_assoc], fun z' ↦ ?_⟩
+      have := Run.cons (hstep z') (hrun (z'+d1))
+      rwa [Nat.add_assoc] at this
+
+theorem F_to_G (e k q : ℕ) (ys : List ℕ) (a : ℕ) (hq : 0 < q)
+    (h : Run e (F (k+1) q) (ys ++ [1+a])) : Run e (G (k+1) q) (ys ++ [a]) := by
+  obtain ⟨p, d, he, hr⟩ := h.last _ _ (F_snoc k q)
+  obtain ⟨rfl, ha⟩ := snoc_inj he
+  have hp : 0 < 2^k := Nat.two_pow_pos k
+  have := hr (2^k*q - 1)
+  have hq' : 1 ≤ 2^k*q := Nat.one_le_iff_ne_zero.2 (by positivity)
+  rw [show 2^k*q - 1 + d = a by omega] at this
+  simpa [G] using this
+
+theorem odd_lookup (k t n v w : ℕ) (r : List ℕ) (e : ℕ) (ys : List ℕ) (a : ℕ)
+    (hn : n + v + 2 = 2^k*(3+2*t)) (hr : Run e (F (k+1) (3+2*t)) (ys ++ [a])) :
+    Run (1+e) ((2*n+1) :: v :: w :: r) ((ys ++ [a+w-v-1]) ++ r) := by
+  obtain ⟨p, d, hlast, hrun⟩ := hr.last _ _ (F_snoc k (3+2*t))
+  obtain ⟨rfl, ha⟩ := snoc_inj hlast
+  have h1 := odd_expand k t n v w r hn
+  have h2 := (hrun (w+n+1)).app r
+  have h1' : Run 1 ((2*n+1) :: v :: w :: r) ((F k (3+2*t) ++ [w+n+1]) ++ r) := by
+    simpa [F, show 3+2*t+1 = 4+2*t by omega] using h1
+  have := h1'.trans h2
+  convert this using 3
+  simp; omega
