@@ -32,3 +32,12 @@ Lemmas on `padicValNat 2` you will want: `v₂(2m) = v₂ m + 1`, `v₂` of an o
 
 Commit each green checkpoint.  Split into named lemmas and add `sorry` leaves freely; a higher
 sorry count during decomposition is progress.
+
+## Status (2026-10-01): DONE ✅
+
+`beaver_math_olympiad_problem_7` is proved, sorry-free.  `#print axioms`:
+`[propext, Classical.choice, Quot.sound]`.  The proof skips the PDF's three-case Claim 3.  The
+invariant is the pair `(p, next p)` with `S p` (`inv`), and one arithmetic lemma `step` shows the
+two orbits `f^[·] (p/2)` and `f^[·] (next p / 2)` merge after `j + 1 ≤ 3` steps.  The
+valuations are handled by `vcase` (a case split of `v₂ x` into 0, 1, 2, 3, ≥4 by residue) and
+`vhalf`, then `omega`.  The induction starts at `(b 3, b 4) = (6, 10)` (`decide +kernel`).
