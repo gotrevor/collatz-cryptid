@@ -3,7 +3,8 @@ Copyright (c) 2026 Trevor Morris. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
-import Mathlib.Tactic
+import Collatz.BMO.Problem9.Bridge
+import Collatz.BMO.Problem9.Closure
 
 /-!
 # BMO #9: the first obstruction
@@ -122,6 +123,8 @@ theorem beaver_math_olympiad_problem_9
       else
         fun i ↦ if i = 0 then x n 0 - 2 else if i ≤ 2 then 1 + x n i else x n i) :
     ¬ ∃ n, x n 0 = 1 ∧ x n 1 = 0 := by
-  sorry
+  rintro ⟨n, hn⟩
+  exact Bridge.forever x (fun n ↦ x_rec n) x_ini
+    (Prefix.single_returns Closure.G_returns) n hn
 
 end BMO9

@@ -47,3 +47,11 @@ arithmetic statement, not the machine.
 4. `lia` ↦ `omega` (ℕ/ℤ linear), `nia` ↦ `nlinarith`/`positivity`, and Rocq `Z` ↦ Lean `ℤ`.
 
 Commit each green checkpoint, and record status at the bottom of this file as you go.
+
+## Status
+
+- 2026-10-01: **Route step 1 done.** `Problem9/Prefix.lean` ports Rocq `Prefix` up to
+  `single_returns` (proved).  `Problem9/Bridge.lean` proves the stream recursion simulates
+  `Exec` safely (`Bridge.forever`).  The headline is proved modulo one sorry,
+  `Closure.G_returns` (`∀ k t, ∃ e m, Exec e (G (k+1) (1+2t)) [m]`).  Not yet ported from Prefix:
+  `run_last`, `F_to_G`, `odd_lookup` (needed by `Table`).  Next: skeleton `Block`, `Table`.
