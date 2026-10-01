@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Trevor Morris
 -/
 import Collatz.BMO.Problem9.Prefix
+import Collatz.BMO.Problem9.Block
 
 /-!
 # BMO #9, port of Rocq `Module Closure` (BMO9.v lines 2659-2740)
