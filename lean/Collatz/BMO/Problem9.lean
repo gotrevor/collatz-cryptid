@@ -95,4 +95,33 @@ theorem orbit_sum_mod (n : ℕ) (s : List ℕ) (h : orbit n = some s) :
           simp [ho] at h
           exact (step_sum_mod p s h).trans hp
 
+/-! ## The headline
+
+BMO#9 as posed on the [BMO wiki](https://wiki.bbchallenge.org/wiki/Beaver_Math_Olympiad) §9,
+in the style of `google-deepmind/formal-conjectures`, so it can anchor a `formal_proof` link.
+A configuration is a sequence `ℕ → ℕ`.  The four rules, for `a b c ∈ ℕ` and a tail `r`:
+
+* `(0, a, c, r) ↦ (3 + a + c, r)`
+* `(1, 0, r) ↦ Halt`
+* `(1, 1 + a, c, r) ↦ (a, 0, 1, 1 + c, r)`
+* `(2 + a, b, c, r) ↦ (a, 1 + b, 1 + c, r)`
+
+The orbit of the all-zero sequence never reaches `Halt`.  The second branch of `x_rec` also covers
+the halting prefix `(1, 0, …)` with an arbitrary value.  This is harmless: the conclusion says that
+prefix never occurs, and the steps before its first occurrence follow the published rules. -/
+
+theorem beaver_math_olympiad_problem_9
+    (x : ℕ → ℕ → ℕ)
+    (x_ini : x 0 = fun _ ↦ 0)
+    (x_rec : ∀ n, x (n + 1) =
+      if x n 0 = 0 then
+        fun i ↦ if i = 0 then 3 + x n 1 + x n 2 else x n (i + 2)
+      else if x n 0 = 1 then
+        fun i ↦ if i = 0 then x n 1 - 1 else if i = 1 then 0 else if i = 2 then 1
+          else if i = 3 then 1 + x n 2 else x n (i - 1)
+      else
+        fun i ↦ if i = 0 then x n 0 - 2 else if i ≤ 2 then 1 + x n i else x n i) :
+    ¬ ∃ n, x n 0 = 1 ∧ x n 1 = 0 := by
+  sorry
+
 end BMO9
