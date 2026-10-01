@@ -20,3 +20,12 @@ rev = "v4.33.1"
 
 [[lean_lib]]
 name = "Collatz"
+
+# comparator harness (Comparator/<Result>/{Challenge,Solution}.lean at the repo root).
+# Not in defaultTargets and not imported by the main lib: challenge files carry `sorry` by design.
+# Built on demand (`lake build Comparator`) and in CI (.github/workflows/comparator.yml).
+# srcDir is relative to the package srcDir ("lean"), so ".." puts the module root at the repo root.
+[[lean_lib]]
+name = "Comparator"
+srcDir = ".."
+globs = ["Comparator.+"]

@@ -1,0 +1,11 @@
+{
+  "challenge_module": "Comparator.BMO.Challenge",
+  "solution_module": "Comparator.BMO.Solution",
+  "theorem_names": [
+    "Collatz.BMO.Problem3.beaver_math_olympiad_problem_3",
+    "Collatz.BMO.Problem4.beaver_math_olympiad_problem_4",
+    "Collatz.BMO.Problem7.beaver_math_olympiad_problem_7"
+  ],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}
