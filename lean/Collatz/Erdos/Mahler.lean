@@ -19,10 +19,10 @@ lives entirely in `[0, 1/2)`:
 
 **Mahler (1968) conjectured: no Z-number exists.**  This is open.
 
-Best known partial result: Flatto–Lagarias–Pollington (1995) show that
-if a Z-number exists, the density of `n` with `{x · (3/2)^n} ∈ [0, 1/2)`
-is bounded; specifically, the density of indices where the orbit drifts
-into the "wrong" half-interval is non-trivially positive.  (Not
+Best known partial result: Flatto–Lagarias–Pollington (Acta Arith. 70, 1995,
+Thm 1.4) show that for every `ξ > 0` and coprime `p > q > 1`,
+`limsup {ξ (p/q)^n} − liminf {ξ (p/q)^n} ≥ 1/p`.  For `3/2` this excludes every
+interval of length `< 1/3`, e.g. `[0, 1/3)`, but not Mahler's `[0, 1/2)`.  (Not
 formalized here.)
 
 ## Place in the family
