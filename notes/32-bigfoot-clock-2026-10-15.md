@@ -79,7 +79,7 @@ Every map is written in int-y1's `Hydra` schema.  The two canonical floor engine
 | Antihydra is `A 3` (`H` from `2³`, walk `+2/−1`, counter 0) | `antihydra_iff_A3` | yes (definitional) |
 | int-y1 #323 is `A 1` (`x + 2` follows `H`) | `hydra323_iff_A1` | int-y1's notes do not say so; Discord unknown (~40%) |
 | BB(2,5) Hydra is `H` from `3`, walk `−1/+2` (`a = 3u − 6`) | `hydraBB25_iff` | **yes**: the substitution `(3a − 6, b)` is on the bbchallenge wiki (dyuan01, page for `1RB1RC_1LC1LE_1RA1RD_0RF0RE_1LA0LB_---1RA`; web search snippet, page not opened) |
-| **#323 and BB(2,5) Hydra walk the same orbit `H^n(3)`**, with mirrored weights | `hydra323_hydraBB25_same_orbit` | not seen anywhere (~50% folklore, since it follows from the two rows above) |
+| **#323 and BB(2,5) Hydra walk the same orbit `H^n(3)`**, with mirrored weights | `hydra323_hydraBB25_same_orbit` | **folklore in substance**: racheline_nya (bbchallenge Discord, `individual-machines`, 2024-07-23) notes that iterating `⌊3n/2⌋` from 2 "passes through 3, it's the hydra trajectory", and int-y1 names #323 `hydra323 : Hydra 3 2 [1, 2] [2, -1] (1, 2)`; the Lean proof is what is new |
 | `A 0`, `A 4` halt (walk steps 1, 22) | `not_A0`, `not_A4` | known-answer controls |
 | #218 is the `K`-orbit of 4 (`x + 3` follows `K`) | `hydra218_iff` | int-y1 likely knows (~50%) |
 
@@ -134,9 +134,10 @@ V6's `k` *is* Ligocki's `a` along the orbit (`segment`).
 
 Nothing here bears on whether Bigfoot halts.  The block map and the clock-in-substance are prior
 work (LegionMammal978).  The Hydra-to-`H` substitution is prior work (dyuan01, wiki).  The
-prior-work search was a local read of `bb-deep-dive` and int-y1 plus one web search: the
-bbchallenge Discord (`#bb3x3`, `#bb-fractran`) was **not** searched, and either the parity lemma
-or the #323/Hydra shared orbit may be known there.
+prior-work search was a local read of `bb-deep-dive` and int-y1, one web search, and (2026-10-15,
+after the lap) a full-text search of the bbchallenge Discord channels `bb6`, `bb2x5` and
+`individual-machines`.  That search found the #323/Hydra shared orbit in substance (row above) and
+nothing on the two-step parity lemma; `#bb3x3` was not searched.
 
 ## Build
 
