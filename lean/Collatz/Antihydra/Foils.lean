@@ -534,6 +534,34 @@ theorem evenCount_ceiling_sharp {L K : ℕ} (hL : 1 ≤ L) (hK : 2 ≤ K) :
   rw [evenCount_congr (τ₂ := τ) fun m _ => heq m, evenCount_eq_min_of_odd_tail τ _ n₁ hodd,
     evenCount_congr (τ₂ := floorChoice) fun m hm => (hpre m (by omega)).symm]
 
+/-! ## Rounding-sensitive identities and a route that passes the gate -/
+
+/-- At an odd value the floor image is `≡ 1 (mod 3)` (`2 H x = 3x - 1`)... -/
+theorem floor_step_mod_three (x : ℕ) (hx : x % 2 = 1) : (3 * x / 2) % 3 = 1 := by omega
+
+/-- ...while the ceiling image is `≡ 2 (mod 3)`.  So mfornet's I4 (`a_k mod 3 ∈ {0, 1}` for
+`k ≥ 1`) and the crossreview's "`H` misses `2 mod 3`" are rounding-sensitive. -/
+theorem ceil_step_mod_three (x : ℕ) (hx : x % 2 = 1) : ((3 * x + 1) / 2) % 3 = 2 := by omega
+
+/-- Canonical rational-base-`3/2` digit sum (mfornet `notes/digit-sum-route.md` §1):
+`2n = 3q + r`, `0 ≤ r < 3`, `S n = r + S q`. -/
+def canonDigitSum : ℕ → ℕ
+  | 0 => 0
+  | n + 1 => (2 * (n + 1)) % 3 + canonDigitSum (2 * (n + 1) / 3)
+decreasing_by omega
+
+/-- Anchor: `S 7 = 7` (canonical representation `2122`, mfornet `digit-sum-route.md` §1). -/
+theorem canonDigitSum_seven : canonDigitSum 7 = 7 := by simp [canonDigitSum]
+
+/-- **Open (mfornet's (G), `notes/digit-sum-route.md` §2).**  Some constant `C` has
+`S n ≥ (1/3) log_{3/2} n - C` for every `n ≥ 1`.  By mfornet's paper argument it bounds below
+the counter of every floor orbit from `n ≥ 2` (not yet the orbit of `8`).  It is a statement
+about the exact digit system, so the gate (`rounding_blind_cannot_decide`) does not apply to
+it: unlike the parity statistics, the canonical digit cost distinguishes floor from ceiling.
+mfornet's own `C = 0` counterexample `n = 2334583347857315758881` refutes only `C = 0`. -/
+def GlobalDigitBound : Prop :=
+  ∃ C : ℝ, ∀ n : ℕ, 1 ≤ n → (1 / 3) * Real.logb (3 / 2) n - C ≤ canonDigitSum n
+
 /-! ## Faithfulness: the all-floor member is Antihydra -/
 
 /-- Antihydra's map `n ↦ n + ⌊n/2⌋`, as in mfornet/antihydra-autoresearch `lean/Antihydra.lean`. -/
@@ -604,5 +632,15 @@ theorem halts_floor_iff : Halts floorChoice (8, 0) ↔ AntihydraHalts := by
     have := orbit_floor_snd k fun m _ hm => hnh ⟨m, hm⟩
     have : (0 : ℤ) ≤ (orbit floorChoice (8, 0) k).2 := by positivity
     linarith
+
+/-- **Open.**  Every `F_L` (`L ≥ 1`) contains a member that never halts from `(8, 0)`.  For large
+`L`, block `0` holds every odd value below `2L`, so a member follows Antihydra or the all-ceiling
+orbit up to height `2L`; this needs one of those two orbits to survive to every height
+(85%, argued in notes/33 §1).  Known: `L = 1` (`exists_nonhalting_member_one`), and it follows
+from Antihydra's non-halting (`allNonhaltingMember_of_not_halts`). -/
+def AllNonhaltingMember : Prop := ∀ L, 1 ≤ L → ∃ σ : ℕ → Bool, ¬ Halts (member L σ) (8, 0)
+
+theorem allNonhaltingMember_of_not_halts (h : ¬ AntihydraHalts) : AllNonhaltingMember :=
+  fun L _ => ⟨fun _ => false, by rw [member_floor, halts_floor_iff]; exact h⟩
 
 end Collatz.Antihydra.Foils
