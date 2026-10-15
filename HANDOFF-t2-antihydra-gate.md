@@ -28,3 +28,9 @@ Lean: `lean/Collatz/Antihydra/Foils.lean`, in the default build via `Collatz.Ant
   optional; it points toward halting, so it is a control, not progress on Antihydra.
 - Discord prior-work check for the foil observation (needs a host session).
 - (G) (`GlobalDigitBound`) is the route that passes the gate; not studied.
+
+## Run scope
+This run was a bounded kickoff (T2 only).  `box done` was signalled; the repo-wide gate declines
+because 9 pre-existing sorries remain outside T2 (Tao, Korec, Bigfoot sim/V6KPos, etc.).  They are
+not in scope for this kickoff.  Relaunch with `--done-when 'sorry-free:lean/Collatz/Antihydra'` (already met)
+if the host should stop on T2's target.
