@@ -12,6 +12,7 @@ import Collatz.Tao
 import Collatz.Korec
 import Collatz.BB
 import Collatz.BMO
+import Collatz.Antihydra
 import Collatz.Bigfoot
 import Collatz.Holdout153
 import Collatz.FatCoyote
