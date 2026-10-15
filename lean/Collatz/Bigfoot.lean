@@ -5,6 +5,9 @@ Authors: Trevor Morris
 -/
 import Collatz.Bigfoot.Machine
 import Collatz.Bigfoot.Dynamics
+import Collatz.Bigfoot.Clock
+import Collatz.Bigfoot.Gate
+import Collatz.Bigfoot.V6Bridge
 import Collatz.Bigfoot.Hypothesis
 import Collatz.Bigfoot.Encoding
 import Collatz.Bigfoot.Reduction
