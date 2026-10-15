@@ -1,5 +1,9 @@
 # Handoff: T2, rounding-choice foils for Antihydra (2026-10-15)
 
+**Status at checkpoint (2026-10-15):** run stopped by the treadmill after `box done --green`.
+Branch `wip/t2-antihydra-gate`, HEAD before this checkpoint `142b185`.  `lake build` green
+(8770 jobs).  T2 targets 1-4 done; nothing in flight; no Aristotle job submitted.
+
 Branch `wip/t2-antihydra-gate`.  Kickoff: `KICKOFF-2026-10-15-t2-antihydra-gate.md`.
 Write-up: `notes/33-antihydra-foils-2026-10-15.md` (claims tagged Lean / source / paper).
 Lean: `lean/Collatz/Antihydra/Foils.lean`, in the default build via `Collatz.Antihydra`; no
@@ -22,7 +26,11 @@ Lean: `lean/Collatz/Antihydra/Foils.lean`, in the default build via `Collatz.Ant
    from members agreeing below block `K` is Antihydra's own `E` frozen at `horizon L K`.
    Gate: `rounding_blind_cannot_decide`.  DONE.
 
-## Open / next
+## Open / next (exact next steps, if T2 is resumed)
+- First: Discord prior-work check for "rounding-choice foil / halting member" (host session).
+- Then, optionally, `AllNonhaltingMember` for fixed small `L` via
+  `nonhalting_member_of_survives` with `K = 2` (finite checks; `L ≤ 2` is immediate since the
+  start `8 ≥ 4L`).
 - `AllNonhaltingMember` (open def).  Small fixed `L` would be finite checks; not worth much.
 - An effective blind `O_k ≥ c log k` in Lean from `even_run_dvd` (mfornet ED2's adaptation) —
   optional; it points toward halting, so it is a control, not progress on Antihydra.
