@@ -98,3 +98,47 @@ In `X = 4b + 3c` the one-step offset `X' − 4X/3` depends only on `(b mod 2, X 
 `3, −1/3, 7/3` at odd `b` and `2, −10/3, 22/3` at even `b` (computed, 4000 steps).  Bigfoot is two
 alternating `×4/3` engines, each applied twice in a row, and neither is a rounding of `4X/3`
 (the offset spread exceeds 1).
+
+## 5. The Maze gate on `KPosCascade` (Lean)
+
+**What `KPosCascade` says, exactly** (`lean/Collatz/Bigfoot/V6Bridge.lean`).  Under
+`φ(a, b, c) = (k := a, a := 2b − 1, b := 2c + 1, P1)`, one Ligocki step from `s` is one V6 segment
+from `φ s` to `φ(step s)`: `⌊b/6⌋` B/S pairs (`cascade`), then a tail of 2–3 rules chosen by
+`b mod 6` (`seg0` … `seg5`, `segment`).  The only decrement firings, `(P1, a = 9)` (B-coll) and
+`(P1, a = 3)` (D-W), occur exactly in the segments with `b ≡ 5` and `b ≡ 2 (mod 6)`, with `k = a`
+(`segment_fire`, `SegFire`).  Hence
+
+* **`kPosCascade_iff_margin2`**: `V6.KPosCascade ↔ Margin2`, where
+  `Margin2 := ∀ n s, Dyn.orbit n = some s → s.b % 6 ∈ {2, 5} → 2 ≤ s.a`.
+* `margin2_nonhalt`: `Margin2 → ∀ n, Dyn.orbit n ≠ none`.
+
+Correction to a docstring: `V6KPos.lean` describes `KPosCascade` as "equivalent to Ligocki's
+InvariantA, i.e. to the holdout".  As statements they are not equivalent.  Non-halting is
+`b ≡ 2 → a ≥ 1`, and `KPosCascade` asks for margin 2 at `b ≡ 2` *and* at the harmless `b ≡ 5`
+steps, where V6's B-coll passes through `k − 1` before Q-kpp restores it.  So the repo's crux is a
+strictly stronger-looking form of the holdout (one direction is proved), of the same kind.
+Empirically both hold: min `a` at `b ≡ 2, 5` over `10⁵` steps is `3` (computed).
+
+**Gate verdict: costume** (`lean/Collatz/Bigfoot/Gate.lean`).  The increment of the counter is
+local: `walk_local` makes it a function of `b mod 6`, i.e. of the clock phase and `b mod 3`.  The
+counter itself is not: by `a_not_local`, it is not a function of `(n mod 4, b mod 3^j)` for any
+`j ≤ 8`, with explicit kernel-checked collisions on the orbit.  Computed over `10⁵` steps,
+essentially every key `(phase, b mod 3^j)` with `j ≤ 8` has several values of `a` (`12/12, …,
+23492/25651` keys), while the increment shows zero conflicts (the control).  So `KPosCascade` is
+"the partial sums of a digit-driven walk along one orbit stay ≥ 2 at the decrement residues".
+That is the Antihydra-type single-orbit wall (crossreview §0: one specific orbit's residue
+statistics), not a within-horizon statement.  No renewal in V6 coordinates rescues it, because
+V6's `k` *is* Ligocki's `a` along the orbit (`segment`).
+
+## What is not claimed
+
+Nothing here bears on whether Bigfoot halts.  The block map and the clock-in-substance are prior
+work (LegionMammal978).  The Hydra-to-`H` substitution is prior work (dyuan01, wiki).  The
+prior-work search was a local read of `bb-deep-dive` and int-y1 plus one web search: the
+bbchallenge Discord (`#bb3x3`, `#bb-fractran`) was **not** searched, and either the parity lemma
+or the #323/Hydra shared orbit may be known there.
+
+## Build
+
+`lake build` at the repo root; the declarations are in `lean/Collatz/Bigfoot/{Clock,Gate,V6Bridge}.lean`
+and `lean/Collatz/Census.lean`.
