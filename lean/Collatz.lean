@@ -13,6 +13,7 @@ import Collatz.Korec
 import Collatz.BB
 import Collatz.BMO
 import Collatz.Bigfoot
+import Collatz.Census
 import Collatz.Holdout153
 import Collatz.FatCoyote
 import Collatz.WilyCoyote

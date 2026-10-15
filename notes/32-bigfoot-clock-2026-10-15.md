@@ -64,3 +64,37 @@ conflicts.
 **Summary sentence**, stated exactly: Bigfoot is the counter walk of the `×256/81` base-3 block
 map `b ↦ 512⌊b/162⌋ + g₄[b mod 162]` (four steps of a `×4/3` map whose parity is a 4-phase clock),
 with walk mean `+1/6` per step.  Halting is the walk going negative (`nonhalt_iff_hydra`).
+
+## 4. Census of shared engines (Lean, `lean/Collatz/Census.lean`)
+
+Every map is written in int-y1's `Hydra` schema.  The two canonical floor engines are
+`H(u) = ⌊3u/2⌋` (`hydraIterate 3 2 [0,1]`) and `K(u) = ⌊4u/3⌋` (`hydraIterate 4 3 [0,1,2]`,
+`hydraIterate_K`).  Sources: Antihydra and BB(2,5) Hydra from sligocki's
+`rust/src/validator.rs` (`test_antihydra` rules 4–6, `test_hydra`; opened in
+`~/src/bb-deep-dive/sligocki-busy-beaver`); #323 and #218 from int-y1's `Size23Summary.lean`
+(opened).
+
+| Claim | Declaration | Folklore? |
+|---|---|---|
+| Antihydra is `A 3` (`H` from `2³`, walk `+2/−1`, counter 0) | `antihydra_iff_A3` | yes (definitional) |
+| int-y1 #323 is `A 1` (`x + 2` follows `H`) | `hydra323_iff_A1` | int-y1's notes do not say so; Discord unknown (~40%) |
+| BB(2,5) Hydra is `H` from `3`, walk `−1/+2` (`a = 3u − 6`) | `hydraBB25_iff` | **yes**: the substitution `(3a − 6, b)` is on the bbchallenge wiki (dyuan01, page for `1RB1RC_1LC1LE_1RA1RD_0RF0RE_1LA0LB_---1RA`; web search snippet, page not opened) |
+| **#323 and BB(2,5) Hydra walk the same orbit `H^n(3)`**, with mirrored weights | `hydra323_hydraBB25_same_orbit` | not seen anywhere (~50% folklore, since it follows from the two rows above) |
+| `A 0`, `A 4` halt (walk steps 1, 22) | `not_A0`, `not_A4` | known-answer controls |
+| #218 is the `K`-orbit of 4 (`x + 3` follows `K`) | `hydra218_iff` | int-y1 likely knows (~50%) |
+
+So "Hydra never halts" says the odd density of `H^n(3)` stays above about 1/3 (`E_n ≤ 2 O_n`).
+"#323 never halts" says the odd density of the *same* sequence stays below about 2/3
+(`O_n ≤ 2E_n + 2`).  The two are the two halves of one equidistribution statement about one
+orbit.  Neither implies the other (paper, 95%: different inequalities).
+
+**Bigfoot vs #218 (computed, negative).**  Both have slope 4/3, but Bigfoot's engine is not `K`
+in disguise at the block level.  LegionMammal978's block map has offset spread
+`max − min of s(r) − 256r/81 = 196/81`, while every 4-fold composition of `⌊4u/3⌋` and `⌈4u/3⌉`
+has spread `350/81`.  An affine conjugacy `u = λβ + t` multiplies spread by `|λ|`, and it needs
+`λ ∈ ℤ` to preserve `ℤ`; `350/196 = 25/14 ∉ ℤ`, so no affine conjugacy exists (paper, 90%).  A
+brute-force search (`λ ∈ {±1, ±2, ±4, ±1/2}`, `|t| < 300`, all 16 roundings) found none either.
+In `X = 4b + 3c` the one-step offset `X' − 4X/3` depends only on `(b mod 2, X mod 3)`: it is
+`3, −1/3, 7/3` at odd `b` and `2, −10/3, 22/3` at even `b` (computed, 4000 steps).  Bigfoot is two
+alternating `×4/3` engines, each applied twice in a row, and neither is a rounding of `4X/3`
+(the offset spread exceeds 1).
