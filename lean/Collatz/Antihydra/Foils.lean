@@ -34,8 +34,15 @@ all-floor member of every `F_L`.
 * `nonhalting_member_of_survives`: if a member survives until its orbit first reaches height
   `2LK`, it agrees below block `K` with a member that never halts (choose the even image at each
   odd value from then on).  `exists_nonhalting_member_one` is the unconditional case `L = 1`.
-* `nonhalting_iff_dense`: Antihydra never halts iff every finite block-neighbourhood of it in
-  `F_L` contains a non-halting member.
+* `rounding_blind_cannot_decide`: no property shared by all members agreeing with Antihydra
+  below block `K` implies non-halting.
+* **The ceiling** (`evenCount_ceiling_lower`, `evenCount_ceiling_sharp`): over the members
+  agreeing with Antihydra below block `K`, the best lower bound on the even count `E_k` is
+  exactly Antihydra's own even count up to `horizon L K`, the first odd value of height
+  `≥ 2LK`.  A rounding-blind argument proves nothing about `E_k` past a finite computation.
+  On the odd side the blind facts are lower bounds (`odd_infinitely_often`, `even_run_dvd`),
+  which point towards halting, not away from it.
+* `halts_floor_iff`: the all-floor member halts iff mfornet's `AntihydraHalts`.
 -/
 
 namespace Collatz.Antihydra.Foils
@@ -109,22 +116,28 @@ theorem step_congr {τ₁ τ₂ : ℕ → Bool} {s : ℕ × ℕ} (h : τ₁ s.1 
     step τ₁ s = step τ₂ s := by
   simp [step, h]
 
-/-- Two members whose choices agree on the first `n` values of the first one's orbit have the
-same orbit up to step `n`. -/
+theorem step_congr_even {τ₁ τ₂ : ℕ → Bool} {s : ℕ × ℕ} (h : s.1 % 2 = 0) :
+    step τ₁ s = step τ₂ s :=
+  Prod.ext (by rw [step_fst_even _ _ h, step_fst_even _ _ h]) (by simp [step, h])
+
+/-- Two members whose choices agree at the odd values among the first `n` states of the first
+one's orbit have the same orbit up to step `n`. -/
 theorem orbit_congr_prefix {τ₁ τ₂ : ℕ → Bool} {s : ℕ × ℕ} {n : ℕ}
-    (h : ∀ m < n, τ₁ (orbit τ₁ s m).1 = τ₂ (orbit τ₁ s m).1) :
+    (h : ∀ m < n, (orbit τ₁ s m).1 % 2 = 1 → τ₁ (orbit τ₁ s m).1 = τ₂ (orbit τ₁ s m).1) :
     ∀ m ≤ n, orbit τ₁ s m = orbit τ₂ s m := by
   intro m hm
   induction m with
   | zero => rfl
   | succ m ih =>
     rw [orbit_succ, orbit_succ, ← ih (by omega)]
-    exact step_congr (h m (by omega))
+    rcases Nat.mod_two_eq_zero_or_one (orbit τ₁ s m).1 with he | ho
+    · exact step_congr_even he
+    · exact step_congr (h m (by omega) ho)
 
 theorem orbit_congr {τ₁ τ₂ : ℕ → Bool} {s : ℕ × ℕ}
     (h : ∀ m, τ₁ (orbit τ₁ s m).1 = τ₂ (orbit τ₁ s m).1) (n : ℕ) :
     orbit τ₁ s n = orbit τ₂ s n :=
-  orbit_congr_prefix (n := n) (fun m _ => h m) n le_rfl
+  orbit_congr_prefix (n := n) (fun m _ _ => h m) n le_rfl
 
 /-- Values never decrease. -/
 theorem orbit_fst_mono (τ : ℕ → Bool) (s : ℕ × ℕ) {m n : ℕ} (h : m ≤ n) :
@@ -195,6 +208,12 @@ theorem even_run_dvd (τ : ℕ → Bool) (e : ℕ) :
       (Nat.Coprime.dvd_of_dvd_mul_left (Nat.Coprime.pow_left _ (by decide)) h1)
     rw [hy, pow_succ, mul_comm (2 ^ e)]
     exact Nat.mul_dvd_mul_left 2 this
+
+/-- Rounding-blind: every member meets odd values infinitely often (`O_k → ∞`). -/
+theorem odd_infinitely_often (τ : ℕ → Bool) (s : ℕ × ℕ) (hs : 2 ≤ s.1) (N : ℕ) :
+    ∃ n, N ≤ n ∧ (orbit τ s n).1 % 2 = 1 := by
+  obtain ⟨j, hj⟩ := exists_odd τ (orbit τ s N) (by have := orbit_fst_ge_add τ s hs N; omega)
+  exact ⟨N + j, by omega, by rw [orbit_add]; exact hj⟩
 
 /-! ## Blocks -/
 
@@ -365,7 +384,7 @@ theorem nonhalting_member_of_survives {L K : ℕ} (hL : 1 ≤ L) (hK : 2 ≤ K) 
   -- prefix agreement with `σ₀` while below height `M`
   have hpre : ∀ n, (∀ m < n, (orbit τ s m).1 < M) →
       ∀ m ≤ n, orbit τ s m = orbit (member L σ₀) s m := fun n hn =>
-    orbit_congr_prefix fun m hm => by simp [τ, member, hn m hm]
+    orbit_congr_prefix fun m hm _ => by simp [τ, member, hn m hm]
   have halive : ∀ n, Alive (orbit τ s n) := by
     intro n
     induction n with
@@ -401,6 +420,119 @@ theorem F_one_both :
     (∃ σ : ℕ → Bool, Halts (member 1 σ) (8, 0)) ∧
       ∃ σ : ℕ → Bool, ¬ Halts (member 1 σ) (8, 0) :=
   ⟨(exists_halting_member le_rfl 0).imp fun _ h => h.2, exists_nonhalting_member_one⟩
+
+/-! ## The ceiling of rounding-blind arguments -/
+
+/-- **Gate.**  No property of orbits that holds for every member of `F_L` agreeing with Antihydra
+on the blocks `< K` can imply non-halting from `(8, 0)`. -/
+theorem rounding_blind_cannot_decide {L : ℕ} (hL : 1 ≤ L) (K : ℕ)
+    (P : (ℕ → ℕ × ℕ) → Prop)
+    (hP : ∀ σ : ℕ → Bool, (∀ b < K, σ b = false) → P (orbit (member L σ) (8, 0)))
+    (hdec : ∀ τ : ℕ → Bool, P (orbit τ (8, 0)) → ¬ Halts τ (8, 0)) : False := by
+  obtain ⟨σ, hσ, hh⟩ := exists_halting_member hL K
+  exact hdec _ (hP σ hσ) hh
+
+/-- Every orbit from height `≥ 2` reaches an odd value of height `≥ M`. -/
+theorem exists_odd_above (τ : ℕ → Bool) (s : ℕ × ℕ) (hs : 2 ≤ s.1) (M : ℕ) :
+    ∃ n, M ≤ (orbit τ s n).1 ∧ (orbit τ s n).1 % 2 = 1 := by
+  have hM : M ≤ (orbit τ s M).1 := (Nat.le_add_left M s.1).trans (orbit_fst_ge_add τ s hs M)
+  obtain ⟨j, hj⟩ := exists_odd τ (orbit τ s M) (by have := orbit_fst_ge_add τ s hs M; omega)
+  exact ⟨M + j, le_trans hM (orbit_fst_mono τ s (by omega)), by rw [orbit_add]; exact hj⟩
+
+theorem evenCount_mono (τ : ℕ → Bool) (s : ℕ × ℕ) {j k : ℕ} (h : j ≤ k) :
+    evenCount τ s j ≤ evenCount τ s k := by
+  unfold evenCount
+  exact Finset.card_le_card (Finset.filter_subset_filter _ (Finset.range_subset_range.mpr h))
+
+theorem evenCount_congr {τ₁ τ₂ : ℕ → Bool} {s : ℕ × ℕ} {k : ℕ}
+    (h : ∀ m < k, orbit τ₁ s m = orbit τ₂ s m) : evenCount τ₁ s k = evenCount τ₂ s k := by
+  unfold evenCount
+  congr 1
+  exact Finset.filter_congr fun m hm => by rw [h m (Finset.mem_range.mp hm)]
+
+/-- Members agreeing with Antihydra below block `K` (`K ≥ 2`) share its orbit up to and
+including the first odd value of height `≥ 2LK`. -/
+theorem orbit_eq_floor_upto {L K : ℕ} (hL : 1 ≤ L) (σ : ℕ → Bool)
+    (hσ : ∀ b < K, σ b = false) (n : ℕ)
+    (hn : ∀ m < n, (orbit floorChoice (8, 0) m).1 % 2 = 1 →
+      (orbit floorChoice (8, 0) m).1 < 2 * L * K) :
+    ∀ m ≤ n, orbit floorChoice (8, 0) m = orbit (member L σ) (8, 0) m := by
+  refine orbit_congr_prefix fun m hm ho => ?_
+  simp [floorChoice, member, hσ _ ((blk_lt_iff (by omega)).mpr (hn m hm ho))]
+
+/-- The **horizon** of `F_L` at block `K`: the first step at which Antihydra's orbit meets an
+odd value of height `≥ 2LK`.  Up to it, every member agreeing with Antihydra below block `K`
+follows Antihydra exactly. -/
+noncomputable def horizon (L K : ℕ) : ℕ :=
+  Nat.find (exists_odd_above floorChoice (8, 0) (by norm_num) (2 * L * K))
+
+theorem horizon_spec (L K : ℕ) :
+    2 * L * K ≤ (orbit floorChoice (8, 0) (horizon L K)).1 ∧
+      (orbit floorChoice (8, 0) (horizon L K)).1 % 2 = 1 :=
+  Nat.find_spec (exists_odd_above floorChoice (8, 0) (by norm_num) (2 * L * K))
+
+theorem lt_of_lt_horizon {L K m : ℕ} (hm : m < horizon L K)
+    (ho : (orbit floorChoice (8, 0) m).1 % 2 = 1) :
+    (orbit floorChoice (8, 0) m).1 < 2 * L * K := by
+  by_contra h
+  exact Nat.find_min (exists_odd_above floorChoice (8, 0) (by norm_num) (2 * L * K)) hm
+    ⟨by omega, ho⟩
+
+theorem evenCount_eq_min_of_odd_tail (τ : ℕ → Bool) (s : ℕ × ℕ) (n : ℕ)
+    (h : ∀ m, n ≤ m → (orbit τ s m).1 % 2 = 1) (k : ℕ) :
+    evenCount τ s k = evenCount τ s (min k n) := by
+  unfold evenCount
+  congr 1
+  ext m
+  simp only [Finset.mem_filter, Finset.mem_range]
+  constructor
+  · rintro ⟨hk, he⟩
+    refine ⟨lt_min hk (by by_contra hc; have := h m (by omega); omega), he⟩
+  · rintro ⟨hk, he⟩; exact ⟨lt_of_lt_of_le hk (min_le_left _ _), he⟩
+
+/-- **The ceiling of rounding-blind arguments, lower half.**  Every member of `F_L` agreeing
+with Antihydra below block `K` has at least as many even values in its first `k` steps as
+Antihydra has before `min k (horizon L K)`. -/
+theorem evenCount_ceiling_lower {L K : ℕ} (hL : 1 ≤ L) (σ : ℕ → Bool)
+    (hσ : ∀ b < K, σ b = false) (k : ℕ) :
+    evenCount floorChoice (8, 0) (min k (horizon L K)) ≤ evenCount (member L σ) (8, 0) k := by
+  have hpre := orbit_eq_floor_upto hL σ hσ (horizon L K) fun m hm ho => lt_of_lt_horizon hm ho
+  rw [evenCount_congr (τ₂ := member L σ) fun m hm => hpre m (by omega)]
+  exact evenCount_mono _ _ (min_le_left _ _)
+
+/-- **The ceiling of rounding-blind arguments, sharpness.**  For `L ≥ 1`, `K ≥ 2`, some member
+agreeing with Antihydra below block `K` attains the lower half for every `k`: its even count
+freezes at the horizon.  So the best lower bound on `E_k` that a property of all such members
+can give is Antihydra's own even count up to the horizon, a finite computation. -/
+theorem evenCount_ceiling_sharp {L K : ℕ} (hL : 1 ≤ L) (hK : 2 ≤ K) :
+    ∃ σ : ℕ → Bool, (∀ b < K, σ b = false) ∧ ∀ k,
+      evenCount (member L σ) (8, 0) k = evenCount floorChoice (8, 0) (min k (horizon L K)) := by
+  classical
+  set M := 2 * L * K
+  set n₁ := horizon L K
+  let τ : ℕ → Bool := fun x => if x < M then false else decide (x % 4 = 3)
+  obtain ⟨σ, hσ, horb⟩ := realize hL hK (fun _ => false) τ (fun x hx => by simp [τ, M, hx]) (8, 0)
+  refine ⟨σ, hσ, fun k => ?_⟩
+  have hpre : ∀ m ≤ n₁, orbit floorChoice (8, 0) m = orbit τ (8, 0) m :=
+    orbit_congr_prefix fun m hm ho => by
+      have h : (orbit floorChoice (8, 0) m).1 < M := lt_of_lt_horizon hm ho
+      simp only [τ, floorChoice]; rw [if_pos h]
+  have hspec := horizon_spec L K
+  rw [hpre n₁ le_rfl] at hspec
+  have htail : ∀ i, M ≤ (orbit τ (8, 0) (n₁ + i)).1 ∧ (orbit τ (8, 0) (n₁ + i)).1 % 2 = 1 := by
+    intro i
+    induction i with
+    | zero => exact hspec
+    | succ i ih =>
+      have hn : ¬ (orbit τ (8, 0) (n₁ + i)).1 < M := by omega
+      rw [← add_assoc, orbit_succ]
+      exact ⟨le_trans ih.1 (by have := step_fst_ge τ (orbit τ (8, 0) (n₁ + i)); omega),
+        step_odd_image τ _ ih.2 (by simp only [τ]; rw [if_neg hn])⟩
+  have hodd : ∀ m, n₁ ≤ m → (orbit τ (8, 0) m).1 % 2 = 1 := fun m hm => by
+    have := (htail (m - n₁)).2; rwa [show n₁ + (m - n₁) = m by omega] at this
+  have heq : ∀ n, orbit (member L σ) (8, 0) n = orbit τ (8, 0) n := horb
+  rw [evenCount_congr (τ₂ := τ) fun m _ => heq m, evenCount_eq_min_of_odd_tail τ _ n₁ hodd,
+    evenCount_congr (τ₂ := floorChoice) fun m hm => (hpre m (by omega)).symm]
 
 /-! ## Faithfulness: the all-floor member is Antihydra -/
 
