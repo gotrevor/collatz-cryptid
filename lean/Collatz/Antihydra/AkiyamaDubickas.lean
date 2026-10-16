@@ -752,4 +752,136 @@ theorem dm43_classification (S : Finset ℕ) (hS : S ⊆ Finset.range 3) :
     rw [hEq]
     exact not_dmStops_range (by omega)
 
+/-! ## Dubickas-Mossinghoff's two-element example, and the floor map
+
+Dubickas and Mossinghoff (2009) ask to settle their problem for some two-element `S`, and give
+the example `p = q + 1`, `S = {0, q - 1}`.  Those residues are the digits `0` and `1`, which avoid
+the digit `q - 1`; so by monotonicity the example follows from Akiyama's conjecture in base
+`(q+1)/q`, for every `q ≥ 3` (for `q = 3` it is the `4/3` problem itself).
+
+The floor map `x ↦ ⌊(q+1) x / q⌋ = x + x / q` is the ceiling map conjugated by the translation
+`x ↦ x - (q - 1)`, since `⌈(x - (q - 1)) / q⌉ = ⌊x / q⌋`.
+-/
+
+/-- Stopping is inherited by subsets. -/
+theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q T) :
+    DMStops q S := by
+  intro x hx
+  obtain ⟨k, hk⟩ := hT x hx
+  exact ⟨k, fun hkS ↦ hk (h hkS)⟩
+
+/-- **Dubickas-Mossinghoff's example follows from Akiyama's conjecture.**  If no positive seed has
+a minimal word that is also maximal, then the iteration with `S = {0, q - 1}` stops. -/
+theorem dmStops_zero_top_of_minWord_ne_maxWord {q : ℕ} (hq : 3 ≤ q)
+    (h : ∀ x, 0 < x → minWord q x ≠ maxWord q x) : DMStops q {0, q - 1} := by
+  apply dmStops_mono (T := (Finset.range q).erase 1)
+  · intro r hr
+    simp only [Finset.mem_insert, Finset.mem_singleton] at hr
+    simp only [Finset.mem_erase, Finset.mem_range]
+    rcases hr with rfl | rfl <;> omega
+  · have hiff := dmStops_ne_zero_iff_ne_one (q := q) (by omega)
+    exact hiff.1.mp (hiff.2.mpr h)
+
+/-- The floor successor `⌊(q+1) x / q⌋`. -/
+def floorNext (q x : ℕ) : ℕ := x + x / q
+
+/-- One step of the conjugacy: `⌈(q+1) y / q⌉` at `y = x - (q - 1)` is
+`⌊(q+1) x / q⌋ - (q - 1)`. -/
+theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
+    next q (x - (q - 1)) = floorNext q x - (q - 1) := by
+  let y := x - (q - 1)
+  have hyx : y + (q - 1) = x := Nat.sub_add_cancel hx
+  have hrlt : y % q < q := Nat.mod_lt y hq
+  have hydiv := Nat.div_add_mod y q
+  have hydiv' : y / q * q + y % q = y := by
+    rw [mul_comm]
+    exact hydiv
+  have hnext : next q y = y + (y + digit q y) / q := by
+    unfold next
+    rw [show (q + 1) * y + digit q y = (y + digit q y) + q * y by ring]
+    rw [Nat.add_mul_div_left _ _ hq]
+    omega
+  have hdigit : digit q y = if y % q = 0 then 0 else q - y % q := by
+    by_cases hr : y % q = 0
+    · simp [digit, hr]
+    · have : q - y % q < q := by omega
+      simp [digit, hr, Nat.mod_eq_of_lt this]
+  calc
+    next q (x - (q - 1)) = next q y := by rfl
+    _ = y + (y + digit q y) / q := hnext
+    _ = floorNext q x - (q - 1) := by
+      rw [hdigit]
+      unfold floorNext
+      by_cases hr : y % q = 0
+      · simp only [hr, if_pos, add_zero]
+        have hxform : x = (q - 1) + q * (y / q) := by omega
+        have hxq : x / q = y / q := by
+          rw [hxform, Nat.add_mul_div_left _ _ hq,
+            Nat.div_eq_of_lt (by omega : q - 1 < q)]
+          omega
+        rw [hxq]
+        rw [Nat.sub_add_comm hx]
+      · rw [if_neg hr]
+        have hsum : y + (q - y % q) = q * (y / q + 1) := by
+          calc
+            y + (q - y % q) =
+                (q * (y / q) + y % q) + (q - y % q) := by rw [hydiv]
+            _ = q * (y / q + 1) := by
+              rw [Nat.mul_add]
+              omega
+        rw [hsum, show q * (y / q + 1) = (y / q + 1) * q by ring,
+          Nat.mul_div_cancel _ hq]
+        have hxform : x = (y % q - 1) + q * (y / q + 1) := by
+          rw [Nat.mul_add]
+          omega
+        have hxq : x / q = y / q + 1 := by
+          rw [hxform, Nat.add_mul_div_left _ _ hq,
+            Nat.div_eq_of_lt (by omega : y % q - 1 < q)]
+          omega
+        rw [hxq]
+        rw [Nat.sub_add_comm hx]
+
+/-- **Floor = translated ceiling.**  For `x ≥ q - 1` the ceiling orbit of `x - (q - 1)` is
+the floor orbit of `x` minus `q - 1`, at every step. -/
+theorem iterate_next_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) (k : ℕ) :
+    (next q)^[k] (x - (q - 1)) = (floorNext q)^[k] x - (q - 1) := by
+  have hge (n : ℕ) : x ≤ (floorNext q)^[n] x := by
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [Function.iterate_succ_apply']
+        exact ih.trans (by simp [floorNext])
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih]
+      exact next_sub_eq_floorNext_sub hq (hx.trans (hge k))
+
+/-- Residues reflect under the translation: the ceiling digit at `x - (q - 1)` is
+`q - 1 - x % q`. -/
+theorem digit_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
+    digit q (x - (q - 1)) = q - 1 - x % q := by
+  let y := x - (q - 1)
+  change digit q y = q - 1 - x % q
+  have hyx : y + (q - 1) = x := Nat.sub_add_cancel hx
+  have hrlt : y % q < q := Nat.mod_lt y hq
+  have hydiv := Nat.div_add_mod y q
+  by_cases hq1 : q = 1
+  · subst q
+    simp [digit]
+    omega
+  by_cases hr : y % q = 0
+  · have hxform : x = (q - 1) + q * (y / q) := by omega
+    have hxmod : x % q = q - 1 := by
+      rw [hxform, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt (by omega)]
+    simp [digit, hr, hxmod]
+  · have hxform : x = (y % q - 1) + q * (y / q + 1) := by
+      rw [Nat.mul_add]
+      omega
+    have hxmod : x % q = y % q - 1 := by
+      rw [hxform, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt (by omega)]
+    have hsub : q - y % q < q := by omega
+    rw [digit, Nat.mod_eq_of_lt hsub, hxmod]
+    omega
+
 end Collatz.Antihydra.AkiyamaDubickas
