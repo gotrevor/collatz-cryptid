@@ -187,7 +187,16 @@ def IsMinWord (p q : ℕ) (u : List ℕ) (w : ℕ → ℕ) : Prop :=
 theorem isMinWord_unique {p q : ℕ} {u : List ℕ} {w w' : ℕ → ℕ}
     (hw : ∀ k, w k < p) (hw' : ∀ k, w' k < p)
     (h : IsMinWord p q u w) (h' : IsMinWord p q u w') : w = w' := by
-  sorry
+  funext k
+  have hnot' : ¬ pre w' (k + 1) < pre w (k + 1) :=
+    (h (k + 1)).2 _ (by simp [pre]) (by simp [pre, hw']) (h' (k + 1)).1
+  have hnot : ¬ pre w (k + 1) < pre w' (k + 1) :=
+    (h' (k + 1)).2 _ (by simp [pre]) (by simp [pre, hw]) (h (k + 1)).1
+  have heq : pre w (k + 1) = pre w' (k + 1) :=
+    le_antisymm (le_of_not_gt hnot') (le_of_not_gt hnot)
+  have := congrArg (fun xs : List ℕ => xs[k]?) heq
+  simp only [pre, List.getElem?_ofFn] at this
+  split at this <;> simp_all
 
 /-! ## Base `3/2`: the greedy (Mahler) description -/
 
