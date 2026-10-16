@@ -787,7 +787,57 @@ def floorNext (q x : ℕ) : ℕ := x + x / q
 /-- One step of the conjugacy: `⌈(q+1) y / q⌉` at `y = x - (q - 1)` is `⌊(q+1) x / q⌋ - (q - 1)`. -/
 theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
     next q (x - (q - 1)) = floorNext q x - (q - 1) := by
-  sorry
+  let y := x - (q - 1)
+  have hyx : y + (q - 1) = x := Nat.sub_add_cancel hx
+  have hrlt : y % q < q := Nat.mod_lt y hq
+  have hydiv := Nat.div_add_mod y q
+  have hydiv' : y / q * q + y % q = y := by
+    rw [mul_comm]
+    exact hydiv
+  have hnext : next q y = y + (y + digit q y) / q := by
+    unfold next
+    rw [show (q + 1) * y + digit q y = (y + digit q y) + q * y by ring]
+    rw [Nat.add_mul_div_left _ _ hq]
+    omega
+  have hdigit : digit q y = if y % q = 0 then 0 else q - y % q := by
+    by_cases hr : y % q = 0
+    · simp [digit, hr]
+    · have : q - y % q < q := by omega
+      simp [digit, hr, Nat.mod_eq_of_lt this]
+  calc
+    next q (x - (q - 1)) = next q y := by rfl
+    _ = y + (y + digit q y) / q := hnext
+    _ = floorNext q x - (q - 1) := by
+      rw [hdigit]
+      unfold floorNext
+      by_cases hr : y % q = 0
+      · simp only [hr, if_pos, add_zero]
+        have hxform : x = (q - 1) + q * (y / q) := by omega
+        have hxq : x / q = y / q := by
+          rw [hxform, Nat.add_mul_div_left _ _ hq,
+            Nat.div_eq_of_lt (by omega : q - 1 < q)]
+          omega
+        rw [hxq]
+        rw [Nat.sub_add_comm hx]
+      · rw [if_neg hr]
+        have hsum : y + (q - y % q) = q * (y / q + 1) := by
+          calc
+            y + (q - y % q) =
+                (q * (y / q) + y % q) + (q - y % q) := by rw [hydiv]
+            _ = q * (y / q + 1) := by
+              rw [Nat.mul_add]
+              omega
+        rw [hsum, show q * (y / q + 1) = (y / q + 1) * q by ring,
+          Nat.mul_div_cancel _ hq]
+        have hxform : x = (y % q - 1) + q * (y / q + 1) := by
+          rw [Nat.mul_add]
+          omega
+        have hxq : x / q = y / q + 1 := by
+          rw [hxform, Nat.add_mul_div_left _ _ hq,
+            Nat.div_eq_of_lt (by omega : y % q - 1 < q)]
+          omega
+        rw [hxq]
+        rw [Nat.sub_add_comm hx]
 
 /-- **Floor = translated ceiling.**  For `x ≥ q - 1` the ceiling orbit of `x - (q - 1)` is the floor
 orbit of `x` minus `q - 1`, at every step. -/
@@ -799,6 +849,27 @@ theorem iterate_next_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) (k : ℕ
 `q - 1 - x % q`. -/
 theorem digit_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
     digit q (x - (q - 1)) = q - 1 - x % q := by
-  sorry
+  let y := x - (q - 1)
+  change digit q y = q - 1 - x % q
+  have hyx : y + (q - 1) = x := Nat.sub_add_cancel hx
+  have hrlt : y % q < q := Nat.mod_lt y hq
+  have hydiv := Nat.div_add_mod y q
+  by_cases hq1 : q = 1
+  · subst q
+    simp [digit]
+    omega
+  by_cases hr : y % q = 0
+  · have hxform : x = (q - 1) + q * (y / q) := by omega
+    have hxmod : x % q = q - 1 := by
+      rw [hxform, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt (by omega)]
+    simp [digit, hr, hxmod]
+  · have hxform : x = (y % q - 1) + q * (y / q + 1) := by
+      rw [Nat.mul_add]
+      omega
+    have hxmod : x % q = y % q - 1 := by
+      rw [hxform, Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt (by omega)]
+    have hsub : q - y % q < q := by omega
+    rw [digit, Nat.mod_eq_of_lt hsub, hxmod]
+    omega
 
 end Collatz.Antihydra.AkiyamaDubickas
