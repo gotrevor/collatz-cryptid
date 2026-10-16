@@ -11,7 +11,8 @@ import Collatz.Antihydra.Foils
 
 Akiyama, Frougny and Sakarovitch (2008) expand a natural number `n` in the rational base `p/q`
 (`p > q ≥ 1` coprime) as the unique word `a_k ⋯ a_0` over `{0, …, p-1}` with `a_k ≠ 0` and
-`n = (1/q) ∑ aᵢ (p/q)^i`.  Equivalently: `q * n = p * n' + a₀` with `a₀ < p`, then expand `n'`.
+`n = (1/q) ∑ aᵢ (p/q)^i`.  Equivalently: `q * n = p * n' + a₀` with `a₀ < p`, then
+expand `n'`.
 
 Andrieu, Eliahou and Vivion ("A Normality Conjecture on Rational Base Number Systems",
 arXiv:2510.11723) define the **minimal word** with seed `u` (an expansion): the infinite word whose
@@ -20,8 +21,8 @@ length-`l` prefix is, for every `l`, the lexicographically least `v ∈ {0, …,
 
 This file proves that **Antihydra's parity word is the bit-complement of the minimal word in base
 `3/2` with seed `rep 7 = 2122`**.  Antihydra's values are `aₖ = H^k(8)` with `H x = x + ⌊x/2⌋`
-(`Foils.orbit Foils.floorChoice (8, 0)`); the bridge is `H (D + 1) = ⌈3D/2⌉ + 1`, and the minimal
-word in base `3/2` with seed `rep N` reads the parities of the `⌈3D/2⌉` orbit of `N`
+(`Foils.orbit Foils.floorChoice (8, 0)`); the bridge is `H (D + 1) = ⌈3D/2⌉ + 1`, and the
+minimal word in base `3/2` with seed `rep N` reads the parities of the `⌈3D/2⌉` orbit of `N`
 (Mahler's binary words, as AEV note).  Checked numerically for 2,000 terms before formalising.
 
 Antihydra halts iff its odd count ever exceeds twice its even count (`Foils.Halts`), so its halting
@@ -152,13 +153,60 @@ theorem rep_extension_last {N a : ℕ} (h : rep 3 2 N ++ [a] ∈ Lang 3 2) :
     simpa using congrArg List.getLast? happ
   omega
 
+/-- Rational evaluation of a least-significant-digit-first word. -/
+def evalDigits (p q : ℕ) (ds : List ℕ) : ℚ :=
+  ∑ i : Fin ds.length, (ds.get i : ℚ) * ((p : ℚ) / q) ^ (i : ℕ)
+
+theorem evalDigits_cons (p q a : ℕ) (ds : List ℕ) :
+    evalDigits p q (a :: ds) = a + ((p : ℚ) / q) * evalDigits p q ds := by
+  simp [evalDigits, Fin.sum_univ_succ, pow_succ, Finset.mul_sum, mul_comm, mul_assoc]
+
+theorem sum_reverse_eq_evalDigits (p q : ℕ) (ds : List ℕ) :
+    (∑ i : Fin ds.length,
+      (ds.reverse.get ⟨i, by simp⟩ : ℚ) * ((p : ℚ) / q) ^ (i : ℕ)) =
+      evalDigits p q ds.reverse := by
+  unfold evalDigits
+  apply Fintype.sum_equiv (finCongr ds.length_reverse.symm)
+  intro i
+  rfl
+
+theorem evalDigits_repRevAux {p q : ℕ} (hqp : q < p) (hq : 0 < q) (n : ℕ) :
+    ∀ f, n ≤ f → evalDigits p q (repRevAux p q f n) = (q : ℚ) * n := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro f hnf
+    rcases n with _ | n
+    · rcases f with _ | f
+      all_goals
+        simp only [repRevAux]
+        unfold evalDigits
+        simp only [List.length_nil]
+        rw [Finset.univ_eq_empty, Finset.sum_empty]
+        simp
+    rcases f with _ | f
+    · omega
+    rw [repRevAux, evalDigits_cons]
+    have hp : 0 < p := by omega
+    have hlt : q * (n + 1) / p < n + 1 := by
+      rw [Nat.div_lt_iff_lt_mul hp]
+      simpa [mul_comm] using
+        (Nat.mul_lt_mul_right (a := n + 1) (b := q) (c := p) (by omega)).2 hqp
+    rw [ih _ hlt f (by omega)]
+    have hqQ : (q : ℚ) ≠ 0 := by positivity
+    have hdiv := Nat.div_add_mod (q * (n + 1)) p
+    field_simp
+    norm_cast
+    omega
+
 /-- Statement-audit check: the expansion evaluates back to `n` by AFS's formula
 `n = (1/q) ∑ aᵢ (p/q)^i` (digits indexed least significant first). -/
 theorem rep_eval {p q : ℕ} (hqp : q < p) (hq : 0 < q) (n : ℕ) :
     ((q : ℚ) * n) =
       ∑ i : Fin (rep p q n).length,
         ((rep p q n).reverse.get ⟨i, by simp⟩ : ℚ) * ((p : ℚ) / q) ^ (i : ℕ) := by
-  sorry
+  have h := evalDigits_repRevAux hqp hq n n (by omega)
+  rw [sum_reverse_eq_evalDigits]
+  simpa [rep] using h.symm
 
 /-! ## Minimal words -/
 
@@ -181,7 +229,8 @@ expansion is lexicographically smaller.  (On lists of equal length, Lean's `List
 lexicographic order the paper uses.) -/
 def IsMinWord (p q : ℕ) (u : List ℕ) (w : ℕ → ℕ) : Prop :=
   ∀ l, u ++ pre w l ∈ Lang p q ∧
-    ∀ v : List ℕ, v.length = l → (∀ d ∈ v, d < p) → u ++ v ∈ Lang p q → ¬ v < pre w l
+    ∀ v : List ℕ, v.length = l → (∀ d ∈ v, d < p) →
+      u ++ v ∈ Lang p q → ¬ v < pre w l
 
 /-- A seed has at most one minimal word. -/
 theorem isMinWord_unique {p q : ℕ} {u : List ℕ} {w w' : ℕ → ℕ}
@@ -230,7 +279,8 @@ theorem rep_iterate_ceilStep (N : ℕ) (hN : 0 < N) (l : ℕ) :
     rw [ih, pre_succ_last, List.append_assoc]
 
 /-- In base `3/2` the minimal word with seed `rep N` (`N ≥ 1`) reads the parities of the
-`⌈3D/2⌉`-orbit of `N`: the least admissible digit at `D` is `D % 2`, and it leads to `⌈3D/2⌉`. -/
+`⌈3D/2⌉`-orbit of `N`: the least admissible digit at `D` is `D % 2`, and it leads to
+`⌈3D/2⌉`. -/
 theorem isMinWord_ceilStep (N : ℕ) (hN : 0 < N) :
     IsMinWord 3 2 (rep 3 2 N) (fun k => ceilStep^[k] N % 2) := by
   intro l
