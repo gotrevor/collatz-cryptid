@@ -698,7 +698,34 @@ Dubickas-Mossinghoff's question in base `4/3` holds iff no positive seed has a m
 that is also maximal. -/
 theorem dm43_pair_iff (S : Finset ℕ) (hS : S ⊆ Finset.range 3) (hcard : S.card = 2) :
     DMStops 3 S ↔ ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x := by
-  sorry
+  have hcases : S = (Finset.range 3).erase 0 ∨
+      S = (Finset.range 3).erase 1 ∨ S = (Finset.range 3).erase 2 := by
+    obtain ⟨a, b, hab, hSab⟩ := Finset.card_eq_two.mp hcard
+    have haMem : a ∈ S := by rw [hSab]; simp
+    have hbMem : b ∈ S := by rw [hSab]; simp
+    have ha : a < 3 := Finset.mem_range.mp (hS haMem)
+    have hb : b < 3 := Finset.mem_range.mp (hS hbMem)
+    rw [hSab]
+    interval_cases a <;> interval_cases b <;> simp_all <;> decide
+  have hzero : DMStops 3 ((Finset.range 3).erase 0) ↔
+      ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x :=
+    (dmStops_ne_zero_iff_ne_one (q := 3) (by omega)).2
+  have hzeroOne : DMStops 3 ((Finset.range 3).erase 0) ↔
+      DMStops 3 ((Finset.range 3).erase 1) :=
+    (dmStops_ne_zero_iff_ne_one (q := 3) (by omega)).1
+  have hone : DMStops 3 ((Finset.range 3).erase 1) ↔
+      ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x :=
+    hzeroOne.symm.trans hzero
+  have htwo : DMStops 3 ((Finset.range 3).erase 2) ↔
+      ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x :=
+    dmStops_ne_two_iff_ne_one.trans hone
+  rcases hcases with hS0 | hS1 | hS2
+  · rw [hS0]
+    exact hzero
+  · rw [hS1]
+    exact hone
+  · rw [hS2]
+    exact htwo
 
 /-- The classification by size: at most one residue always stops, two residues is Akiyama's
 conjecture, and all three never stop. -/
