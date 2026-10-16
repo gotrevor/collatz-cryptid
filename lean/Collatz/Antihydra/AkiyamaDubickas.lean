@@ -10,10 +10,11 @@ import Mathlib
 
 Work in the rational base `p/q` with `p = q + 1`.  From an integer `x`, the **minimal** digit is the
 least `a ∈ {0, …, p-1}` with `q ∣ p * x + a`, namely `a = (-x) mod q`, and it leads to
-`(p * x + a) / q = ⌈p x / q⌉`.  The **maximal** digit is the largest such `a`: it is the same digit
-unless `x ≡ 0 (mod q)`, where it is `q` instead of `0`.  Iterating gives the minimal and maximal
-words of Akiyama-Frougny-Sakarovitch with seed `rep x` (for base `3/2` this identification is proved
-against the AFS definition in `Collatz.Antihydra.RationalBase`).
+`(p * x + a) / q = ⌈p x / q⌉`.  The **maximal** digit is the largest such `a`: it is the
+same digit unless `x ≡ 0 (mod q)`, where it is `q` instead of `0`.  Iterating gives the
+minimal and maximal words of Akiyama-Frougny-Sakarovitch with seed `rep x` (for base
+`3/2` this identification is proved against the AFS definition in
+`Collatz.Antihydra.RationalBase`).
 
 Results:
 * `shift`: while the minimal word from `x` avoids `0`, the orbit of `x + 1` is the orbit of `x` plus
@@ -149,7 +150,8 @@ theorem next_eq_ceil {q : ℕ} (hq : 0 < q) (x : ℕ) :
   · rw [div_le_iff₀ hqQ]
     nlinarith
 
-/-- Base `4/3` check: the minimal word from `7` starts `2, 2, 1, 2` (`7 → 10 → 14 → 19 → 26`). -/
+/-- Base `4/3` check: the minimal word from `7` starts `2, 2, 1, 2`
+(`7 → 10 → 14 → 19 → 26`). -/
 theorem minWord_three_seven : (List.range 4).map (minWord 3 7) = [2, 2, 1, 2] := by
   decide
 
@@ -197,8 +199,8 @@ private lemma digit_succ_of_eq_zero {q y : ℕ} (hq : 2 ≤ q) (hy : digit q y =
     simpa [hyMod, Nat.mod_eq_of_lt (by omega : 1 < q)] using Nat.add_mod y 1 q
   rw [digit, hsuccMod, Nat.mod_eq_of_lt (by omega)]
 
-/-- **Shift.**  If the first `n` minimal digits from `x` are nonzero, then for `k ≤ n` the orbit of
-`x + 1` is the orbit of `x` plus one. -/
+/-- **Shift.**  If the first `n` minimal digits from `x` are nonzero, then for `k ≤ n` the
+orbit of `x + 1` is the orbit of `x` plus one. -/
 theorem shift {q : ℕ} (hq : 0 < q) (x n : ℕ) (h : ∀ k < n, minWord q x k ≠ 0) :
     ∀ k ≤ n, (next q)^[k] (x + 1) = (next q)^[k] x + 1 := by
   intro k hk
@@ -288,8 +290,9 @@ private lemma digit_eq_top_iff {q y : ℕ} (hq : 2 ≤ q) :
     rw [digit, Nat.mod_eq_of_lt hsub]
     omega
 
-/-- The two cases `S = {residues ≠ 0}` and `S = {residues ≠ 1}` are equivalent, and both say that no
-positive seed has a minimal word that is also maximal (Akiyama's conjecture, via AFS §5). -/
+/-- The two cases `S = {residues ≠ 0}` and `S = {residues ≠ 1}` are equivalent, and both
+say that no positive seed has a minimal word that is also maximal (Akiyama's conjecture,
+via AFS §5). -/
 theorem dmStops_ne_zero_iff_ne_one {q : ℕ} (hq : 2 ≤ q) :
     (DMStops q ((Finset.range q).erase 0) ↔ DMStops q ((Finset.range q).erase 1)) ∧
       (DMStops q ((Finset.range q).erase 0) ↔ ∀ x, 0 < x → minWord q x ≠ maxWord q x) := by
@@ -361,9 +364,50 @@ theorem dmStops_ne_zero_iff_ne_one {q : ℕ} (hq : 2 ≤ q) :
 
 /-! ## Base `4/3`: halving -/
 
+private lemma digit_double_eq_one_iff (y : ℕ) : digit 3 (2 * y) = 1 ↔ digit 3 y = 2 := by
+  unfold digit
+  omega
+
+private lemma next_double_of_digit_ne_one (y : ℕ) (h : digit 3 (2 * y) ≠ 1) :
+    next 3 (2 * y) = 2 * next 3 y := by
+  unfold next digit at *
+  omega
+
 /-- In base `4/3` the minimal word from `2y` avoids `1` iff the minimal word from `y` avoids `2`. -/
 theorem halving (y : ℕ) :
     (∀ k, minWord 3 (2 * y) k ≠ 1) ↔ ∀ k, minWord 3 y k ≠ 2 := by
-  sorry
+  constructor
+  · intro hleft
+    have horbit : ∀ k, (next 3)^[k] (2 * y) = 2 * (next 3)^[k] y := by
+      intro k
+      induction k with
+      | zero => simp
+      | succ k ih =>
+          rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih]
+          apply next_double_of_digit_ne_one
+          intro hk
+          apply hleft k
+          simpa [minWord, ih]
+    intro k hk
+    apply hleft k
+    unfold minWord
+    rw [horbit k]
+    exact (digit_double_eq_one_iff _).2 hk
+  · intro hright
+    have horbit : ∀ k, (next 3)^[k] (2 * y) = 2 * (next 3)^[k] y := by
+      intro k
+      induction k with
+      | zero => simp
+      | succ k ih =>
+          rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih]
+          apply next_double_of_digit_ne_one
+          intro hk
+          exact hright k ((digit_double_eq_one_iff _).1 hk)
+    intro k hk
+    apply hright k
+    apply (digit_double_eq_one_iff _).1
+    unfold minWord at hk
+    rw [horbit k] at hk
+    exact hk
 
 end Collatz.Antihydra.AkiyamaDubickas
