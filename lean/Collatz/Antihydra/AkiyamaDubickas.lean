@@ -464,7 +464,8 @@ theorem shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ min
       exact next_add_of_digit_le hq (h k (by omega))
 
 /-- The digits of the shifted word are the original digits minus `c`. -/
-theorem minWord_shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ minWord q x k) :
+theorem minWord_shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ)
+    (h : ∀ k < n, c ≤ minWord q x k) :
     ∀ k < n, minWord q (x + c) k = minWord q x k - c := by
   intro k hk
   unfold minWord
@@ -472,14 +473,53 @@ theorem minWord_shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c
 
 /-- **Scale by `m`.**  While `m` times each minimal digit from `y` stays below `q`, the orbit of
 `m * y` is `m` times the orbit of `y`. -/
+private lemma digit_mul_of_lt {q m y : ℕ} (h : m * digit q y < q) :
+    digit q (m * y) = m * digit q y := by
+  have hq : 0 < q := by omega
+  have hy := digit_spec hq y
+  have hmy := digit_spec hq (m * y)
+  have heq : (q + 1) * (m * y) + m * digit q y =
+      m * ((q + 1) * y + digit q y) := by ring
+  have hcand : q ∣ (q + 1) * (m * y) + m * digit q y := by
+    rw [heq]
+    exact dvd_mul_of_dvd_right hy.2.1 m
+  have hmodNew : ((q + 1) * (m * y) + digit q (m * y)) % q = 0 :=
+    Nat.mod_eq_zero_of_dvd hmy.2.1
+  have hmodCand : ((q + 1) * (m * y) + m * digit q y) % q = 0 :=
+    Nat.mod_eq_zero_of_dvd hcand
+  have hsum : (q + 1) * (m * y) + digit q (m * y) ≡
+      (q + 1) * (m * y) + m * digit q y [MOD q] := by
+    exact hmodNew.trans hmodCand.symm
+  have hdigit : digit q (m * y) ≡ m * digit q y [MOD q] :=
+    Nat.ModEq.add_left_cancel' _ hsum
+  change digit q (m * y) % q = (m * digit q y) % q at hdigit
+  rw [Nat.mod_eq_of_lt hmy.1, Nat.mod_eq_of_lt h] at hdigit
+  exact hdigit
+
+private lemma next_mul_of_digit_lt {q m y : ℕ} (h : m * digit q y < q) :
+    next q (m * y) = m * next q y := by
+  have hq : 0 < q := by omega
+  have hy := digit_spec hq y
+  rw [next, next, digit_mul_of_lt h]
+  have heq : (q + 1) * (m * y) + m * digit q y =
+      m * ((q + 1) * y + digit q y) := by ring
+  rw [heq, Nat.mul_div_assoc _ hy.2.1]
+
 theorem scale {q : ℕ} (m y n : ℕ) (h : ∀ k < n, m * minWord q y k < q) :
     ∀ k ≤ n, (next q)^[k] (m * y) = m * (next q)^[k] y := by
-  sorry
+  intro k hk
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih (by omega)]
+      exact next_mul_of_digit_lt (h k (by omega))
 
 /-- The digits of the scaled word are `m` times the original digits. -/
 theorem minWord_scale {q : ℕ} (m y n : ℕ) (h : ∀ k < n, m * minWord q y k < q) :
     ∀ k < n, minWord q (m * y) k = m * minWord q y k := by
-  sorry
+  intro k hk
+  unfold minWord
+  rw [scale m y n h k (by omega), digit_mul_of_lt (h k hk)]
 
 /-- If `m ∣ q + 1` and `m` divides the minimal digit at `x`, then `m` divides the successor:
 `q * next q x = (q + 1) * x + digit q x` and `m` is coprime to `q`. -/
