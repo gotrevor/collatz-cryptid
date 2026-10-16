@@ -525,7 +525,19 @@ theorem minWord_scale {q : ℕ} (m y n : ℕ) (h : ∀ k < n, m * minWord q y k 
 `q * next q x = (q + 1) * x + digit q x` and `m` is coprime to `q`. -/
 theorem dvd_next_of_dvd_digit {q m : ℕ} (hq : 0 < q) (hm : m ∣ q + 1) (x : ℕ)
     (h : m ∣ digit q x) : m ∣ next q x := by
-  sorry
+  have hcopBig : Nat.Coprime (q + 1) q := by
+    rw [Nat.add_comm]
+    exact Nat.coprime_add_self_left.mpr (Nat.coprime_one_left q)
+  have hcop : Nat.Coprime m q := hcopBig.of_dvd_left hm
+  have hs := digit_spec hq x
+  have hmul : q * next q x = (q + 1) * x + digit q x :=
+    Nat.mul_div_cancel' hs.2.1
+  have hsum : m ∣ (q + 1) * x + digit q x :=
+    dvd_add (dvd_mul_of_dvd_left hm x) h
+  have hprod : m ∣ next q x * q := by
+    rw [mul_comm, hmul]
+    exact hsum
+  exact hcop.dvd_of_dvd_mul_right hprod
 
 /-! ## Base `4/3`: every case of the Dubickas-Mossinghoff problem
 
