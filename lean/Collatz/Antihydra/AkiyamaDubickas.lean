@@ -765,7 +765,9 @@ The floor map `x ↦ ⌊(q+1) x / q⌋ = x + x / q` is the ceiling map conjugate
 
 /-- Stopping is inherited by subsets. -/
 theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q T) : DMStops q S := by
-  sorry
+  intro x hx
+  obtain ⟨k, hk⟩ := hT x hx
+  exact ⟨k, fun hkS ↦ hk (h hkS)⟩
 
 /-- **Dubickas-Mossinghoff's example follows from Akiyama's conjecture.**  If no positive seed has
 a minimal word that is also maximal, then the iteration with `S = {0, q - 1}` stops. -/
