@@ -706,7 +706,9 @@ theorem dm43_pair_iff (S : Finset ℕ) (hS : S ⊆ Finset.range 3) (hcard : S.ca
     have ha : a < 3 := Finset.mem_range.mp (hS haMem)
     have hb : b < 3 := Finset.mem_range.mp (hS hbMem)
     rw [hSab]
-    interval_cases a <;> interval_cases b <;> simp_all <;> decide
+    interval_cases a <;> interval_cases b
+    all_goals try omega
+    all_goals decide
   have hzero : DMStops 3 ((Finset.range 3).erase 0) ↔
       ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x :=
     (dmStops_ne_zero_iff_ne_one (q := 3) (by omega)).2
