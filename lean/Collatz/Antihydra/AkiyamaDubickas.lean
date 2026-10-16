@@ -234,10 +234,34 @@ theorem avoidsZero_iff {q : ℕ} (hq : 2 ≤ q) (x : ℕ) :
 
 /-! ## Minimal = maximal exactly when `0` is avoided -/
 
+private lemma maxDigit_ne_zero {q y : ℕ} (hq : 0 < q) : maxDigit q y ≠ 0 := by
+  by_cases hy : digit q y = 0
+  · simp [maxDigit, hy, hq.ne']
+  · simp [maxDigit, hy]
+
+private lemma maxNext_eq_next {q y : ℕ} (hy : digit q y ≠ 0) :
+    maxNext q y = next q y := by
+  simp [maxNext, next, maxDigit, hy]
+
 /-- The minimal and maximal words from `x` coincide iff the minimal word never uses `0`. -/
 theorem minWord_eq_maxWord_iff {q : ℕ} (hq : 0 < q) (x : ℕ) :
     minWord q x = maxWord q x ↔ ∀ k, minWord q x k ≠ 0 := by
-  sorry
+  constructor
+  · intro heq k
+    rw [heq]
+    unfold maxWord
+    exact maxDigit_ne_zero hq
+  · intro hzero
+    have horbit : ∀ k, (maxNext q)^[k] x = (next q)^[k] x := by
+      intro k
+      induction k with
+      | zero => simp
+      | succ k ih =>
+          rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih]
+          exact maxNext_eq_next (hzero k)
+    funext k
+    have hd : digit q ((next q)^[k] x) ≠ 0 := hzero k
+    rw [minWord, maxWord, horbit k, maxDigit, if_neg hd]
 
 /-! ## Dubickas-Mossinghoff's question -/
 
