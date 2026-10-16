@@ -551,15 +551,81 @@ successor even.  So every nontrivial case is Akiyama's conjecture in base `4/3`.
 /-- **Singletons stop** (Dubickas-Mossinghoff, Prop. 3.2, in base `(q+1)/q`): a positive orbit
 cannot keep one residue forever, since then `q ^ k ∣ x + a` for every `k`. -/
 theorem dmStops_singleton {q : ℕ} (hq : 2 ≤ q) (r : ℕ) : DMStops q {r} := by
-  sorry
+  have hqpos : 0 < q := by omega
+  intro x hx
+  by_cases hr : r < q
+  · by_contra hstop
+    push Not at hstop
+    have hres (k : ℕ) : (next q)^[k] x % q = r := by
+      simpa using hstop k
+    have hr0 : x % q = r := by simpa using hres 0
+    have hdigit (k : ℕ) : digit q ((next q)^[k] x) = digit q x := by
+      unfold digit
+      rw [hres k, hr0]
+    have hstep (k : ℕ) :
+        q * ((next q)^[k.succ] x + digit q x) =
+          (q + 1) * ((next q)^[k] x + digit q x) := by
+      have hs := digit_spec hqpos ((next q)^[k] x)
+      have hmul : q * next q ((next q)^[k] x) =
+          (q + 1) * (next q)^[k] x + digit q ((next q)^[k] x) :=
+        Nat.mul_div_cancel' hs.2.1
+      calc
+        q * ((next q)^[k.succ] x + digit q x) =
+            q * next q ((next q)^[k] x) + q * digit q x := by
+              rw [Function.iterate_succ_apply']
+              ring
+        _ = ((q + 1) * (next q)^[k] x + digit q ((next q)^[k] x)) +
+            q * digit q x := by rw [hmul]
+        _ = (q + 1) * ((next q)^[k] x + digit q x) := by
+          rw [hdigit k]
+          ring
+    have hpow (k : ℕ) :
+        q ^ k * ((next q)^[k] x + digit q x) =
+          (q + 1) ^ k * (x + digit q x) := by
+      induction k with
+      | zero => simp
+      | succ k ih =>
+          calc
+            q ^ k.succ * ((next q)^[k.succ] x + digit q x) =
+                q ^ k * (q * ((next q)^[k.succ] x + digit q x)) := by
+                  rw [Nat.pow_succ]
+                  ring
+            _ = q ^ k * ((q + 1) * ((next q)^[k] x + digit q x)) := by
+              rw [hstep k]
+            _ = (q + 1) * (q ^ k * ((next q)^[k] x + digit q x)) := by ring
+            _ = (q + 1) * ((q + 1) ^ k * (x + digit q x)) := by rw [ih]
+            _ = (q + 1) ^ k.succ * (x + digit q x) := by
+              rw [Nat.pow_succ]
+              ring
+    let k := x + digit q x
+    have hk : x + digit q x < q ^ k := by
+      simpa [k] using
+        (Nat.lt_pow_self (n := x + digit q x) (a := q) (by omega))
+    have hdvdProduct : q ^ k ∣ (q + 1) ^ k * (x + digit q x) := by
+      rw [← hpow k]
+      exact dvd_mul_right _ _
+    have hcopBase : Nat.Coprime q (q + 1) := by simp
+    have hcopPow : Nat.Coprime (q ^ k) ((q + 1) ^ k) :=
+      Nat.Coprime.pow k k hcopBase
+    have hdvd : q ^ k ∣ x + digit q x :=
+      hcopPow.dvd_of_dvd_mul_left hdvdProduct
+    have hle : q ^ k ≤ x + digit q x := Nat.le_of_dvd (by omega) hdvd
+    omega
+  · refine ⟨0, ?_⟩
+    simp only [Function.iterate_zero_apply, Finset.mem_singleton]
+    have hxmod := Nat.mod_lt x hqpos
+    omega
 
 /-- The empty set stops at once. -/
 theorem dmStops_empty (q : ℕ) : DMStops q ∅ := by
-  sorry
+  intro x _
+  exact ⟨0, by simp⟩
 
 /-- The full residue set never stops. -/
 theorem not_dmStops_range {q : ℕ} (hq : 0 < q) : ¬ DMStops q (Finset.range q) := by
-  sorry
+  intro h
+  obtain ⟨k, hk⟩ := h 1 (by omega)
+  exact hk (Finset.mem_range.mpr (Nat.mod_lt _ hq))
 
 /-- Base `4/3`: avoiding residue `2` (digit `1`) is the same problem as avoiding residue `1`
 (digit `2`). -/
