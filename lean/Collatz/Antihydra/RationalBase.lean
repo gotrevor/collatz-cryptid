@@ -289,6 +289,14 @@ theorem antihydra_value_eq (k : ℕ) :
 theorem antihydra_parity_complement_minWord :
     ∃ w : ℕ → ℕ, IsMinWord 3 2 [2, 1, 2, 2] w ∧ (∀ k, w k < 2) ∧
       ∀ k, (Foils.orbit Foils.floorChoice (8, 0) k).1 % 2 = 1 - w k := by
-  sorry
+  refine ⟨fun k => ceilStep^[k] 7 % 2, ?_, ?_, ?_⟩
+  · rw [← rep_three_two_seven]
+    exact isMinWord_ceilStep 7 (by omega)
+  · intro k
+    exact Nat.mod_lt _ (by omega)
+  · intro k
+    rw [antihydra_value_eq]
+    simp only
+    rcases Nat.mod_two_eq_zero_or_one (ceilStep^[k] 7) with h | h <;> omega
 
 end Collatz.Antihydra.RationalBase
