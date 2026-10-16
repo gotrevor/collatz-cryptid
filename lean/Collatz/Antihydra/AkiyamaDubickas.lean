@@ -629,9 +629,69 @@ theorem not_dmStops_range {q : ℕ} (hq : 0 < q) : ¬ DMStops q (Finset.range q)
 
 /-- Base `4/3`: avoiding residue `2` (digit `1`) is the same problem as avoiding residue `1`
 (digit `2`). -/
+private lemma digit_three_eq_one_iff {y : ℕ} : digit 3 y = 1 ↔ y % 3 = 2 := by
+  unfold digit
+  omega
+
 theorem dmStops_ne_two_iff_ne_one :
     DMStops 3 ((Finset.range 3).erase 2) ↔ DMStops 3 ((Finset.range 3).erase 1) := by
-  sorry
+  have htwo : DMStops 3 ((Finset.range 3).erase 2) ↔
+      ∀ x, 0 < x → ∃ k, minWord 3 x k = 1 := by
+    constructor
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, digit_three_eq_one_iff.2 ?_⟩
+      simpa [Finset.mem_erase, Nat.mod_lt _ (by omega : 0 < 3)] using hk
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, ?_⟩
+      have hmod := digit_three_eq_one_iff.1 hk
+      simpa [Finset.mem_erase, Nat.mod_lt _ (by omega : 0 < 3)] using hmod
+  have hone : DMStops 3 ((Finset.range 3).erase 1) ↔
+      ∀ x, 0 < x → ∃ k, minWord 3 x k = 2 := by
+    constructor
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, (digit_eq_top_iff (by omega : 2 ≤ 3)).2 ?_⟩
+      simpa [Finset.mem_erase, Nat.mod_lt _ (by omega : 0 < 3)] using hk
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, ?_⟩
+      have hmod := (digit_eq_top_iff (by omega : 2 ≤ 3)).1 hk
+      simpa [Finset.mem_erase, Nat.mod_lt _ (by omega : 0 < 3)] using hmod
+  rw [htwo, hone]
+  constructor
+  · intro h y hy
+    obtain ⟨k, hk⟩ := h (2 * y) (by omega)
+    have hnot : ¬∀ j, minWord 3 (2 * y) j ≠ 1 := by
+      push Not
+      exact ⟨k, hk⟩
+    rw [halving y] at hnot
+    push Not at hnot
+    exact hnot
+  · intro h x hx
+    by_cases hr : x % 3 = 2
+    · exact ⟨0, digit_three_eq_one_iff.2 hr⟩
+    have hdigitNe : digit 3 x ≠ 1 := fun hdigit ↦ hr (digit_three_eq_one_iff.1 hdigit)
+    have hdigitLt : digit 3 x < 3 := (digit_spec (by omega) x).1
+    have hdigitEven : 2 ∣ digit 3 x := by omega
+    have hnextEven : 2 ∣ next 3 x :=
+      dvd_next_of_dvd_digit (by omega) (by norm_num) x hdigitEven
+    obtain ⟨y, hyEq⟩ := hnextEven
+    have hmul : 3 * next 3 x = 4 * x + digit 3 x :=
+      Nat.mul_div_cancel' (digit_spec (by omega) x).2.1
+    have hy : 0 < y := by omega
+    obtain ⟨k, hk⟩ := h y hy
+    have hnot : ¬∀ j, minWord 3 y j ≠ 2 := by
+      push Not
+      exact ⟨k, hk⟩
+    rw [← halving y] at hnot
+    push Not at hnot
+    obtain ⟨j, hj⟩ := hnot
+    refine ⟨j + 1, ?_⟩
+    unfold minWord at hj ⊢
+    rw [show j + 1 = j.succ by omega, Function.iterate_succ_apply, hyEq]
+    exact hj
 
 /-- **The whole `4/3` problem is Akiyama's conjecture.**  Every two-residue case of
 Dubickas-Mossinghoff's question in base `4/3` holds iff no positive seed has a minimal word
