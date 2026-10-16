@@ -764,7 +764,8 @@ The floor map `x ↦ ⌊(q+1) x / q⌋ = x + x / q` is the ceiling map conjugate
 -/
 
 /-- Stopping is inherited by subsets. -/
-theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q T) : DMStops q S := by
+theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q T) :
+    DMStops q S := by
   intro x hx
   obtain ⟨k, hk⟩ := hT x hx
   exact ⟨k, fun hkS ↦ hk (h hkS)⟩
@@ -784,7 +785,8 @@ theorem dmStops_zero_top_of_minWord_ne_maxWord {q : ℕ} (hq : 3 ≤ q)
 /-- The floor successor `⌊(q+1) x / q⌋`. -/
 def floorNext (q x : ℕ) : ℕ := x + x / q
 
-/-- One step of the conjugacy: `⌈(q+1) y / q⌉` at `y = x - (q - 1)` is `⌊(q+1) x / q⌋ - (q - 1)`. -/
+/-- One step of the conjugacy: `⌈(q+1) y / q⌉` at `y = x - (q - 1)` is
+`⌊(q+1) x / q⌋ - (q - 1)`. -/
 theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
     next q (x - (q - 1)) = floorNext q x - (q - 1) := by
   let y := x - (q - 1)
@@ -839,8 +841,8 @@ theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
         rw [hxq]
         rw [Nat.sub_add_comm hx]
 
-/-- **Floor = translated ceiling.**  For `x ≥ q - 1` the ceiling orbit of `x - (q - 1)` is the floor
-orbit of `x` minus `q - 1`, at every step. -/
+/-- **Floor = translated ceiling.**  For `x ≥ q - 1` the ceiling orbit of `x - (q - 1)` is
+the floor orbit of `x` minus `q - 1`, at every step. -/
 theorem iterate_next_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) (k : ℕ) :
     (next q)^[k] (x - (q - 1)) = (floorNext q)^[k] x - (q - 1) := by
   have hge (n : ℕ) : x ≤ (floorNext q)^[n] x := by
