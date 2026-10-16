@@ -59,18 +59,95 @@ admissible `b ≤ q` with `q ∣ (q+1) x + b` is at least it. -/
 theorem digit_spec {q : ℕ} (hq : 0 < q) (x : ℕ) :
     digit q x < q ∧ q ∣ (q + 1) * x + digit q x ∧
       ∀ b ≤ q, q ∣ (q + 1) * x + b → digit q x ≤ b := by
-  sorry
+  have hx : x % q < q := Nat.mod_lt x hq
+  have hdigit : digit q x = if x % q = 0 then 0 else q - x % q := by
+    by_cases hr : x % q = 0
+    · simp [digit, hr]
+    · have : q - x % q < q := by omega
+      simp [digit, hr, Nat.mod_eq_of_lt this]
+  have hdiv (b : ℕ) : q ∣ (q + 1) * x + b ↔ q ∣ x + b := by
+    have heq : (q + 1) * x + b = q * x + (x + b) := by ring
+    rw [heq]
+    simpa [add_comm] using
+      (Nat.dvd_add_iff_left (dvd_mul_right q x) : q ∣ x + b ↔ q ∣ x + b + q * x).symm
+  constructor
+  · rw [hdigit]
+    split <;> omega
+  constructor
+  · rw [hdiv, hdigit]
+    by_cases hr : x % q = 0
+    · simpa [hr] using Nat.dvd_of_mod_eq_zero hr
+    · simp only [if_neg hr]
+      have hdecomp := Nat.div_add_mod x q
+      have heq : x + (q - x % q) = q * (x / q + 1) := by
+        rw [Nat.mul_add]
+        omega
+      rw [heq]
+      exact dvd_mul_right q (x / q + 1)
+  · intro b hb hdvd
+    rw [hdiv, Nat.dvd_iff_mod_eq_zero, Nat.add_mod] at hdvd
+    by_cases hbq : b = q
+    · rw [hdigit]
+      split <;> omega
+    have hblt : b < q := by omega
+    rw [Nat.mod_eq_of_lt hblt] at hdvd
+    rw [hdigit]
+    by_cases hr : x % q = 0
+    · simp [hr]
+    · simp only [if_neg hr]
+      by_contra hnot
+      have hsumlt : x % q + b < q := by omega
+      rw [Nat.mod_eq_of_lt hsumlt] at hdvd
+      omega
 
 /-- The maximal digit is the largest admissible digit `≤ q`. -/
 theorem maxDigit_spec {q : ℕ} (hq : 0 < q) (x : ℕ) :
     maxDigit q x ≤ q ∧ q ∣ (q + 1) * x + maxDigit q x ∧
       ∀ b ≤ q, q ∣ (q + 1) * x + b → b ≤ maxDigit q x := by
-  sorry
+  have hs := digit_spec hq x
+  by_cases hz : digit q x = 0
+  · simp only [maxDigit, if_pos hz]
+    constructor
+    · exact le_rfl
+    constructor
+    · have hd : q ∣ (q + 1) * x := by simpa [hz] using hs.2.1
+      exact dvd_add hd (dvd_refl q)
+    · exact fun b hb _ ↦ hb
+  · simp only [maxDigit, if_neg hz]
+    constructor
+    · exact hs.1.le
+    constructor
+    · exact hs.2.1
+    · intro b hb hadm
+      have hdb : digit q x ≤ b := hs.2.2 b hb hadm
+      by_contra hnot
+      have hlt : digit q x < b := by omega
+      have heq : (q + 1) * x + b =
+          (b - digit q x) + ((q + 1) * x + digit q x) := by omega
+      have hdiff : q ∣ b - digit q x :=
+        (Nat.dvd_add_iff_left hs.2.1).mpr (heq ▸ hadm)
+      have hqle : q ≤ b - digit q x := Nat.le_of_dvd (by omega) hdiff
+      omega
 
 /-- `next` is the ceiling `⌈(q+1) x / q⌉`. -/
 theorem next_eq_ceil {q : ℕ} (hq : 0 < q) (x : ℕ) :
     (next q x : ℤ) = ⌈(((q + 1) * x : ℕ) : ℚ) / q⌉ := by
-  sorry
+  have hs := digit_spec hq x
+  have hmul : q * next q x = (q + 1) * x + digit q x := by
+    exact Nat.mul_div_cancel' hs.2.1
+  have hmulQ : (q : ℚ) * next q x = (q + 1) * x + digit q x := by
+    exact_mod_cast hmul
+  have hqQ : (0 : ℚ) < q := by exact_mod_cast hq
+  have hdQ : (digit q x : ℚ) < q := by exact_mod_cast hs.1
+  symm
+  rw [Int.ceil_eq_iff]
+  norm_num only [Int.cast_natCast, Int.cast_one]
+  push_cast at hmulQ ⊢
+  constructor
+  · rw [lt_div_iff₀ hqQ]
+    nlinarith
+  · rw [div_le_iff₀ hqQ]
+    nlinarith
 
 /-- Base `4/3` check: the minimal word from `7` starts `2, 2, 1, 2` (`7 → 10 → 14 → 19 → 26`). -/
 theorem minWord_three_seven : (List.range 4).map (minWord 3 7) = [2, 2, 1, 2] := by
