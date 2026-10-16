@@ -410,4 +410,83 @@ theorem halving (y : ℕ) :
     rw [horbit k] at hk
     exact hk
 
+/-! ## General shift and scaling
+
+The two moves behind every reduction above.  Shifting by `c` lowers each digit by `c` while
+all digits stay `≥ c`; scaling by `m` multiplies each digit by `m` while the products stay
+`< q`.  When `m ∣ q + 1`, a digit divisible by `m` forces the successor to be divisible by
+`m`, which is what lets base `4/3` absorb odd starts.
+-/
+
+/-- **Shift by `c`.**  While the minimal digits from `x` are all `≥ c`, the orbit of `x + c` is
+the orbit of `x` plus `c`. -/
+theorem shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ minWord q x k) :
+    ∀ k ≤ n, (next q)^[k] (x + c) = (next q)^[k] x + c := by
+  sorry
+
+/-- The digits of the shifted word are the original digits minus `c`. -/
+theorem minWord_shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ minWord q x k) :
+    ∀ k < n, minWord q (x + c) k = minWord q x k - c := by
+  sorry
+
+/-- **Scale by `m`.**  While `m` times each minimal digit from `y` stays below `q`, the orbit of
+`m * y` is `m` times the orbit of `y`. -/
+theorem scale {q : ℕ} (m y n : ℕ) (h : ∀ k < n, m * minWord q y k < q) :
+    ∀ k ≤ n, (next q)^[k] (m * y) = m * (next q)^[k] y := by
+  sorry
+
+/-- The digits of the scaled word are `m` times the original digits. -/
+theorem minWord_scale {q : ℕ} (m y n : ℕ) (h : ∀ k < n, m * minWord q y k < q) :
+    ∀ k < n, minWord q (m * y) k = m * minWord q y k := by
+  sorry
+
+/-- If `m ∣ q + 1` and `m` divides the minimal digit at `x`, then `m` divides the successor:
+`q * next q x = (q + 1) * x + digit q x` and `m` is coprime to `q`. -/
+theorem dvd_next_of_dvd_digit {q m : ℕ} (hq : 0 < q) (hm : m ∣ q + 1) (x : ℕ)
+    (h : m ∣ digit q x) : m ∣ next q x := by
+  sorry
+
+/-! ## Base `4/3`: every case of the Dubickas-Mossinghoff problem
+
+Residues and digits in base `4/3`: residue `0` is digit `0`, residue `1` is digit `2`, and
+residue `2` is digit `1`.  `dmStops_ne_zero_iff_ne_one` covers `S = {1, 2}` and `S = {0, 2}`
+(the latter is Dubickas-Mossinghoff's "4/3 problem").  The remaining pair `S = {0, 1}` (avoid
+digit `1`) reduces to `S = {0, 2}` by one step and `halving`: a digit other than `1` makes the
+successor even.  So every nontrivial case is Akiyama's conjecture in base `4/3`.
+-/
+
+/-- **Singletons stop** (Dubickas-Mossinghoff, Prop. 3.2, in base `(q+1)/q`): a positive orbit
+cannot keep one residue forever, since then `q ^ k ∣ x + a` for every `k`. -/
+theorem dmStops_singleton {q : ℕ} (hq : 2 ≤ q) (r : ℕ) : DMStops q {r} := by
+  sorry
+
+/-- The empty set stops at once. -/
+theorem dmStops_empty (q : ℕ) : DMStops q ∅ := by
+  sorry
+
+/-- The full residue set never stops. -/
+theorem not_dmStops_range {q : ℕ} (hq : 0 < q) : ¬ DMStops q (Finset.range q) := by
+  sorry
+
+/-- Base `4/3`: avoiding residue `2` (digit `1`) is the same problem as avoiding residue `1`
+(digit `2`). -/
+theorem dmStops_ne_two_iff_ne_one :
+    DMStops 3 ((Finset.range 3).erase 2) ↔ DMStops 3 ((Finset.range 3).erase 1) := by
+  sorry
+
+/-- **The whole `4/3` problem is Akiyama's conjecture.**  Every two-residue case of
+Dubickas-Mossinghoff's question in base `4/3` holds iff no positive seed has a minimal word
+that is also maximal. -/
+theorem dm43_pair_iff (S : Finset ℕ) (hS : S ⊆ Finset.range 3) (hcard : S.card = 2) :
+    DMStops 3 S ↔ ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x := by
+  sorry
+
+/-- The classification by size: at most one residue always stops, two residues is Akiyama's
+conjecture, and all three never stop. -/
+theorem dm43_classification (S : Finset ℕ) (hS : S ⊆ Finset.range 3) :
+    (S.card ≤ 1 → DMStops 3 S) ∧
+      (S.card = 2 → (DMStops 3 S ↔ ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x)) ∧
+      (S.card = 3 → ¬ DMStops 3 S) := by
+  sorry
+
 end Collatz.Antihydra.AkiyamaDubickas
