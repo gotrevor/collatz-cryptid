@@ -733,6 +733,21 @@ theorem dm43_classification (S : Finset ℕ) (hS : S ⊆ Finset.range 3) :
     (S.card ≤ 1 → DMStops 3 S) ∧
       (S.card = 2 → (DMStops 3 S ↔ ∀ x, 0 < x → minWord 3 x ≠ maxWord 3 x)) ∧
       (S.card = 3 → ¬ DMStops 3 S) := by
-  sorry
+  constructor
+  · intro hcard
+    rcases (show S.card = 0 ∨ S.card = 1 by omega) with hzero | hone
+    · have hEmpty : S = ∅ := Finset.card_eq_zero.mp hzero
+      rw [hEmpty]
+      exact dmStops_empty 3
+    · obtain ⟨r, hSingleton⟩ := Finset.card_eq_one.mp hone
+      rw [hSingleton]
+      exact dmStops_singleton (by omega) r
+  constructor
+  · exact dm43_pair_iff S hS
+  · intro hcard
+    have hEq : S = Finset.range 3 :=
+      Finset.eq_of_subset_of_card_le hS (by simp [hcard])
+    rw [hEq]
+    exact not_dmStops_range (by omega)
 
 end Collatz.Antihydra.AkiyamaDubickas
