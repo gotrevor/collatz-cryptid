@@ -773,7 +773,13 @@ theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q 
 a minimal word that is also maximal, then the iteration with `S = {0, q - 1}` stops. -/
 theorem dmStops_zero_top_of_minWord_ne_maxWord {q : ℕ} (hq : 3 ≤ q)
     (h : ∀ x, 0 < x → minWord q x ≠ maxWord q x) : DMStops q {0, q - 1} := by
-  sorry
+  apply dmStops_mono (T := (Finset.range q).erase 1)
+  · intro r hr
+    simp only [Finset.mem_insert, Finset.mem_singleton] at hr
+    simp only [Finset.mem_erase, Finset.mem_range]
+    rcases hr with rfl | rfl <;> omega
+  · have hiff := dmStops_ne_zero_iff_ne_one (q := q) (by omega)
+    exact hiff.1.mp (hiff.2.mpr h)
 
 /-- The floor successor `⌊(q+1) x / q⌋`. -/
 def floorNext (q x : ℕ) : ℕ := x + x / q
