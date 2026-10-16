@@ -22,8 +22,7 @@ This file proves that **Antihydra's parity word is the bit-complement of the min
 `3/2` with seed `rep 7 = 2122`**.  Antihydra's values are `aₖ = H^k(8)` with `H x = x + ⌊x/2⌋`
 (`Foils.orbit Foils.floorChoice (8, 0)`); the bridge is `H (D + 1) = ⌈3D/2⌉ + 1`, and the minimal
 word in base `3/2` with seed `rep N` reads the parities of the `⌈3D/2⌉` orbit of `N`
-(Mahler's binary words, as AEV note).  Checked numerically for 2,000 terms before formalising
-(`claude/knowledge/core/projects/portfolio/starts/disjunctive-collatz.md`, fourth probe).
+(Mahler's binary words, as AEV note).  Checked numerically for 2,000 terms before formalising.
 
 Antihydra halts iff its odd count ever exceeds twice its even count (`Foils.Halts`), so its halting
 problem is a statement about letter counts in one AEV minimal word.  AEV's normality conjecture
