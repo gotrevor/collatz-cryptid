@@ -94,7 +94,15 @@ theorem isMinWord_ceilStep (N : ℕ) (hN : 0 < N) :
 `H (D + 1) = ⌈3D/2⌉ + 1` where `H x = ⌊3x/2⌋`. -/
 theorem antihydra_value_eq (k : ℕ) :
     (Foils.orbit Foils.floorChoice (8, 0) k).1 = ceilStep^[k] 7 + 1 := by
-  sorry
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    rw [Foils.orbit_succ]
+    simp only [Foils.step, Foils.floorChoice, Bool.false_eq_true, if_false]
+    rw [ih]
+    unfold ceilStep
+    rw [Function.iterate_succ_apply']
+    omega
 
 /-- **Main theorem.**  Antihydra's parity word is the bit-complement of the minimal word in base
 `3/2` with seed `2122 = rep 7`. -/
