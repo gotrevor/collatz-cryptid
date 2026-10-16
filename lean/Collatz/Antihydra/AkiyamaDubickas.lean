@@ -420,14 +420,55 @@ all digits stay `≥ c`; scaling by `m` multiplies each digit by `m` while the p
 
 /-- **Shift by `c`.**  While the minimal digits from `x` are all `≥ c`, the orbit of `x + c` is
 the orbit of `x` plus `c`. -/
+private lemma digit_add_of_le {q y c : ℕ} (hq : 0 < q) (hc : c ≤ digit q y) :
+    digit q (y + c) = digit q y - c := by
+  have hy := digit_spec hq y
+  have hyc := digit_spec hq (y + c)
+  have heq : (q + 1) * (y + c) + (digit q y - c) =
+      ((q + 1) * y + digit q y) + q * c := by
+    ring_nf
+    omega
+  have hcand : q ∣ (q + 1) * (y + c) + (digit q y - c) := by
+    rw [heq]
+    exact dvd_add hy.2.1 (dvd_mul_right q c)
+  have hmodNew : ((q + 1) * (y + c) + digit q (y + c)) % q = 0 :=
+    Nat.mod_eq_zero_of_dvd hyc.2.1
+  have hmodCand : ((q + 1) * (y + c) + (digit q y - c)) % q = 0 :=
+    Nat.mod_eq_zero_of_dvd hcand
+  have hsum : (q + 1) * (y + c) + digit q (y + c) ≡
+      (q + 1) * (y + c) + (digit q y - c) [MOD q] := by
+    exact hmodNew.trans hmodCand.symm
+  have hdigit : digit q (y + c) ≡ digit q y - c [MOD q] :=
+    Nat.ModEq.add_left_cancel' _ hsum
+  change digit q (y + c) % q = (digit q y - c) % q at hdigit
+  rw [Nat.mod_eq_of_lt hyc.1,
+    Nat.mod_eq_of_lt (lt_of_le_of_lt (Nat.sub_le _ _) hy.1)] at hdigit
+  exact hdigit
+
+private lemma next_add_of_digit_le {q y c : ℕ} (hq : 0 < q) (hc : c ≤ digit q y) :
+    next q (y + c) = next q y + c := by
+  rw [next, next, digit_add_of_le hq hc]
+  have heq : (q + 1) * (y + c) + (digit q y - c) =
+      ((q + 1) * y + digit q y) + q * c := by
+    ring_nf
+    omega
+  rw [heq, Nat.add_mul_div_left _ _ hq]
+
 theorem shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ minWord q x k) :
     ∀ k ≤ n, (next q)^[k] (x + c) = (next q)^[k] x + c := by
-  sorry
+  intro k hk
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih (by omega)]
+      exact next_add_of_digit_le hq (h k (by omega))
 
 /-- The digits of the shifted word are the original digits minus `c`. -/
 theorem minWord_shift_add {q : ℕ} (hq : 0 < q) (c x n : ℕ) (h : ∀ k < n, c ≤ minWord q x k) :
     ∀ k < n, minWord q (x + c) k = minWord q x k - c := by
-  sorry
+  intro k hk
+  unfold minWord
+  rw [shift_add hq c x n h k (by omega), digit_add_of_le hq (h k hk)]
 
 /-- **Scale by `m`.**  While `m` times each minimal digit from `y` stays below `q`, the orbit of
 `m * y` is `m` times the orbit of `y`. -/
