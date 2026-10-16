@@ -843,7 +843,17 @@ theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
 orbit of `x` minus `q - 1`, at every step. -/
 theorem iterate_next_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) (k : ℕ) :
     (next q)^[k] (x - (q - 1)) = (floorNext q)^[k] x - (q - 1) := by
-  sorry
+  have hge (n : ℕ) : x ≤ (floorNext q)^[n] x := by
+    induction n with
+    | zero => simp
+    | succ n ih =>
+        rw [Function.iterate_succ_apply']
+        exact ih.trans (by simp [floorNext])
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih]
+      exact next_sub_eq_floorNext_sub hq (hx.trans (hge k))
 
 /-- Residues reflect under the translation: the ceiling digit at `x - (q - 1)` is
 `q - 1 - x % q`. -/
