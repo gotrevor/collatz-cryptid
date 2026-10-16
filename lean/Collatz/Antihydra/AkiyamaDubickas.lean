@@ -270,12 +270,94 @@ start, iterating `⌈(q+1) x / q⌉` eventually meets a residue outside `S`. -/
 def DMStops (q : ℕ) (S : Finset ℕ) : Prop :=
   ∀ x, 0 < x → ∃ k, (next q)^[k] x % q ∉ S
 
+private lemma digit_eq_zero_iff {q y : ℕ} (hq : 0 < q) : digit q y = 0 ↔ y % q = 0 := by
+  have hr : y % q < q := Nat.mod_lt y hq
+  by_cases hy : y % q = 0
+  · simp [digit, hy]
+  · have hsub : q - y % q < q := by omega
+    rw [digit, Nat.mod_eq_of_lt hsub]
+    omega
+
+private lemma digit_eq_top_iff {q y : ℕ} (hq : 2 ≤ q) :
+    digit q y = q - 1 ↔ y % q = 1 := by
+  have hr : y % q < q := Nat.mod_lt y (by omega)
+  by_cases hy : y % q = 0
+  · simp [digit, hy]
+    omega
+  · have hsub : q - y % q < q := by omega
+    rw [digit, Nat.mod_eq_of_lt hsub]
+    omega
+
 /-- The two cases `S = {residues ≠ 0}` and `S = {residues ≠ 1}` are equivalent, and both say that no
 positive seed has a minimal word that is also maximal (Akiyama's conjecture, via AFS §5). -/
 theorem dmStops_ne_zero_iff_ne_one {q : ℕ} (hq : 2 ≤ q) :
     (DMStops q ((Finset.range q).erase 0) ↔ DMStops q ((Finset.range q).erase 1)) ∧
       (DMStops q ((Finset.range q).erase 0) ↔ ∀ x, 0 < x → minWord q x ≠ maxWord q x) := by
-  sorry
+  have hqpos : 0 < q := by omega
+  have hzero : DMStops q ((Finset.range q).erase 0) ↔
+      ∀ x, 0 < x → ∃ k, minWord q x k = 0 := by
+    constructor
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, (digit_eq_zero_iff hqpos).2 ?_⟩
+      simpa [Finset.mem_erase, Nat.mod_lt _ hqpos] using hk
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, ?_⟩
+      have hmod := (digit_eq_zero_iff hqpos).1 hk
+      simpa [Finset.mem_erase, Nat.mod_lt _ hqpos] using hmod
+  have hone : DMStops q ((Finset.range q).erase 1) ↔
+      ∀ x, 0 < x → ∃ k, minWord q x k = q - 1 := by
+    constructor
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, (digit_eq_top_iff hq).2 ?_⟩
+      simpa [Finset.mem_erase, Nat.mod_lt _ hqpos] using hk
+    · intro h x hx
+      obtain ⟨k, hk⟩ := h x hx
+      refine ⟨k, ?_⟩
+      have hmod := (digit_eq_top_iff hq).1 hk
+      simpa [Finset.mem_erase, Nat.mod_lt _ hqpos] using hmod
+  constructor
+  · rw [hzero, hone]
+    constructor
+    · intro h x hx
+      cases x with
+      | zero => omega
+      | succ x =>
+          cases x with
+          | zero =>
+              refine ⟨0, (digit_eq_top_iff hq).2 ?_⟩
+              simp [Nat.mod_eq_of_lt (by omega : 1 < q)]
+          | succ x =>
+              have hex := h (x + 1) (by omega)
+              have hnot : ¬∀ k, minWord q (x + 1) k ≠ 0 := by
+                push Not
+                exact hex
+              rw [avoidsZero_iff hq] at hnot
+              push Not at hnot
+              simpa [Nat.add_assoc] using hnot
+    · intro h x hx
+      have hex := h (x + 1) (by omega)
+      have hnot : ¬∀ k, minWord q (x + 1) k ≠ q - 1 := by
+        push Not
+        exact hex
+      rw [← avoidsZero_iff hq] at hnot
+      push Not at hnot
+      exact hnot
+  · rw [hzero]
+    constructor
+    · intro h x hx heq
+      obtain ⟨k, hk⟩ := h x hx
+      have hall := (minWord_eq_maxWord_iff hqpos x).1 heq
+      exact hall k hk
+    · intro h x hx
+      by_contra hnot
+      push Not at hnot
+      have hall : ∀ k, minWord q x k ≠ 0 := by
+        intro k hk
+        exact hnot k hk
+      exact h x hx ((minWord_eq_maxWord_iff hqpos x).2 hall)
 
 /-! ## Base `4/3`: halving -/
 
