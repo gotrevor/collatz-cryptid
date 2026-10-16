@@ -185,6 +185,18 @@ private lemma next_succ_of_digit_ne_zero {q y : ℕ} (hq : 0 < q) (hy : digit q 
     omega
   rw [heq, Nat.add_div_right _ hq]
 
+private lemma digit_succ_of_eq_zero {q y : ℕ} (hq : 2 ≤ q) (hy : digit q y = 0) :
+    digit q (y + 1) = q - 1 := by
+  have hs := digit_spec (q := q) (by omega) y
+  have hd : q ∣ (q + 1) * y := by simpa [hy] using hs.2.1
+  have heq : (q + 1) * y = q * y + y := by ring
+  rw [heq] at hd
+  have hyDvd : q ∣ y := (Nat.dvd_add_iff_right (dvd_mul_right q y)).mpr hd
+  have hyMod : y % q = 0 := Nat.dvd_iff_mod_eq_zero.mp hyDvd
+  have hsuccMod : (y + 1) % q = 1 := by
+    simpa [hyMod, Nat.mod_eq_of_lt (by omega : 1 < q)] using Nat.add_mod y 1 q
+  rw [digit, hsuccMod, Nat.mod_eq_of_lt (by omega)]
+
 /-- **Shift.**  If the first `n` minimal digits from `x` are nonzero, then for `k ≤ n` the orbit of
 `x + 1` is the orbit of `x` plus one. -/
 theorem shift {q : ℕ} (hq : 0 < q) (x n : ℕ) (h : ∀ k < n, minWord q x k ≠ 0) :
@@ -199,7 +211,26 @@ theorem shift {q : ℕ} (hq : 0 < q) (x n : ℕ) (h : ∀ k < n, minWord q x k �
 /-- The minimal word from `x` avoids `0` iff the minimal word from `x + 1` avoids `q - 1`. -/
 theorem avoidsZero_iff {q : ℕ} (hq : 2 ≤ q) (x : ℕ) :
     (∀ k, minWord q x k ≠ 0) ↔ ∀ k, minWord q (x + 1) k ≠ q - 1 := by
-  sorry
+  have hqpos : 0 < q := by omega
+  constructor
+  · intro hzero k hbad
+    have hshift := shift hqpos x k (fun j _ ↦ hzero j) k le_rfl
+    have hyne : digit q ((next q)^[k] x) ≠ 0 := hzero k
+    have hdlt := (digit_spec hqpos ((next q)^[k] x)).1
+    unfold minWord at hbad
+    rw [hshift, digit_succ_of_ne_zero hqpos hyne] at hbad
+    omega
+  · intro hmax k hk
+    have hex : ∃ j, minWord q x j = 0 := ⟨k, by simpa using hk⟩
+    let j := Nat.find hex
+    have hjzero : minWord q x j = 0 := Nat.find_spec hex
+    have hjprev : ∀ i < j, minWord q x i ≠ 0 := by
+      intro i hi hizero
+      exact (Nat.not_lt_of_ge (Nat.find_min' hex hizero)) hi
+    have hshift := shift hqpos x j hjprev j le_rfl
+    apply hmax j
+    unfold minWord at hjzero ⊢
+    rw [hshift, digit_succ_of_eq_zero hq hjzero]
 
 /-! ## Minimal = maximal exactly when `0` is avoided -/
 
