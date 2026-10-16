@@ -752,4 +752,45 @@ theorem dm43_classification (S : Finset ℕ) (hS : S ⊆ Finset.range 3) :
     rw [hEq]
     exact not_dmStops_range (by omega)
 
+/-! ## Dubickas-Mossinghoff's two-element example, and the floor map
+
+Dubickas and Mossinghoff (2009) ask to settle their problem for some two-element `S`, and give
+the example `p = q + 1`, `S = {0, q - 1}`.  Those residues are the digits `0` and `1`, which avoid
+the digit `q - 1`; so by monotonicity the example follows from Akiyama's conjecture in base
+`(q+1)/q`, for every `q ≥ 3` (for `q = 3` it is the `4/3` problem itself).
+
+The floor map `x ↦ ⌊(q+1) x / q⌋ = x + x / q` is the ceiling map conjugated by the translation
+`x ↦ x - (q - 1)`, since `⌈(x - (q - 1)) / q⌉ = ⌊x / q⌋`.
+-/
+
+/-- Stopping is inherited by subsets. -/
+theorem dmStops_mono {q : ℕ} {S T : Finset ℕ} (h : S ⊆ T) (hT : DMStops q T) : DMStops q S := by
+  sorry
+
+/-- **Dubickas-Mossinghoff's example follows from Akiyama's conjecture.**  If no positive seed has
+a minimal word that is also maximal, then the iteration with `S = {0, q - 1}` stops. -/
+theorem dmStops_zero_top_of_minWord_ne_maxWord {q : ℕ} (hq : 3 ≤ q)
+    (h : ∀ x, 0 < x → minWord q x ≠ maxWord q x) : DMStops q {0, q - 1} := by
+  sorry
+
+/-- The floor successor `⌊(q+1) x / q⌋`. -/
+def floorNext (q x : ℕ) : ℕ := x + x / q
+
+/-- One step of the conjugacy: `⌈(q+1) y / q⌉` at `y = x - (q - 1)` is `⌊(q+1) x / q⌋ - (q - 1)`. -/
+theorem next_sub_eq_floorNext_sub {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
+    next q (x - (q - 1)) = floorNext q x - (q - 1) := by
+  sorry
+
+/-- **Floor = translated ceiling.**  For `x ≥ q - 1` the ceiling orbit of `x - (q - 1)` is the floor
+orbit of `x` minus `q - 1`, at every step. -/
+theorem iterate_next_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) (k : ℕ) :
+    (next q)^[k] (x - (q - 1)) = (floorNext q)^[k] x - (q - 1) := by
+  sorry
+
+/-- Residues reflect under the translation: the ceiling digit at `x - (q - 1)` is
+`q - 1 - x % q`. -/
+theorem digit_sub_eq {q x : ℕ} (hq : 0 < q) (hx : q - 1 ≤ x) :
+    digit q (x - (q - 1)) = q - 1 - x % q := by
+  sorry
+
 end Collatz.Antihydra.AkiyamaDubickas
