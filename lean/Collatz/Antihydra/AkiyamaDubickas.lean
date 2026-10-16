@@ -155,11 +155,46 @@ theorem minWord_three_seven : (List.range 4).map (minWord 3 7) = [2, 2, 1, 2] :=
 
 /-! ## The shift lemma -/
 
+private lemma digit_succ_of_ne_zero {q y : ℕ} (hq : 0 < q) (hy : digit q y ≠ 0) :
+    digit q (y + 1) = digit q y - 1 := by
+  have hySpec := digit_spec hq y
+  have hsSpec := digit_spec hq (y + 1)
+  have heq : (q + 1) * (y + 1) + (digit q y - 1) =
+      ((q + 1) * y + digit q y) + q := by
+    ring_nf
+    omega
+  have hdvd : q ∣ (q + 1) * (y + 1) + (digit q y - 1) := by
+    rw [heq]
+    exact dvd_add hySpec.2.1 (dvd_refl q)
+  have hle : digit q (y + 1) ≤ digit q y - 1 :=
+    hsSpec.2.2 _ (by omega) hdvd
+  have heq' : (q + 1) * (y + 1) + digit q (y + 1) =
+      ((q + 1) * y + (digit q (y + 1) + 1)) + q := by ring
+  have hdvd' : q ∣ (q + 1) * y + (digit q (y + 1) + 1) :=
+    (Nat.dvd_add_iff_left (dvd_refl q)).mpr (heq' ▸ hsSpec.2.1)
+  have hge : digit q y ≤ digit q (y + 1) + 1 :=
+    hySpec.2.2 _ (by omega) hdvd'
+  omega
+
+private lemma next_succ_of_digit_ne_zero {q y : ℕ} (hq : 0 < q) (hy : digit q y ≠ 0) :
+    next q (y + 1) = next q y + 1 := by
+  rw [next, next, digit_succ_of_ne_zero hq hy]
+  have heq : (q + 1) * (y + 1) + (digit q y - 1) =
+      ((q + 1) * y + digit q y) + q := by
+    ring_nf
+    omega
+  rw [heq, Nat.add_div_right _ hq]
+
 /-- **Shift.**  If the first `n` minimal digits from `x` are nonzero, then for `k ≤ n` the orbit of
 `x + 1` is the orbit of `x` plus one. -/
 theorem shift {q : ℕ} (hq : 0 < q) (x n : ℕ) (h : ∀ k < n, minWord q x k ≠ 0) :
     ∀ k ≤ n, (next q)^[k] (x + 1) = (next q)^[k] x + 1 := by
-  sorry
+  intro k hk
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [Function.iterate_succ_apply', Function.iterate_succ_apply', ih (by omega)]
+      exact next_succ_of_digit_ne_zero hq (h k (by omega))
 
 /-- The minimal word from `x` avoids `0` iff the minimal word from `x + 1` avoids `q - 1`. -/
 theorem avoidsZero_iff {q : ℕ} (hq : 2 ≤ q) (x : ℕ) :
