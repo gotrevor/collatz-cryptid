@@ -15,9 +15,9 @@ Lean: `lean/Collatz/Antihydra/HaarDigitRate.lean`.
   For Fornet's candidate (18,6,1)/25 that is `a_* ≤ 8/25`.
 * **Crux (open): `CrossEnergyBounded`** (Λ bounded).  Numerically flat at every law tested,
   `N ≤ 48`.  Control: the multiplier-1 sibling gives growth `1.0137^N`.  notes/37 §3.
-* Sorries in `src` (all disclosed, on-path):
-  `moment_bound` (90%), `haarRate_le_of_crossEnergyBounded` (85%),
-  `candidate_spineRatio_lt_one` (99%, numeric rpow).
+* **Lap 2: no `sorry` left in `HaarDigitRate.lean`.**  `moment_bound`, `candidate_spineRatio_lt_one`
+  and `haarRate_le_of_crossEnergyBounded` are proved, so `haarRate_le_eight_twentyfifths` is
+  axiom-clean.  Its only hypothesis is `CrossEnergyBounded candidate`, the crux.
 
 ## Next
 
@@ -45,3 +45,30 @@ So (C1) is equivalent to bounded partial sums of the parity correlations `(L^j �
 `χ(δ) = (−1)^δ`.  Plan: compute this increment sequence for `n = 20..50` and test whether it
 decays (a spectral mechanism) or oscillates.  Record the result in notes/37 §6 and in the
 `CrossEnergyBounded` docstring.
+
+## Lap 2 (2026-10-17)
+
+Commits `14d516d` (Theorem A), `626c03f` (q(1/32) < 1), `5db49ff` + `f4a2bf0` (Theorem B).
+Theorem B carries `set_option maxHeartbeats 2000000` (elaboration of the big assembly).
+
+Crux findings this lap (none of them proves (C1) yet):
+* **Fornet's finite-memory MDP route is out of reach.**  Fresh numerics, float relative value
+  iteration in `tmp/mdp/lam.c`, give `λ_L = 0.3789 (16), 0.3702 (20), 0.3634 (24)`.  `λ_22`
+  matches Fornet's certified `0.36661`.  The decay is slower than `log L / L`, so `λ_L < 1/3`
+  needs `L ≳ 60` bits, beyond direct computation.
+* **Gibbs-variational lower bounds on the quenched free energy give nothing past a policy's own
+  cost.**  Any randomized policy that beats 1/3 through its entropy would sit above the
+  annealed entropy curve's tangent line.  Not recorded in Lean yet.
+* **Exact increment formula** (checked numerically against `cross_energy_p.c` to 6 digits):
+  `Λ_N = 1 + ∑_{k≤N} T_k` with
+  `T_k = ∑_{η odd mod 2^k} cos(2π 3^k η/2^k) ∏_{i≤k} π̂(3^{i−1}η/2^i)`.
+  The absolute mass grows like `1.155^k` while `|T_k| ≈ 1e-3` at `k ≈ 40`.  `|T_k|` decays slowly
+  and oscillates.
+* **Parity-cancellation identity** `L*χ = 2(π₀ − 2π₂) χ₄`: the odd parents cancel exactly.
+* **Integer picture.**  `W_j = R_j|_ℤ`: every integer has 1–2 backward predecessors and parity
+  holds automatically.  `W_j` has a forced mod-3 pattern, so it is not smooth at unit scale.  The
+  CRT heuristic (3-adic fine structure × 2-adic period) is the likely mechanism behind (C1).
+
+Next: state the shift-recursion form of `crossEnergy` in Lean (`crossEnergy p N = lam p N 1`).
+That makes (C1) an elementary integer-recursion statement, with `decide` anchors.  Then attack it
+through the increment/parity structure.

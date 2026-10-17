@@ -1,5 +1,11 @@
 # PENDING_WORK (t4-haar-rate)
 
+2026-10-17 lap 2: Theorems A and B are proved in Lean.  The headline
+`haarRate_le_eight_twentyfifths` is sorry-free and conditional only on `CrossEnergyBounded
+candidate` (the crux).  Next attack on the crux: Lean statement of the shift recursion
+(`crossEnergy = lam 1`), then the increment structure `T_k` and the parity cancellation.  See
+HANDOFF lap 2.
+
 2026-10-17: crux advanced.  `a_* ≤ p₁+2p₂` is reduced (spine decomposition, notes/37 Thms A/B)
 to one open hypothesis `CrossEnergyBounded p` (`HaarDigitRate.lean`): the adjacent `L²`
 cross-energy `∫ρ_N(y)ρ_N(y+1)dm` of Fornet's iid law is bounded.  Numerics are flat (0.547 for

@@ -4,6 +4,21 @@
 Haar-mean optimal base-3/2 digit rate `a_*` below `1/3`?  Known: `0.3042471157… ≤ a_* ≤ 0.36661`.
 notes/36 fits `a_* = c* = 0.30425` with a parameter-free branching-random-walk law.
 
+**Update (2026-10-17, lap 2).**  Theorems A and B are now proved in Lean, so
+`haarRate_le_eight_twentyfifths : CrossEnergyBounded candidate → a_* ≤ 8/25` has no `sorry`.
+Lean-friendly proofs replaced the paper ones:
+
+* Theorem A is the one-step recursion `M_{N+1} ≤ q M_N + r Λ_N^s` (`moment_succ_le`).  It comes
+  from the first-digit split, subadditivity, `m ↦ 3m + c` permuting residues, and concave Jensen
+  under the weights `Z_N`.
+* Theorem B has four pieces:
+  - a Chernoff bound through the tilted partition function: `Z_N l^{V_N} ≤ Z_N(p_d l^d)`
+    (`Z_mul_pow_V_le`, `chernoff`);
+  - a Young bound `x ≤ K + x^{1+s}/K^s` in place of Hölder (`mass_le`, `cheap_card`);
+  - the block-commitment squeeze, with exactly uniform block starts (`sum_block`) and block-cost
+    variance `≤ qL²` (`squeeze`);
+  - subadditivity (`A_mul_le`, `A_add_le`).
+
 **Outcome of this note.**  The kickoff's route (truncated second moment of `Z_N`) is replaced by
 a sharper one: a *spine* (size-biased) decomposition of the density martingale of Fornet's iid
 self-similar law `μ_p`.  It reduces `a_* ≤ p₁ + 2p₂` to a single hypothesis on one number per
@@ -29,7 +44,7 @@ For a digit law `p = (p₀,p₁,p₂)` let `D_j` be iid `p`, `X = −∑ D_j 2^j
 `Z_N(x) = ∑_{legal w, |w|=N} ∏ p_{w_j}` (Fornet PT1.2/IC1.2).  **[Lean]** `Z` (first-digit
 recursion), `Z_add_pow_mul`, `rho`.  Fornet's IC1.1/AC4: `μ_p ≪ m ⇒ a_* ≤ c(p)`.
 
-## 2. Theorem A: the spine moment bound  [Lean-sorry 90%: `moment_bound`]
+## 2. Theorem A: the spine moment bound  [Lean: `moment_bound`]
 
 For `0 < s ≤ 1` put `q(s) = 2^s ∑_d p_d^{1+s}` (`spineRatio`) and
 `r(s) = 2^s (p₀ p₂^s + p₂ p₀^s)` (`siblingWeight`).  For every `N`,
@@ -57,7 +72,7 @@ the product structure.  That is what `moment_bound` states.
 
 `q(s) < 1` for small `s` iff `H(p) > log 2`: `d/ds log q |_{s=0} = log 2 − H(p)`.  For Fornet's
 candidate `p = (18,6,1)/25`, `H(p) = 0.7078 > log 2` and `q(1/32) ≈ 0.99978`
-(**[Lean-sorry 99%]** `candidate_spineRatio_lt_one`, a numeric `rpow` bound).
+(**[Lean]** `candidate_spineRatio_lt_one`, rational upper bounds on four 32nd roots).
 
 **Corollary A′ [paper 90%].**  If `H(p) > log 2` and `sup_n Λ_n < ∞`, then `μ_p ≪ m` with a
 density in `L^{1+s}` for every `s ∈ (0,1]` with `q(s) < 1`.  (Uniform `L^{1+s}` bound on the
@@ -108,7 +123,7 @@ never returns to `0`; for multiplier `1` it shrinks onto `0`.
 
 **Confidence that (C1) holds for the candidate: ~75%.**
 
-## 4. Theorem B: from the moment bound to `a_* ≤ c(p)`  [Lean-sorry 85%: `haarRate_le_of_crossEnergyBounded`]
+## 4. Theorem B: from the moment bound to `a_* ≤ c(p)`  [Lean: `haarRate_le_of_crossEnergyBounded`]
 
 Assume `q(s) < 1` and (C1), so `M := sup_N ∫ρ_N^{1+s} dm < ∞` by Theorem A.  A self-contained
 argument (Fornet IC1.1 is the alternative citation):
@@ -127,7 +142,7 @@ argument (Fornet IC1.1 is the alternative citation):
    `∑_{x<2^N} V_N(x) ≤ (c+ε) N 2^N` for all large `N`.  ∎
 
 **Corollaries.**
-* **[Lean, modulo the sorries above]** `haarRate_le_eight_twentyfifths`: (C1) for the candidate
+* **[Lean]** `haarRate_le_eight_twentyfifths`: (C1) for the candidate
   ⇒ `a_* ≤ 8/25 < 1/3`.  That refutes Fornet's mean inequality `a_* ≥ 1/3`.
 * [paper 85%] (C1) for the tilted law at one `θ ∈ (1.2382, θ*)` ⇒ `a_* < 1/3`.  (C1) for all
   `θ < θ*` ⇒ `a_* = c*`, the notes/36 prediction: `c(θ) ↓ c*` as `θ ↑ θ*`, and `a_* ≥ c*` is OE3.
@@ -162,9 +177,8 @@ strictly more than (C1), and the spine route needs exactly (C1).
 
 ## 7. Not claimed
 
-No bound on `a_*` is proved.  Nothing here touches the fixed-integer rate, global (G), or
-Antihydra's orbit.  Theorems A and B are paper proofs, stated in Lean with `sorry`.  The step
-that most needs an expert check is the Jensen step in Theorem A.  It is applied to `μ_p`, a
-probability measure, with the sibling's shift fixed at `±1` and independent of the tail.
+No unconditional bound on `a_*` is proved: everything is conditional on (C1).  Nothing here
+touches the fixed-integer rate, global (G), or Antihydra's orbit.  Theorems A and B are proved
+in Lean (no `sorry`); (C1) is the single open hypothesis of the headline.
 
 Build: `lake build Collatz.Antihydra.HaarDigitRate`.
