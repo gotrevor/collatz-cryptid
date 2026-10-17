@@ -8,6 +8,10 @@ jobs).  Targets 1-4 DONE, and the stretch's Bigfoot half is DONE: Bigfoot drains
 the cryptid, so the Bigfoot ladder `14 → 13 → 7 → 2 → 1` is closed in the `X` coordinate.
 Remaining stretch item (optional): the clocked block map (`step4_block`, slope `256/81`) as the
 coordinate; since `d = 1` is already reached in `X`, its interest is only a different family.
+`box done` signalled 2026-10-17; the repo-wide gate declines it because of 9 pre-existing
+`sorry`s outside this kickoff (Korec, Tao, Bigfoot `Reduction`/`V6KPos`/`InvariantSketch`: the
+open cryptid problems themselves).  This T3 run is a bounded task: it should be launched with
+`--done-when` scoped to `lean/Collatz/HydraFoils*` (sorry-free).  Don't reopen finished work.
 Build tip: after editing `HydraFoils.lean`, rebuild the Cert218 chunk modules one at a time
 (parallel rebuild hits the box's "too many open files"; reference corpus
 `lean-box-fd-exhaustion-is-mmap-not-nofile.md`).
