@@ -32,3 +32,16 @@ Lean: `lean/Collatz/Antihydra/HaarDigitRate.lean`.
 
 Numerics: `tools/sandbox/haar_digit_rate/cross_energy*.c`.  The box has no libc headers.  Compile
 with the toolchain's `leanc` (prototypes inline): `leanc -O3 -c f.c && leanc f.o -o f -lm`.
+
+## Checkpoint (lap end, 2026-10-17)
+
+Branch `wip/t4-haar-rate`, HEAD `47d0860`.  The tree is clean, apart from the untracked
+`CLAUDE.local.md` (not ours to commit).  The scratch dir `tmp/` holds copies of the numerics
+programs.  It is not committed; canonical copies are in `tools/sandbox/haar_digit_rate/`.
+
+Unstarted idea for the next lap, crux-side.  Since `L1 = α·1_odd + β·1_even`,
+`Λ_{n+1} − Λ_n = ((β−α)/2)·⟨m_n, (−1)^δ⟩`, where `m_n` is the forward shift measure from `δ = 1`.
+So (C1) is equivalent to bounded partial sums of the parity correlations `(L^j χ)(1)`,
+`χ(δ) = (−1)^δ`.  Plan: compute this increment sequence for `n = 20..50` and test whether it
+decays (a spectral mechanism) or oscillates.  Record the result in notes/37 §6 and in the
+`CrossEnergyBounded` docstring.
