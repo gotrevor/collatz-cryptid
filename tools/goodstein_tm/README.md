@@ -41,10 +41,11 @@ is corrupted.
 - Seeds 16 and 100 (`build_halt.py`, 56 and 89 states): 1533 Goodstein steps match in 20M
   machine steps.
 
-The machine pauses for a long time at bases of the form `3·2^k − 1` (1535, 6143, …), so different
-seeds stop at the same count under the same budget.  At those bases the tail of the tree runs out
-and a large block is copied `b − 1` times.  Goodstein-from-4 changes structure at the same bases;
-it ends at base `3·2^402653211 − 1`.
+In the sequence from 4, the step into base `3·2^k` (12, 24, …, 1536, 3072, 6144, …) is where the
+tail of the tree runs out.  There a block of about `b` nodes is copied `b − 1` times (computed
+symbolically up to base 20000).  The machine spends most of its time in those steps, so a fixed
+budget tends to stop just before one.  Seeds 4, 16 and 100 all stop at base 1535 under 20M steps
+because their lowest levels go through the same doubling.
 
 The table's other `---` entries are (state, symbol) pairs the construction never reads; the only
 halt the machine reaches is `STEP_DONE_CHECK2` reading `]`.  That claim is argued from the
