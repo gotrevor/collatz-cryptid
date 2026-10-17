@@ -32,6 +32,21 @@ big-integer Goodstein computation (`bump` = hereditary base change on integers).
 - Seeds 1, 2, 3 halt after exactly 1, 3, 5 Goodstein steps (23, 171, 285 machine steps).
 - Seed 4: the first 1533 Goodstein steps match the reference (20M machine steps, value 7 digits).
 
+`test_fast.py` compares the tape tree, node for node, with a symbolic hereditary-base reference
+(a number is a descending tuple of exponent trees), so it needs no big integers and big seeds stay
+cheap.  It agrees with `test_halt.py` on seeds 1-4.  It also reports a mismatch when one transition
+is corrupted.
+
+- Seed 4: 6141 Goodstein steps match (300M machine steps, about 80 s).
+- Seeds 16 and 100 (`build_halt.py`, 56 and 89 states): 1533 Goodstein steps match in 20M
+  machine steps.
+
+In the sequence from 4, the step into base `3·2^k` (12, 24, …, 1536, 3072, 6144, …) is where the
+tail of the tree runs out.  There a block of about `b` nodes is copied `b − 1` times (computed
+symbolically up to base 20000).  The machine spends most of its time in those steps, so a fixed
+budget tends to stop just before one.  Seeds 4, 16 and 100 all stop at base 1535 under 20M steps
+because their lowest levels go through the same doubling.
+
 The table's other `---` entries are (state, symbol) pairs the construction never reads; the only
 halt the machine reaches is `STEP_DONE_CHECK2` reading `]`.  That claim is argued from the
 construction and observed in these runs; it is not proved.
