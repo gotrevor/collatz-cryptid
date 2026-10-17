@@ -348,5 +348,125 @@ theorem candidate_crossEnergyBounded_of_paritySummable (h : ParityCorrSummable c
   crossEnergyBounded_of_paritySummable candidate candidate_isDigitLaw
     (by rw [candidate_parityBias]; norm_num) h
 
-end Collatz.Antihydra.HaarDigitRate
+/-! ## Multiscale form: equidistribution of the forward measure mod `2^k`
 
+`Λ_{n+k} = ∑_{r < 2^k} C_k(r) h_n(r)`, where `h_n(r)` is the forward mass of `δ ≡ r (mod 2^k)`
+after `n` steps from `δ = 1` (`forwardMass`).  Since `∑_r C_k(r) = 2^k` and `C_k(r) ≤ C_k(0)`,
+`|Λ_{n+k} − Λ_n| ≤ C_k(0) · ∑_r |h_n(r) − Λ_n/2^k|` (`crossEnergy_add_sub_le`).  So exponential
+equidistribution of `δ_n mod 2^k` beating the diagonal growth `C_k(0) = ∫ρ_k²` bounds the
+cross-energy (condition (S) in total-variation form, notes/37 §9). -/
+
+/-- `𝒦` as a linear map. -/
+noncomputable def kernelLin (p : ℕ → ℝ) : (ℕ → ℝ) →ₗ[ℝ] (ℕ → ℝ) where
+  toFun := kernelOp p
+  map_add' f g := by funext δ; simp only [kernelOp, Pi.add_apply]; split_ifs <;> ring
+  map_smul' c f := by
+    funext δ; simp only [kernelOp, Pi.smul_apply, smul_eq_mul, RingHom.id_apply]
+    split_ifs <;> ring
+
+theorem iterate_kernelOp_eq (p : ℕ → ℝ) (n : ℕ) (g : ℕ → ℝ) :
+    (kernelOp p)^[n] g = (kernelLin p ^ n) g := by
+  rw [Module.End.pow_apply]; rfl
+
+/-- Forward mass of the residue class `r mod 2^k` after `n` steps from `δ = 1`. -/
+noncomputable def forwardMass (p : ℕ → ℝ) (n k r : ℕ) : ℝ :=
+  (kernelOp p)^[n] (fun δ => if δ % 2 ^ k = r then 1 else 0) 1
+
+theorem crossShift_mod (p : ℕ → ℝ) (k δ : ℕ) : crossShift p k δ = crossShift p k (δ % 2 ^ k) := by
+  unfold crossShift haarAvg
+  congr 1
+  refine sum_congr rfl fun r _ => ?_
+  have h : r + δ = r + δ % 2 ^ k + 2 ^ k * (δ / 2 ^ k) := by rw [add_assoc, Nat.mod_add_div]
+  beta_reduce
+  rw [h, rho_add_pow_mul]
+
+theorem shiftKernel_decomp (p : ℕ → ℝ) (k : ℕ) : shiftKernel p k =
+    fun δ => ∑ r ∈ range (2 ^ k), crossShift p k r * (if δ % 2 ^ k = r then 1 else 0) := by
+  funext δ
+  simp only [mul_ite, mul_one, mul_zero]
+  rw [sum_ite_eq, if_pos (mem_range.2 (Nat.mod_lt _ (by positivity))), ← crossShift_mod,
+    crossShift_eq_shiftKernel]
+
+/-- **Multiscale identity** `Λ_{n+k} = ∑_{r<2^k} C_k(r) h_n(r)`. -/
+theorem crossEnergy_add_eq (p : ℕ → ℝ) (n k : ℕ) :
+    crossEnergy p (n + k) = ∑ r ∈ range (2 ^ k), crossShift p k r * forwardMass p n k r := by
+  rw [crossEnergy_eq_shiftKernel, shiftKernel_eq_iterate, Function.iterate_add_apply,
+    ← shiftKernel_eq_iterate, shiftKernel_decomp, iterate_kernelOp_eq]
+  have : (fun δ => ∑ r ∈ range (2 ^ k), crossShift p k r * (if δ % 2 ^ k = r then (1 : ℝ) else 0))
+      = ∑ r ∈ range (2 ^ k),
+          crossShift p k r • (fun δ => if δ % 2 ^ k = r then (1 : ℝ) else 0) := by
+    funext δ; simp [Finset.sum_apply]
+  rw [this, map_sum]
+  simp only [map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul, forwardMass,
+    iterate_kernelOp_eq]
+
+/-- The forward masses of the `2^k` classes add up to `Λ_n`. -/
+theorem sum_forwardMass (p : ℕ → ℝ) (n k : ℕ) :
+    ∑ r ∈ range (2 ^ k), forwardMass p n k r = crossEnergy p n := by
+  rw [crossEnergy_eq_shiftKernel, shiftKernel_eq_iterate]
+  simp only [forwardMass, iterate_kernelOp_eq]
+  have : (fun _ : ℕ => (1 : ℝ)) =
+      ∑ r ∈ range (2 ^ k), (fun δ => if δ % 2 ^ k = r then (1 : ℝ) else 0) := by
+    funext δ
+    rw [Finset.sum_apply, sum_ite_eq, if_pos (mem_range.2 (Nat.mod_lt _ (by positivity)))]
+  rw [this, map_sum, Finset.sum_apply]
+
+theorem crossShift_nonneg (p : ℕ → ℝ) (hp : ∀ d, 0 ≤ p d) (k δ : ℕ) : 0 ≤ crossShift p k δ := by
+  unfold crossShift haarAvg
+  exact div_nonneg (sum_nonneg fun r _ =>
+    mul_nonneg (rho_nonneg p hp k r) (rho_nonneg p hp k _)) (by positivity)
+
+/-- Shift reindexing of a `2^k`-periodic sum. -/
+theorem sum_rho_shift (p : ℕ → ℝ) (k c : ℕ) (f : ℝ → ℝ) :
+    ∑ y ∈ range (2 ^ k), f (rho p k (y + c)) = ∑ y ∈ range (2 ^ k), f (rho p k y) := by
+  have := sum_range_pow_affine k 1 c rfl (fun x => f (rho p k x))
+    (fun x j => by simp only [rho_add_pow_mul])
+  simpa using this
+
+/-- `C_k(δ) ≤ C_k(0) = ∫ ρ_k²` (AM–GM). -/
+theorem crossShift_le_zero (p : ℕ → ℝ) (k δ : ℕ) : crossShift p k δ ≤ crossShift p k 0 := by
+  unfold crossShift haarAvg
+  gcongr ?_ / _
+  have h1 : ∑ r ∈ range (2 ^ k), rho p k r * rho p k (r + δ) ≤
+      ∑ r ∈ range (2 ^ k), (rho p k r ^ 2 / 2 + rho p k (r + δ) ^ 2 / 2) :=
+    sum_le_sum fun r _ => by nlinarith [sq_nonneg (rho p k r - rho p k (r + δ))]
+  rw [sum_add_distrib, sum_rho_shift p k δ (fun x => x ^ 2 / 2)] at h1
+  simp only [add_zero]
+  have h2 : ∑ r ∈ range (2 ^ k), rho p k r * rho p k r =
+      ∑ r ∈ range (2 ^ k), rho p k r ^ 2 / 2 + ∑ r ∈ range (2 ^ k), rho p k r ^ 2 / 2 := by
+    rw [← sum_add_distrib]; exact sum_congr rfl fun r _ => by ring
+  linarith
+
+/-- `∑_{r<2^k} C_k(r) = 2^k`: the difference law is a probability measure. -/
+theorem sum_crossShift (p : ℕ → ℝ) (hp : IsDigitLaw p) (k : ℕ) :
+    ∑ r ∈ range (2 ^ k), crossShift p k r = 2 ^ k := by
+  have hρ : ∑ y ∈ range (2 ^ k), rho p k y = 2 ^ k := by
+    simp only [rho, ← mul_sum, sum_Z, hp.2, one_pow, mul_one]
+  have hP : (0 : ℝ) < 2 ^ k := by positivity
+  unfold crossShift haarAvg
+  rw [← sum_div, sum_comm]
+  have : ∀ y, ∑ r ∈ range (2 ^ k), rho p k y * rho p k (y + r) = rho p k y * 2 ^ k := by
+    intro y
+    rw [← mul_sum, ← hρ]
+    congr 1
+    have := sum_rho_shift p k y id
+    simp only [id] at this
+    rw [← this]; exact sum_congr rfl fun r _ => by rw [add_comm]
+  simp only [this, ← sum_mul, hρ]
+  field_simp
+
+/-- **Multiscale bound**: `|Λ_{n+k} − Λ_n| ≤ C_k(0) ∑_{r<2^k} |h_n(r) − Λ_n/2^k|`. -/
+theorem crossEnergy_add_sub_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (n k : ℕ) :
+    |crossEnergy p (n + k) - crossEnergy p n| ≤
+      crossShift p k 0 * ∑ r ∈ range (2 ^ k), |forwardMass p n k r - crossEnergy p n / 2 ^ k| := by
+  have hP : (0 : ℝ) < 2 ^ k := by positivity
+  have key : crossEnergy p (n + k) - crossEnergy p n =
+      ∑ r ∈ range (2 ^ k), crossShift p k r * (forwardMass p n k r - crossEnergy p n / 2 ^ k) := by
+    simp only [mul_sub, sum_sub_distrib, ← crossEnergy_add_eq, ← sum_mul, sum_crossShift p hp]
+    field_simp
+  rw [key, mul_sum]
+  refine (abs_sum_le_sum_abs _ _).trans (sum_le_sum fun r _ => ?_)
+  rw [abs_mul, abs_of_nonneg (crossShift_nonneg p hp.1 k r)]
+  exact mul_le_mul_of_nonneg_right (crossShift_le_zero p k r) (abs_nonneg _)
+
+end Collatz.Antihydra.HaarDigitRate

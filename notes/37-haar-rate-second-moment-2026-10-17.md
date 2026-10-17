@@ -218,3 +218,60 @@ character in one step (the `cos(π/2) = 0` term).  Also `Λ_{n+k} = Λ_n + ∑_{
 for `k = αn` with `c > α log γ`, where `γ ≈ 1.155` is the diagonal growth.  (S) implies (C1).
 Numerics: `T_k` (`tmp/mdp/tk`, `k ≤ 30`) has `|T_k|/absmass ≈ 1.7e−4` at `k = 30`, far below
 `γ^{−30} = 0.013`.
+
+## 9. Lap 4: the crux as an integer recursion and a parity sum  [Lean + computed]
+
+**Residue-free form [Lean].**  `lean/Collatz/Antihydra/HaarShift.lean`.  `crossShift p N δ =
+∫ρ_N(y)ρ_N(y+δ)` obeys `C_{N+1}(2u+1) = 2π(1)(C_N(3u+1)+C_N(3u+2))`,
+`C_{N+1}(2u+2) = 2π(0)C_N(3u+3) + 2π(2)(C_N(3u+2)+C_N(3u+4))` and
+`C_{N+1}(0) = 2π(0)C_N(0) + 4π(2)C_N(1)`, with `π = (∑p², p₁(p₀+p₂), p₀p₂)`
+(`crossShift_succ_odd/even/zero`).  Hence `crossEnergy p N = shiftKernel p N 1`
+(`crossEnergy_eq_shiftKernel`), where `shiftKernel` is defined by the recursion alone.  Anchor:
+`crossEnergy_candidate_one` (`Λ₁ = 456/625`).
+
+**Parity form [Lean].**  With `𝒦` the one-step operator (`kernelOp`), `𝒦1 = 1 + βχ`, where
+`χ(δ) = (−1)^δ` and `β = (p₀−p₁+p₂)²` (`kernelOp_one`).  So
+`Λ_N = 1 + β∑_{n<N} P_n` with `P_n = (𝒦^nχ)(1)` (`crossEnergy_eq_one_add_sum`).  The crux is
+exactly a bound on the partial sums of `P_n` (`crossEnergyBounded_iff_parity`).  The odd parents
+cancel: `𝒦χ = (2π(0)−4π(2))χ₄` (`kernelOp_parity`, `parityCorr_succ`).  Absolute
+summability `ParityCorrSummable` (open) is sufficient (`crossEnergyBounded_of_paritySummable`).
+
+**Numerics for (S) [computed]** (`tools/sandbox/haar_digit_rate/{parity_corr,fwd_tv,
+fwd_fourier}.c`, forward measure `m_n` from `δ = 1`, `n ≤ 44`).
+* `P_n/Λ_n`: `8e−2` (n=10), `1.5e−2` (20), `1.8e−2` (30), `3e−3` (40), `−4.6e−3` (42).  The
+  signs oscillate and the decay is slow, about `e^{−0.07n}`.  The identity
+  `Λ_{n+1} − Λ_n = βP_n` matches the program to all printed digits.
+* Fourier form of (S): at fixed `k`, `max_{ξ∈2^{−k}ℤ∖0}|F_n(ξ)|/Λ_n` decays at rate about
+  `0.15` (k=8) and `0.06` (k=12), with plateaus.  So (S) is plausible only for `α ≲ 0.2`.  It is
+  marginal at `α ≈ 0.3`.
+* Total variation from uniform mod `2^k`: `TV_{n,k} ≈ 0.18·exp(−0.10n + 0.33k)`
+  (`16 ≤ n ≤ 44`, `k ≤ 20`).  `Λ_{n+k} − Λ_n = ∑_r (C_k(r) − 1)(h_n(r) − Λ_n2^{−k})` gives
+  `|Λ_{n+k} − Λ_n| ≤ C_k(0)·Λ_n·TV_{n,k}`.  With `C_k(0) ≈ γ^k`, `γ = 2∑p² = 1.155`, the TV
+  form of (S) closes for `α < 0.21`.  In Lean: `crossEnergy_add_sub_le` (with `crossEnergy_add_eq`, `sum_crossShift`).  The `k = 1`
+  case alone (`ParityCorrSummable`) already suffices, so larger `k` adds nothing logically.
+
+**No mechanism [paper 75%].**  Every reformulation reached so far (Fourier `T_k`, the dual
+transfer operator `t ↦ (3t+ε)/2` on `ℝ/ℤ`, the real lattice form, renewal over zero runs) is
+the same object.  Each one needs exponential equidistribution of the weighted integer chain
+`δ ↦ (3δ+e)/2` modulo `2^k`.  The forward measure carries a forced `3`-adic pattern
+(`m'(3u) = 2π(0)m(2u)`, `m'(3u+1) = 2π(1)m(2u+1) + 2π(2)m(2u)`, …).  So it is never smooth at
+unit scale.  Parity decorrelation needs the CRT heuristic: the `2`-adic, `3`-adic and real
+coordinates are asymptotically independent.  Here are four reformulations, and what each needs:
+* **Real lattice form** (paper, elementary).  `Λ_N = 2^N P(R_N ∈ −3 + 3(2/3)^Nℤ)` with
+  `R_N = ∑_{j<N} e_j(2/3)^j`, `e_j` iid `π`.  This is a finest-scale lattice local limit
+  statement.  Heavy atoms (short representations) are provably avoided below complexity `0.63N`
+  (the chain never hits `0`).  The heuristic count then gives `Λ = O(1)`, but nothing controls
+  the arithmetic correlations above that.
+* **Known AC theorems do not reach it.**  Real-line AC theorems (Varjú, Kittle, Kittle–Varjú)
+  need entropy/contraction excess far beyond the `2%` (candidate) or `≤ 5%` (any law of cost
+  `≤ 1/3`) available here.  The excess is intrinsically small because `h(1/3) − log 2 ≈ 0.037`.
+* **`L^q`-dimension route.**  Shmerkin's `L^q`-dimension theorem, transported to `ℤ_2`, would
+  give `M_N = e^{o(N)}`, hence only `m(B_N) ≥ e^{−o(N)}`.  Turning that into `a_* ≤ c` needs
+  exponential lower-tail concentration of `V_N` under Haar, which is open and not easier.
+* **Literature.**  A web search for `p`-adic/`2`-adic self-similar AC found nothing.
+
+**Obstruction, precisely.**  `a_* ≤ 8/25` follows from bounded partial sums of
+`P_n = ∑_δ m_n(δ)(−1)^δ` for one explicit nonnegative integer chain.  The bound is equivalent
+to that statement (`crossEnergyBounded_iff_parity`).  It is the `2`-adic analogue of a
+finest-scale smoothness question for a self-similar measure with contraction `2/3`, and no
+proof technique is known.
