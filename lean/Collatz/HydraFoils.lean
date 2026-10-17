@@ -494,6 +494,60 @@ theorem halting_dense_of_modCert (hq : 0 < S.q) (hpq : S.q < S.p) {d L Q : ℕ} 
   rw [hw, hφx, hφn]
   exact h
 
+/-- **Lifted gate, general period.**  As `halting_dense_of_modCert`, but the check runs over
+`u < N` for any period `N` with `q ∣ N`, `Q ∣ N` and `Q ∣ p (N / q)` (then the image mod `Q`
+depends only on `x mod N`), and the escape is only needed on an entry predicate `Ent` that holds
+along the starting member's orbit. -/
+theorem halting_dense_of_modCertN (hq : 0 < S.q) (hpq : S.q < S.p) {d L Q N : ℕ} (hL : 1 ≤ L)
+    (hN : 0 < N) (hqN : S.q ∣ N) (hQN : Q ∣ N) (hQp : Q ∣ S.p * (N / S.q))
+    (φ : ℕ → ℕ) (m : ℕ)
+    (hcert : ∀ u < N, ∃ c ≤ d, (m : ℤ) * S.w.getD (u % S.q) 0 +
+      φ (((S.img u + c) % Q).toNat) + 1 ≤ φ (u % Q))
+    (Ent : ℤ → Prop) (σ₀ : ℤ → Fin (d + 1)) (K : ℤ) (s : ℤ × ℤ)
+    (horig : ∀ n, Ent (S.orbit (member S.q L σ₀) s n).1)
+    (hesc : ∀ x, s.1 ≤ x → Ent x → x + 1 ≤ S.img x) :
+    ∃ σ : ℤ → Fin (d + 1), (∀ b < K, σ b = σ₀ b) ∧ S.Halts (member S.q L σ) s := by
+  refine S.halting_dense_of_drain hq hpq hL Ent (fun _ => True)
+    (fun x => φ ((x % Q).toNat)) m (fun x _ => ?_) (fun _ _ => ⟨0, trivial⟩) σ₀ K s
+    horig hesc
+  obtain ⟨M, hM⟩ := hqN
+  obtain ⟨A, hA⟩ := hQN
+  obtain ⟨B, hB⟩ := hQp
+  have hM' : N / S.q = M := by rw [hM, Nat.mul_div_cancel_left _ hq]
+  rw [hM'] at hB
+  have hN' : (0 : ℤ) < N := by exact_mod_cast hN
+  set u : ℕ := (x % (N : ℤ)).toNat with hu
+  have hu' : (u : ℤ) = x % (N : ℤ) := Int.toNat_of_nonneg (Int.emod_nonneg _ hN'.ne')
+  have hult : u < N := by
+    have := Int.emod_lt_of_pos x hN'
+    have : (u : ℤ) < N := by omega
+    exact_mod_cast this
+  have hx : x = u + N * (x / (N : ℤ)) := by
+    rw [hu']; have := Int.emod_add_mul_ediv x (N : ℤ); linarith
+  obtain ⟨c, hc, h⟩ := hcert u hult
+  refine ⟨⟨c, by omega⟩, trivial, ?_⟩
+  have hw : S.wt x = S.w.getD (u % S.q) 0 := by
+    unfold wt
+    congr 1
+    rw [hx, hM, Nat.cast_mul, mul_assoc, S.res_shift]
+    unfold res
+    rw [← Int.natCast_mod, Int.toNat_natCast]
+  have hφx : (x % Q).toNat = u % Q := by
+    rw [hx, hA, Nat.cast_mul, mul_assoc, Int.add_mul_emod_self_left, ← Int.natCast_mod,
+      Int.toNat_natCast]
+  have hφn : ((S.img x + ((⟨c, by omega⟩ : Fin (d + 1)) : ℕ)) % Q).toNat =
+      ((S.img u + c) % Q).toNat := by
+    congr 1
+    change (S.img x + (c : ℤ)) % Q = _
+    have e1 : (N : ℤ) = S.q * M := by rw [hM]; push_cast; ring
+    have e2 : (S.p : ℤ) * M = Q * B := by exact_mod_cast hB
+    rw [hx, e1, show (S.q : ℤ) * M * (x / (S.q * M : ℤ)) = S.q * M * (x / (S.q * M : ℤ)) from rfl,
+      S.img_shift hq M, show S.img u + S.p * M * (x / ((S.q : ℤ) * M)) + c =
+        S.img u + c + Q * (B * (x / ((S.q : ℤ) * M))) by rw [e2]; ring,
+      Int.add_mul_emod_self_left]
+  rw [hw, hφx, hφn]
+  exact h
+
 end Sys
 
 /-! ## Instances: the census in the schema -/

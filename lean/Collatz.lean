@@ -17,6 +17,7 @@ import Collatz.Bigfoot
 import Collatz.Census
 import Collatz.HydraFoils
 import Collatz.HydraFoils.Cert218
+import Collatz.HydraFoils.BigfootLift
 import Collatz.Holdout153
 import Collatz.FatCoyote
 import Collatz.WilyCoyote
