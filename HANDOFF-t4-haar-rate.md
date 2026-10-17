@@ -96,3 +96,17 @@ and `STATUS.md` are new.  notes/37 §8 records the hardness assessment and condi
 
 Next: PENDING_WORK top entry.  First the integer shift recursion in Lean, then numerics for (S).
 `tmp/` is scratch and not committed.
+
+## Lap 4 (2026-10-17)
+
+Commits `245f07f` (shift recursion), `2934324` (parity form), `25e3809` (multiscale bound, notes/37
+§9).  New module `lean/Collatz/Antihydra/HaarShift.lean` (imported by `Collatz.Antihydra`):
+`crossShift`, `pairLaw`, `shiftKernel`, `crossEnergy_eq_shiftKernel`, `kernelOp`, `parityCorr`,
+`crossEnergy_eq_one_add_sum`, `crossEnergyBounded_iff_parity`, `kernelOp_parity`,
+`parityCorr_succ`, `ParityCorrSummable` (open, docstring evidence),
+`candidate_crossEnergyBounded_of_paritySummable`, `forwardMass`, `crossEnergy_add_eq`,
+`crossEnergy_add_sub_le`.  All axiom-clean, with no `sorry`.  Numerics programs:
+`tools/sandbox/haar_digit_rate/{parity_corr,fwd_tv,fwd_fourier}.c`.
+
+Outcome: the DIRECTION stop rule fired.  There is no viable mechanism for (S) or (C1); notes/37 §9
+records the obstruction.  `box done` signalled.

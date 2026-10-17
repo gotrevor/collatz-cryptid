@@ -1,5 +1,22 @@
 # PENDING_WORK (t4-haar-rate)
 
+2026-10-17 lap 4: the crux has a residue-free form and a parity form, both in Lean
+(`lean/Collatz/Antihydra/HaarShift.lean`):
+* `crossEnergy_eq_shiftKernel`: Λ_N is the value at 1 of an explicit integer recursion;
+* `crossEnergyBounded_iff_parity`: the crux holds iff the partial sums of the weighted parity
+  correlations `P_n = (𝒦^n χ)(1)` are bounded, via `Λ_N = 1 + (p₀−p₁+p₂)² ∑_{n<N} P_n`;
+* `kernelOp_parity`: odd parents cancel exactly;
+* `crossEnergy_add_sub_le`: the multiscale total-variation form of condition (S).
+Numerics (notes/37 §9): `P_n/Λ_n` decays slowly (about `e^{−0.07n}`) and oscillates, and
+`TV_{n,k} ≈ 0.18 e^{−0.10n+0.33k}`.  No proof mechanism was found.  Every reformulation needs
+exponential equidistribution of the chain `δ ↦ (3δ+e)/2` mod `2^k`, and the known AC theorems
+need far more entropy excess than the ≤ 5% available.  DIRECTION's stop rule applied: obstruction
+recorded, `box done`.
+Next attack, if the track reopens: prove `ParityCorrSummable candidate`.  The most concrete
+sub-target is exponential decay of `P_n` for the candidate.  A 3-adic/2-adic CRT decoupling
+of the forward measure (real envelope × 3-adic pattern) is the one heuristic mechanism; it has
+not been made quantitative.
+
 2026-10-17 lap 3 (review): the crux now has a minimal form, `MomentBounded candidate (1/32)`.  It
 is equivalent to bounded shift moments, and the headline follows from it
 (`haarRate_le_eight_twentyfifths_of_momentBounded`).  (C1) is only sufficient: it adds a
