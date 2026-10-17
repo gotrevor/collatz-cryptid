@@ -1,5 +1,10 @@
 # Handoff: T3, rounding-choice foils for the whole Hydra schema (2026-10-17)
 
+**FINAL (2026-10-17):** `box done --green` accepted; treadmill stopped.  Branch
+`wip/t3-hydra-foils`, HEAD `221daa9` before this commit; tree clean; no Aristotle job.  Next steps
+for a future session (all optional): clocked block-map coordinate for Bigfoot; density (arbitrary
+`σ₀`) rather than existence near the cryptid for Bigfoot; prior-work search (host, needs egress).
+
 **Checkpoint (2026-10-17, lap 2):** branch `wip/t3-hydra-foils`.  `lake build` green (8785
 jobs).  Targets 1-4 DONE, and the stretch's Bigfoot half is DONE: Bigfoot drains at defect 1
 (`bigfoot_halting_member_one`, lifted certificate on `X mod 1944`) and at defect 2
