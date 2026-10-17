@@ -115,3 +115,9 @@ records the obstruction.  `box done` signalled.
 track: they sit in other tracks' modules (`Tao.lean`, `Korec.lean`, `Bigfoot/*`), outside the T4
 kickoff.  `HaarDigitRate.lean` and `HaarShift.lean` have no `sorry`.  This run should be scoped
 with `--done-when 'sorry-free:lean/Collatz/Antihydra/HaarShift.lean'` (or HaarDigitRate.lean).
+
+**Stuck-bail, strike 1 (2026-10-17).**  `box done` was declined by the repo-wide gate, so
+`box stuck` was filed.  A fresh lap should verify two things: that `grep sorry` finds none in
+`lean/Collatz/Antihydra/Haar*.lean`, and that the remaining `sorry`s are only in `Tao.lean`,
+`Korec.lean` and `Bigfoot/*`.  If both hold, it should file `box stuck` again.  The exact ask is
+to scope the run with `--done-when 'sorry-free:lean/Collatz/Antihydra/HaarShift.lean'`.
