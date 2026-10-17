@@ -1,0 +1,3566 @@
+{
+"symbols": [
+"_",
+"b",
+"B",
+"[",
+"]",
+"N",
+"u",
+"n",
+"v",
+"P",
+"d",
+"e",
+"T",
+"C",
+"D",
+"S",
+"z",
+"s",
+"p",
+"y"
+],
+"start": "INIT",
+"beep": "BEEP",
+"table": {
+"INIT": {
+"_": [
+"[",
+"R",
+"INIT2"
+]
+},
+"INIT2": {
+"_": [
+"]",
+"L",
+"INIT3"
+]
+},
+"INIT3": {
+"[": [
+"[",
+"L",
+"INIT4"
+]
+},
+"INIT4": {
+"_": [
+"b",
+"L",
+"INIT5"
+]
+},
+"INIT5": {
+"_": [
+"b",
+"R",
+"DEC0"
+]
+},
+"DEC0": {
+"_": [
+"_",
+"R",
+"DEC0"
+],
+"b": [
+"b",
+"R",
+"DEC0"
+],
+"B": [
+"B",
+"R",
+"DEC0"
+],
+"[": [
+"[",
+"R",
+"DEC0"
+],
+"]": [
+"]",
+"R",
+"DEC_FIRST"
+],
+"N": [
+"N",
+"R",
+"DEC0"
+],
+"u": [
+"u",
+"R",
+"DEC0"
+],
+"n": [
+"n",
+"R",
+"DEC0"
+],
+"v": [
+"v",
+"R",
+"DEC0"
+],
+"P": [
+"P",
+"R",
+"DEC0"
+],
+"d": [
+"d",
+"R",
+"DEC0"
+],
+"e": [
+"e",
+"R",
+"DEC0"
+],
+"T": [
+"T",
+"R",
+"DEC0"
+],
+"C": [
+"C",
+"R",
+"DEC0"
+],
+"D": [
+"D",
+"R",
+"DEC0"
+],
+"S": [
+"S",
+"R",
+"DEC0"
+],
+"z": [
+"z",
+"R",
+"DEC0"
+],
+"s": [
+"s",
+"R",
+"DEC0"
+],
+"p": [
+"p",
+"R",
+"DEC0"
+],
+"y": [
+"y",
+"R",
+"DEC0"
+]
+},
+"DEC_FIRST": {
+"_": [
+"P",
+"R",
+"DEC_FIRST2"
+]
+},
+"DEC_FIRST2": {
+"_": [
+"d",
+"L",
+"DEC_NEXT"
+]
+},
+"DEC_NEXT": {
+"_": [
+"_",
+"L",
+"DEC_NEXT"
+],
+"b": [
+"b",
+"L",
+"DEC_NEXT"
+],
+"B": [
+"B",
+"L",
+"DEC_NEXT"
+],
+"[": [
+"[",
+"R",
+"DEC_FIND"
+],
+"]": [
+"]",
+"L",
+"DEC_NEXT"
+],
+"N": [
+"N",
+"L",
+"DEC_NEXT"
+],
+"u": [
+"u",
+"L",
+"DEC_NEXT"
+],
+"n": [
+"n",
+"L",
+"DEC_NEXT"
+],
+"v": [
+"v",
+"L",
+"DEC_NEXT"
+],
+"P": [
+"P",
+"L",
+"DEC_NEXT"
+],
+"d": [
+"d",
+"L",
+"DEC_NEXT"
+],
+"e": [
+"e",
+"L",
+"DEC_NEXT"
+],
+"T": [
+"T",
+"L",
+"DEC_NEXT"
+],
+"C": [
+"C",
+"L",
+"DEC_NEXT"
+],
+"D": [
+"D",
+"L",
+"DEC_NEXT"
+],
+"S": [
+"S",
+"L",
+"DEC_NEXT"
+],
+"z": [
+"z",
+"L",
+"DEC_NEXT"
+],
+"s": [
+"s",
+"L",
+"DEC_NEXT"
+],
+"p": [
+"p",
+"L",
+"DEC_NEXT"
+],
+"y": [
+"y",
+"L",
+"DEC_NEXT"
+]
+},
+"DEC_FIND": {
+"]": [
+"]",
+"L",
+"DEC_UNMARK"
+],
+"N": [
+"n",
+"R",
+"DEC_NODE"
+],
+"u": [
+"v",
+"R",
+"DEC_U"
+],
+"n": [
+"n",
+"R",
+"DEC_FIND"
+],
+"v": [
+"v",
+"R",
+"DEC_FIND"
+]
+},
+"DEC_U": {
+"_": [
+"_",
+"L",
+"DEC_U2"
+],
+"b": [
+"b",
+"R",
+"DEC_U"
+],
+"B": [
+"B",
+"R",
+"DEC_U"
+],
+"[": [
+"[",
+"R",
+"DEC_U"
+],
+"]": [
+"]",
+"R",
+"DEC_U"
+],
+"N": [
+"N",
+"R",
+"DEC_U"
+],
+"u": [
+"u",
+"R",
+"DEC_U"
+],
+"n": [
+"n",
+"R",
+"DEC_U"
+],
+"v": [
+"v",
+"R",
+"DEC_U"
+],
+"P": [
+"P",
+"R",
+"DEC_U"
+],
+"d": [
+"d",
+"R",
+"DEC_U"
+],
+"e": [
+"e",
+"R",
+"DEC_U"
+],
+"T": [
+"T",
+"R",
+"DEC_U"
+],
+"C": [
+"C",
+"R",
+"DEC_U"
+],
+"D": [
+"D",
+"R",
+"DEC_U"
+],
+"S": [
+"S",
+"R",
+"DEC_U"
+],
+"z": [
+"z",
+"R",
+"DEC_U"
+],
+"s": [
+"s",
+"R",
+"DEC_U"
+],
+"p": [
+"p",
+"R",
+"DEC_U"
+],
+"y": [
+"y",
+"R",
+"DEC_U"
+]
+},
+"DEC_U2": {
+"d": [
+"d",
+"L",
+"DEC_U3"
+]
+},
+"DEC_U3": {
+"P": [
+"P",
+"L",
+"DEC_NEXT"
+],
+"d": [
+"d",
+"R",
+"DEC_U4"
+]
+},
+"DEC_U4": {
+"d": [
+"_",
+"L",
+"DEC_NEXT"
+]
+},
+"DEC_NODE": {
+"_": [
+"P",
+"L",
+"DEC_CFIND"
+],
+"b": [
+"b",
+"R",
+"DEC_NODE"
+],
+"B": [
+"B",
+"R",
+"DEC_NODE"
+],
+"[": [
+"[",
+"R",
+"DEC_NODE"
+],
+"]": [
+"]",
+"R",
+"DEC_NODE"
+],
+"N": [
+"N",
+"R",
+"DEC_NODE"
+],
+"u": [
+"u",
+"R",
+"DEC_NODE"
+],
+"n": [
+"n",
+"R",
+"DEC_NODE"
+],
+"v": [
+"v",
+"R",
+"DEC_NODE"
+],
+"P": [
+"P",
+"R",
+"DEC_NODE"
+],
+"d": [
+"d",
+"R",
+"DEC_NODE"
+],
+"e": [
+"e",
+"R",
+"DEC_NODE"
+],
+"T": [
+"T",
+"R",
+"DEC_NODE"
+],
+"C": [
+"C",
+"R",
+"DEC_NODE"
+],
+"D": [
+"D",
+"R",
+"DEC_NODE"
+],
+"S": [
+"S",
+"R",
+"DEC_NODE"
+],
+"z": [
+"z",
+"R",
+"DEC_NODE"
+],
+"s": [
+"s",
+"R",
+"DEC_NODE"
+],
+"p": [
+"p",
+"R",
+"DEC_NODE"
+],
+"y": [
+"y",
+"R",
+"DEC_NODE"
+]
+},
+"DEC_CFIND": {
+"P": [
+"P",
+"R",
+"DEC_CPICK"
+],
+"d": [
+"d",
+"L",
+"DEC_CFIND"
+],
+"e": [
+"e",
+"R",
+"DEC_CPICK"
+]
+},
+"DEC_CPICK": {
+"P": [
+"P",
+"R",
+"DEC_CPLUS"
+],
+"d": [
+"e",
+"R",
+"DEC_CCARRY"
+]
+},
+"DEC_CCARRY": {
+"_": [
+"d",
+"L",
+"DEC_CRET"
+],
+"b": [
+"b",
+"R",
+"DEC_CCARRY"
+],
+"B": [
+"B",
+"R",
+"DEC_CCARRY"
+],
+"[": [
+"[",
+"R",
+"DEC_CCARRY"
+],
+"]": [
+"]",
+"R",
+"DEC_CCARRY"
+],
+"N": [
+"N",
+"R",
+"DEC_CCARRY"
+],
+"u": [
+"u",
+"R",
+"DEC_CCARRY"
+],
+"n": [
+"n",
+"R",
+"DEC_CCARRY"
+],
+"v": [
+"v",
+"R",
+"DEC_CCARRY"
+],
+"P": [
+"P",
+"R",
+"DEC_CCARRY"
+],
+"d": [
+"d",
+"R",
+"DEC_CCARRY"
+],
+"e": [
+"e",
+"R",
+"DEC_CCARRY"
+],
+"T": [
+"T",
+"R",
+"DEC_CCARRY"
+],
+"C": [
+"C",
+"R",
+"DEC_CCARRY"
+],
+"D": [
+"D",
+"R",
+"DEC_CCARRY"
+],
+"S": [
+"S",
+"R",
+"DEC_CCARRY"
+],
+"z": [
+"z",
+"R",
+"DEC_CCARRY"
+],
+"s": [
+"s",
+"R",
+"DEC_CCARRY"
+],
+"p": [
+"p",
+"R",
+"DEC_CCARRY"
+],
+"y": [
+"y",
+"R",
+"DEC_CCARRY"
+]
+},
+"DEC_CRET": {
+"P": [
+"P",
+"L",
+"DEC_CFIND"
+],
+"d": [
+"d",
+"L",
+"DEC_CRET"
+]
+},
+"DEC_CPLUS": {
+"_": [
+"d",
+"L",
+"DEC_UNP"
+],
+"b": [
+"b",
+"R",
+"DEC_CPLUS"
+],
+"B": [
+"B",
+"R",
+"DEC_CPLUS"
+],
+"[": [
+"[",
+"R",
+"DEC_CPLUS"
+],
+"]": [
+"]",
+"R",
+"DEC_CPLUS"
+],
+"N": [
+"N",
+"R",
+"DEC_CPLUS"
+],
+"u": [
+"u",
+"R",
+"DEC_CPLUS"
+],
+"n": [
+"n",
+"R",
+"DEC_CPLUS"
+],
+"v": [
+"v",
+"R",
+"DEC_CPLUS"
+],
+"P": [
+"P",
+"R",
+"DEC_CPLUS"
+],
+"d": [
+"d",
+"R",
+"DEC_CPLUS"
+],
+"e": [
+"e",
+"R",
+"DEC_CPLUS"
+],
+"T": [
+"T",
+"R",
+"DEC_CPLUS"
+],
+"C": [
+"C",
+"R",
+"DEC_CPLUS"
+],
+"D": [
+"D",
+"R",
+"DEC_CPLUS"
+],
+"S": [
+"S",
+"R",
+"DEC_CPLUS"
+],
+"z": [
+"z",
+"R",
+"DEC_CPLUS"
+],
+"s": [
+"s",
+"R",
+"DEC_CPLUS"
+],
+"p": [
+"p",
+"R",
+"DEC_CPLUS"
+],
+"y": [
+"y",
+"R",
+"DEC_CPLUS"
+]
+},
+"DEC_UNP": {
+"P": [
+"P",
+"L",
+"DEC_UNP2"
+],
+"d": [
+"d",
+"L",
+"DEC_UNP"
+]
+},
+"DEC_UNP2": {
+"P": [
+"P",
+"L",
+"DEC_NEXT"
+],
+"e": [
+"d",
+"L",
+"DEC_UNP2"
+]
+},
+"DEC_UNMARK": {
+"[": [
+"[",
+"L",
+"GSTEP_BUMP"
+],
+"n": [
+"N",
+"L",
+"DEC_UNMARK"
+],
+"v": [
+"u",
+"L",
+"DEC_UNMARK"
+]
+},
+"GSTEP_BUMP": {
+"_": [
+"b",
+"R",
+"GO_CHOP"
+],
+"b": [
+"b",
+"L",
+"GSTEP_BUMP"
+],
+"B": [
+"B",
+"L",
+"GSTEP_BUMP"
+],
+"[": [
+"[",
+"L",
+"GSTEP_BUMP"
+],
+"]": [
+"]",
+"L",
+"GSTEP_BUMP"
+],
+"N": [
+"N",
+"L",
+"GSTEP_BUMP"
+],
+"u": [
+"u",
+"L",
+"GSTEP_BUMP"
+],
+"n": [
+"n",
+"L",
+"GSTEP_BUMP"
+],
+"v": [
+"v",
+"L",
+"GSTEP_BUMP"
+],
+"P": [
+"P",
+"L",
+"GSTEP_BUMP"
+],
+"d": [
+"d",
+"L",
+"GSTEP_BUMP"
+],
+"e": [
+"e",
+"L",
+"GSTEP_BUMP"
+],
+"T": [
+"T",
+"L",
+"GSTEP_BUMP"
+],
+"C": [
+"C",
+"L",
+"GSTEP_BUMP"
+],
+"D": [
+"D",
+"L",
+"GSTEP_BUMP"
+],
+"S": [
+"S",
+"L",
+"GSTEP_BUMP"
+],
+"z": [
+"z",
+"L",
+"GSTEP_BUMP"
+],
+"s": [
+"s",
+"L",
+"GSTEP_BUMP"
+],
+"p": [
+"p",
+"L",
+"GSTEP_BUMP"
+],
+"y": [
+"y",
+"L",
+"GSTEP_BUMP"
+]
+},
+"GO_CHOP": {
+"_": [
+"_",
+"L",
+"CHOP_START"
+],
+"b": [
+"b",
+"R",
+"GO_CHOP"
+],
+"B": [
+"B",
+"R",
+"GO_CHOP"
+],
+"[": [
+"[",
+"R",
+"GO_CHOP"
+],
+"]": [
+"]",
+"R",
+"GO_CHOP"
+],
+"N": [
+"N",
+"R",
+"GO_CHOP"
+],
+"u": [
+"u",
+"R",
+"GO_CHOP"
+],
+"n": [
+"n",
+"R",
+"GO_CHOP"
+],
+"v": [
+"v",
+"R",
+"GO_CHOP"
+],
+"P": [
+"P",
+"R",
+"GO_CHOP"
+],
+"d": [
+"d",
+"R",
+"GO_CHOP"
+],
+"e": [
+"e",
+"R",
+"GO_CHOP"
+],
+"T": [
+"T",
+"R",
+"GO_CHOP"
+],
+"C": [
+"C",
+"R",
+"GO_CHOP"
+],
+"D": [
+"D",
+"R",
+"GO_CHOP"
+],
+"S": [
+"S",
+"R",
+"GO_CHOP"
+],
+"z": [
+"z",
+"R",
+"GO_CHOP"
+],
+"s": [
+"s",
+"R",
+"GO_CHOP"
+],
+"p": [
+"p",
+"R",
+"GO_CHOP"
+],
+"y": [
+"y",
+"R",
+"GO_CHOP"
+]
+},
+"CHOP_START": {
+"d": [
+"d",
+"L",
+"CHOP_D1"
+]
+},
+"CHOP_D1": {
+"P": [
+"_",
+"R",
+"CHOP_ERASE1"
+],
+"d": [
+"d",
+"L",
+"CHOP_FINDL"
+]
+},
+"CHOP_ERASE1": {
+"d": [
+"_",
+"L",
+"STEP_DONE_CHECK"
+]
+},
+"STEP_DONE_CHECK": {
+"_": [
+"_",
+"L",
+"STEP_DONE_CHECK2"
+]
+},
+"STEP_DONE_CHECK2": {
+"]": [
+"]",
+"L",
+"BEEP"
+],
+"d": [
+"d",
+"L",
+"GSTEP_BUMP"
+]
+},
+"CHOP_FINDL": {
+"P": [
+"T",
+"L",
+"CAND_FIND"
+],
+"d": [
+"d",
+"L",
+"CHOP_FINDL"
+]
+},
+"CAND_FIND": {
+"P": [
+"C",
+"R",
+"CMP_C"
+],
+"d": [
+"d",
+"L",
+"CAND_FIND"
+]
+},
+"CMP_C": {
+"P": [
+"P",
+"R",
+"BACK_CMP_CEXH"
+],
+"d": [
+"D",
+"R",
+"CMP_TOL"
+],
+"T": [
+"T",
+"R",
+"BACK_CMP_CEXH"
+],
+"D": [
+"D",
+"R",
+"CMP_C"
+]
+},
+"CMP_TOL": {
+"_": [
+"_",
+"R",
+"CMP_TOL"
+],
+"b": [
+"b",
+"R",
+"CMP_TOL"
+],
+"B": [
+"B",
+"R",
+"CMP_TOL"
+],
+"[": [
+"[",
+"R",
+"CMP_TOL"
+],
+"]": [
+"]",
+"R",
+"CMP_TOL"
+],
+"N": [
+"N",
+"R",
+"CMP_TOL"
+],
+"u": [
+"u",
+"R",
+"CMP_TOL"
+],
+"n": [
+"n",
+"R",
+"CMP_TOL"
+],
+"v": [
+"v",
+"R",
+"CMP_TOL"
+],
+"P": [
+"P",
+"R",
+"CMP_TOL"
+],
+"d": [
+"d",
+"R",
+"CMP_TOL"
+],
+"e": [
+"e",
+"R",
+"CMP_TOL"
+],
+"T": [
+"T",
+"R",
+"CMP_L"
+],
+"C": [
+"C",
+"R",
+"CMP_TOL"
+],
+"D": [
+"D",
+"R",
+"CMP_TOL"
+],
+"S": [
+"S",
+"R",
+"CMP_TOL"
+],
+"z": [
+"z",
+"R",
+"CMP_TOL"
+],
+"s": [
+"s",
+"R",
+"CMP_TOL"
+],
+"p": [
+"p",
+"R",
+"CMP_TOL"
+],
+"y": [
+"y",
+"R",
+"CMP_TOL"
+]
+},
+"CMP_L": {
+"_": [
+"_",
+"L",
+"NOTPARENT"
+],
+"d": [
+"D",
+"L",
+"CMP_TOC"
+],
+"D": [
+"D",
+"R",
+"CMP_L"
+]
+},
+"CMP_TOC": {
+"_": [
+"_",
+"L",
+"CMP_TOC"
+],
+"b": [
+"b",
+"L",
+"CMP_TOC"
+],
+"B": [
+"B",
+"L",
+"CMP_TOC"
+],
+"[": [
+"[",
+"L",
+"CMP_TOC"
+],
+"]": [
+"]",
+"L",
+"CMP_TOC"
+],
+"N": [
+"N",
+"L",
+"CMP_TOC"
+],
+"u": [
+"u",
+"L",
+"CMP_TOC"
+],
+"n": [
+"n",
+"L",
+"CMP_TOC"
+],
+"v": [
+"v",
+"L",
+"CMP_TOC"
+],
+"P": [
+"P",
+"L",
+"CMP_TOC"
+],
+"d": [
+"d",
+"L",
+"CMP_TOC"
+],
+"e": [
+"e",
+"L",
+"CMP_TOC"
+],
+"T": [
+"T",
+"L",
+"CMP_TOC"
+],
+"C": [
+"C",
+"R",
+"CMP_C"
+],
+"D": [
+"D",
+"L",
+"CMP_TOC"
+],
+"S": [
+"S",
+"L",
+"CMP_TOC"
+],
+"z": [
+"z",
+"L",
+"CMP_TOC"
+],
+"s": [
+"s",
+"L",
+"CMP_TOC"
+],
+"p": [
+"p",
+"L",
+"CMP_TOC"
+],
+"y": [
+"y",
+"L",
+"CMP_TOC"
+]
+},
+"CMP_CEXH": {
+"_": [
+"_",
+"R",
+"CMP_CEXH"
+],
+"b": [
+"b",
+"R",
+"CMP_CEXH"
+],
+"B": [
+"B",
+"R",
+"CMP_CEXH"
+],
+"[": [
+"[",
+"R",
+"CMP_CEXH"
+],
+"]": [
+"]",
+"R",
+"CMP_CEXH"
+],
+"N": [
+"N",
+"R",
+"CMP_CEXH"
+],
+"u": [
+"u",
+"R",
+"CMP_CEXH"
+],
+"n": [
+"n",
+"R",
+"CMP_CEXH"
+],
+"v": [
+"v",
+"R",
+"CMP_CEXH"
+],
+"P": [
+"P",
+"R",
+"CMP_CEXH"
+],
+"d": [
+"d",
+"R",
+"CMP_CEXH"
+],
+"e": [
+"e",
+"R",
+"CMP_CEXH"
+],
+"T": [
+"T",
+"R",
+"CMP_LCHK"
+],
+"C": [
+"C",
+"R",
+"CMP_CEXH"
+],
+"D": [
+"D",
+"R",
+"CMP_CEXH"
+],
+"S": [
+"S",
+"R",
+"CMP_CEXH"
+],
+"z": [
+"z",
+"R",
+"CMP_CEXH"
+],
+"s": [
+"s",
+"R",
+"CMP_CEXH"
+],
+"p": [
+"p",
+"R",
+"CMP_CEXH"
+],
+"y": [
+"y",
+"R",
+"CMP_CEXH"
+]
+},
+"CMP_LCHK": {
+"_": [
+"_",
+"L",
+"NOTPARENT"
+],
+"d": [
+"d",
+"R",
+"PAR_END"
+],
+"D": [
+"D",
+"R",
+"CMP_LCHK"
+]
+},
+"NOTPARENT": {
+"_": [
+"_",
+"L",
+"NOTPARENT"
+],
+"b": [
+"b",
+"L",
+"NOTPARENT"
+],
+"B": [
+"B",
+"L",
+"NOTPARENT"
+],
+"[": [
+"[",
+"L",
+"NOTPARENT"
+],
+"]": [
+"]",
+"L",
+"NOTPARENT"
+],
+"N": [
+"N",
+"L",
+"NOTPARENT"
+],
+"u": [
+"u",
+"L",
+"NOTPARENT"
+],
+"n": [
+"n",
+"L",
+"NOTPARENT"
+],
+"v": [
+"v",
+"L",
+"NOTPARENT"
+],
+"P": [
+"P",
+"L",
+"NOTPARENT"
+],
+"d": [
+"d",
+"L",
+"NOTPARENT"
+],
+"e": [
+"e",
+"L",
+"NOTPARENT"
+],
+"T": [
+"T",
+"L",
+"NOTPARENT"
+],
+"C": [
+"P",
+"L",
+"CAND_FIND"
+],
+"D": [
+"d",
+"L",
+"NOTPARENT"
+],
+"S": [
+"S",
+"L",
+"NOTPARENT"
+],
+"z": [
+"z",
+"L",
+"NOTPARENT"
+],
+"s": [
+"s",
+"L",
+"NOTPARENT"
+],
+"p": [
+"p",
+"L",
+"NOTPARENT"
+],
+"y": [
+"y",
+"L",
+"NOTPARENT"
+]
+},
+"PAR_END": {
+"_": [
+"_",
+"L",
+"ERASE_L"
+],
+"b": [
+"b",
+"R",
+"PAR_END"
+],
+"B": [
+"B",
+"R",
+"PAR_END"
+],
+"[": [
+"[",
+"R",
+"PAR_END"
+],
+"]": [
+"]",
+"R",
+"PAR_END"
+],
+"N": [
+"N",
+"R",
+"PAR_END"
+],
+"u": [
+"u",
+"R",
+"PAR_END"
+],
+"n": [
+"n",
+"R",
+"PAR_END"
+],
+"v": [
+"v",
+"R",
+"PAR_END"
+],
+"P": [
+"P",
+"R",
+"PAR_END"
+],
+"d": [
+"d",
+"R",
+"PAR_END"
+],
+"e": [
+"e",
+"R",
+"PAR_END"
+],
+"T": [
+"T",
+"R",
+"PAR_END"
+],
+"C": [
+"C",
+"R",
+"PAR_END"
+],
+"D": [
+"D",
+"R",
+"PAR_END"
+],
+"S": [
+"S",
+"R",
+"PAR_END"
+],
+"z": [
+"z",
+"R",
+"PAR_END"
+],
+"s": [
+"s",
+"R",
+"PAR_END"
+],
+"p": [
+"p",
+"R",
+"PAR_END"
+],
+"y": [
+"y",
+"R",
+"PAR_END"
+]
+},
+"ERASE_L": {
+"d": [
+"_",
+"L",
+"ERASE_L"
+],
+"T": [
+"_",
+"L",
+"MARK_END"
+],
+"D": [
+"_",
+"L",
+"ERASE_L"
+]
+},
+"MARK_END": {
+"d": [
+"z",
+"L",
+"UNMARK_S"
+],
+"D": [
+"z",
+"L",
+"UNMARK_S"
+]
+},
+"UNMARK_S": {
+"_": [
+"_",
+"L",
+"UNMARK_S"
+],
+"b": [
+"b",
+"L",
+"UNMARK_S"
+],
+"B": [
+"B",
+"L",
+"UNMARK_S"
+],
+"[": [
+"[",
+"L",
+"UNMARK_S"
+],
+"]": [
+"]",
+"L",
+"UNMARK_S"
+],
+"N": [
+"N",
+"L",
+"UNMARK_S"
+],
+"u": [
+"u",
+"L",
+"UNMARK_S"
+],
+"n": [
+"n",
+"L",
+"UNMARK_S"
+],
+"v": [
+"v",
+"L",
+"UNMARK_S"
+],
+"P": [
+"P",
+"L",
+"UNMARK_S"
+],
+"d": [
+"d",
+"L",
+"UNMARK_S"
+],
+"e": [
+"e",
+"L",
+"UNMARK_S"
+],
+"T": [
+"T",
+"L",
+"UNMARK_S"
+],
+"C": [
+"S",
+"R",
+"BACK_REP_START"
+],
+"D": [
+"d",
+"L",
+"UNMARK_S"
+],
+"S": [
+"S",
+"L",
+"UNMARK_S"
+],
+"z": [
+"z",
+"L",
+"UNMARK_S"
+],
+"s": [
+"s",
+"L",
+"UNMARK_S"
+],
+"p": [
+"p",
+"L",
+"UNMARK_S"
+],
+"y": [
+"y",
+"L",
+"UNMARK_S"
+]
+},
+"REP_START": {
+"_": [
+"_",
+"L",
+"REP_START"
+],
+"b": [
+"b",
+"L",
+"REP_START"
+],
+"B": [
+"B",
+"L",
+"REP_START"
+],
+"[": [
+"[",
+"L",
+"REP_FIRST"
+],
+"]": [
+"]",
+"L",
+"REP_START"
+],
+"N": [
+"N",
+"L",
+"REP_START"
+],
+"u": [
+"u",
+"L",
+"REP_START"
+],
+"n": [
+"n",
+"L",
+"REP_START"
+],
+"v": [
+"v",
+"L",
+"REP_START"
+],
+"P": [
+"P",
+"L",
+"REP_START"
+],
+"d": [
+"d",
+"L",
+"REP_START"
+],
+"e": [
+"e",
+"L",
+"REP_START"
+],
+"T": [
+"T",
+"L",
+"REP_START"
+],
+"C": [
+"C",
+"L",
+"REP_START"
+],
+"D": [
+"D",
+"L",
+"REP_START"
+],
+"S": [
+"S",
+"L",
+"REP_START"
+],
+"z": [
+"z",
+"L",
+"REP_START"
+],
+"s": [
+"s",
+"L",
+"REP_START"
+],
+"p": [
+"p",
+"L",
+"REP_START"
+],
+"y": [
+"y",
+"L",
+"REP_START"
+]
+},
+"REP_FIRST": {
+"b": [
+"B",
+"L",
+"REP_SCAN"
+]
+},
+"REP_SCAN": {
+"_": [
+"_",
+"R",
+"REP_DONE"
+],
+"b": [
+"B",
+"R",
+"GO_S"
+],
+"B": [
+"B",
+"L",
+"REP_SCAN"
+]
+},
+"GO_S": {
+"_": [
+"_",
+"R",
+"GO_S"
+],
+"b": [
+"b",
+"R",
+"GO_S"
+],
+"B": [
+"B",
+"R",
+"GO_S"
+],
+"[": [
+"[",
+"R",
+"GO_S"
+],
+"]": [
+"]",
+"R",
+"GO_S"
+],
+"N": [
+"N",
+"R",
+"GO_S"
+],
+"u": [
+"u",
+"R",
+"GO_S"
+],
+"n": [
+"n",
+"R",
+"GO_S"
+],
+"v": [
+"v",
+"R",
+"GO_S"
+],
+"P": [
+"P",
+"R",
+"GO_S"
+],
+"d": [
+"d",
+"R",
+"GO_S"
+],
+"e": [
+"e",
+"R",
+"GO_S"
+],
+"T": [
+"T",
+"R",
+"GO_S"
+],
+"C": [
+"C",
+"R",
+"GO_S"
+],
+"D": [
+"D",
+"R",
+"GO_S"
+],
+"S": [
+"S",
+"R",
+"BACK_CP_SCAN"
+],
+"z": [
+"z",
+"R",
+"GO_S"
+],
+"s": [
+"s",
+"R",
+"GO_S"
+],
+"p": [
+"p",
+"R",
+"GO_S"
+],
+"y": [
+"y",
+"R",
+"GO_S"
+]
+},
+"CP_SCAN": {
+"P": [
+"p",
+"R",
+"CARRY_P"
+],
+"d": [
+"e",
+"R",
+"CARRY_D"
+],
+"e": [
+"e",
+"R",
+"CP_SCAN"
+],
+"S": [
+"s",
+"R",
+"CARRY_P"
+],
+"z": [
+"y",
+"R",
+"CARRY_DL"
+],
+"s": [
+"s",
+"R",
+"CP_SCAN"
+],
+"p": [
+"p",
+"R",
+"CP_SCAN"
+]
+},
+"CARRY_P": {
+"_": [
+"P",
+"L",
+"CP_RET"
+],
+"b": [
+"b",
+"R",
+"CARRY_P"
+],
+"B": [
+"B",
+"R",
+"CARRY_P"
+],
+"[": [
+"[",
+"R",
+"CARRY_P"
+],
+"]": [
+"]",
+"R",
+"CARRY_P"
+],
+"N": [
+"N",
+"R",
+"CARRY_P"
+],
+"u": [
+"u",
+"R",
+"CARRY_P"
+],
+"n": [
+"n",
+"R",
+"CARRY_P"
+],
+"v": [
+"v",
+"R",
+"CARRY_P"
+],
+"P": [
+"P",
+"R",
+"CARRY_P"
+],
+"d": [
+"d",
+"R",
+"CARRY_P"
+],
+"e": [
+"e",
+"R",
+"CARRY_P"
+],
+"T": [
+"T",
+"R",
+"CARRY_P"
+],
+"C": [
+"C",
+"R",
+"CARRY_P"
+],
+"D": [
+"D",
+"R",
+"CARRY_P"
+],
+"S": [
+"S",
+"R",
+"CARRY_P"
+],
+"z": [
+"z",
+"R",
+"CARRY_P"
+],
+"s": [
+"s",
+"R",
+"CARRY_P"
+],
+"p": [
+"p",
+"R",
+"CARRY_P"
+],
+"y": [
+"y",
+"R",
+"CARRY_P"
+]
+},
+"CARRY_D": {
+"_": [
+"d",
+"L",
+"CP_RET"
+],
+"b": [
+"b",
+"R",
+"CARRY_D"
+],
+"B": [
+"B",
+"R",
+"CARRY_D"
+],
+"[": [
+"[",
+"R",
+"CARRY_D"
+],
+"]": [
+"]",
+"R",
+"CARRY_D"
+],
+"N": [
+"N",
+"R",
+"CARRY_D"
+],
+"u": [
+"u",
+"R",
+"CARRY_D"
+],
+"n": [
+"n",
+"R",
+"CARRY_D"
+],
+"v": [
+"v",
+"R",
+"CARRY_D"
+],
+"P": [
+"P",
+"R",
+"CARRY_D"
+],
+"d": [
+"d",
+"R",
+"CARRY_D"
+],
+"e": [
+"e",
+"R",
+"CARRY_D"
+],
+"T": [
+"T",
+"R",
+"CARRY_D"
+],
+"C": [
+"C",
+"R",
+"CARRY_D"
+],
+"D": [
+"D",
+"R",
+"CARRY_D"
+],
+"S": [
+"S",
+"R",
+"CARRY_D"
+],
+"z": [
+"z",
+"R",
+"CARRY_D"
+],
+"s": [
+"s",
+"R",
+"CARRY_D"
+],
+"p": [
+"p",
+"R",
+"CARRY_D"
+],
+"y": [
+"y",
+"R",
+"CARRY_D"
+]
+},
+"CARRY_DL": {
+"_": [
+"d",
+"L",
+"CP_END"
+],
+"b": [
+"b",
+"R",
+"CARRY_DL"
+],
+"B": [
+"B",
+"R",
+"CARRY_DL"
+],
+"[": [
+"[",
+"R",
+"CARRY_DL"
+],
+"]": [
+"]",
+"R",
+"CARRY_DL"
+],
+"N": [
+"N",
+"R",
+"CARRY_DL"
+],
+"u": [
+"u",
+"R",
+"CARRY_DL"
+],
+"n": [
+"n",
+"R",
+"CARRY_DL"
+],
+"v": [
+"v",
+"R",
+"CARRY_DL"
+],
+"P": [
+"P",
+"R",
+"CARRY_DL"
+],
+"d": [
+"d",
+"R",
+"CARRY_DL"
+],
+"e": [
+"e",
+"R",
+"CARRY_DL"
+],
+"T": [
+"T",
+"R",
+"CARRY_DL"
+],
+"C": [
+"C",
+"R",
+"CARRY_DL"
+],
+"D": [
+"D",
+"R",
+"CARRY_DL"
+],
+"S": [
+"S",
+"R",
+"CARRY_DL"
+],
+"z": [
+"z",
+"R",
+"CARRY_DL"
+],
+"s": [
+"s",
+"R",
+"CARRY_DL"
+],
+"p": [
+"p",
+"R",
+"CARRY_DL"
+],
+"y": [
+"y",
+"R",
+"CARRY_DL"
+]
+},
+"CP_RET": {
+"_": [
+"_",
+"L",
+"CP_RET"
+],
+"b": [
+"b",
+"L",
+"CP_RET"
+],
+"B": [
+"B",
+"L",
+"CP_RET"
+],
+"[": [
+"[",
+"L",
+"CP_RET"
+],
+"]": [
+"]",
+"L",
+"CP_RET"
+],
+"N": [
+"N",
+"L",
+"CP_RET"
+],
+"u": [
+"u",
+"L",
+"CP_RET"
+],
+"n": [
+"n",
+"L",
+"CP_RET"
+],
+"v": [
+"v",
+"L",
+"CP_RET"
+],
+"P": [
+"P",
+"L",
+"CP_RET"
+],
+"d": [
+"d",
+"L",
+"CP_RET"
+],
+"e": [
+"e",
+"R",
+"CP_SCAN"
+],
+"T": [
+"T",
+"L",
+"CP_RET"
+],
+"C": [
+"C",
+"L",
+"CP_RET"
+],
+"D": [
+"D",
+"L",
+"CP_RET"
+],
+"S": [
+"S",
+"L",
+"CP_RET"
+],
+"z": [
+"z",
+"L",
+"CP_RET"
+],
+"s": [
+"s",
+"R",
+"CP_SCAN"
+],
+"p": [
+"p",
+"R",
+"CP_SCAN"
+],
+"y": [
+"y",
+"L",
+"CP_RET"
+]
+},
+"CP_END": {
+"_": [
+"_",
+"L",
+"CP_END"
+],
+"b": [
+"b",
+"L",
+"CP_END"
+],
+"B": [
+"B",
+"L",
+"CP_END"
+],
+"[": [
+"[",
+"L",
+"CP_END"
+],
+"]": [
+"]",
+"L",
+"CP_END"
+],
+"N": [
+"N",
+"L",
+"CP_END"
+],
+"u": [
+"u",
+"L",
+"CP_END"
+],
+"n": [
+"n",
+"L",
+"CP_END"
+],
+"v": [
+"v",
+"L",
+"CP_END"
+],
+"P": [
+"P",
+"L",
+"CP_END"
+],
+"d": [
+"d",
+"L",
+"CP_END"
+],
+"e": [
+"e",
+"L",
+"CP_END"
+],
+"T": [
+"T",
+"L",
+"CP_END"
+],
+"C": [
+"C",
+"L",
+"CP_END"
+],
+"D": [
+"D",
+"L",
+"CP_END"
+],
+"S": [
+"S",
+"L",
+"CP_END"
+],
+"z": [
+"z",
+"L",
+"CP_END"
+],
+"s": [
+"s",
+"L",
+"CP_END"
+],
+"p": [
+"p",
+"L",
+"CP_END"
+],
+"y": [
+"z",
+"L",
+"CP_UNM"
+]
+},
+"CP_UNM": {
+"e": [
+"d",
+"L",
+"CP_UNM"
+],
+"s": [
+"S",
+"L",
+"REP_RET"
+],
+"p": [
+"P",
+"L",
+"CP_UNM"
+]
+},
+"REP_RET": {
+"_": [
+"_",
+"L",
+"REP_RET"
+],
+"b": [
+"b",
+"L",
+"REP_RET"
+],
+"B": [
+"B",
+"L",
+"REP_RET"
+],
+"[": [
+"[",
+"L",
+"REP_SCAN"
+],
+"]": [
+"]",
+"L",
+"REP_RET"
+],
+"N": [
+"N",
+"L",
+"REP_RET"
+],
+"u": [
+"u",
+"L",
+"REP_RET"
+],
+"n": [
+"n",
+"L",
+"REP_RET"
+],
+"v": [
+"v",
+"L",
+"REP_RET"
+],
+"P": [
+"P",
+"L",
+"REP_RET"
+],
+"d": [
+"d",
+"L",
+"REP_RET"
+],
+"e": [
+"e",
+"L",
+"REP_RET"
+],
+"T": [
+"T",
+"L",
+"REP_RET"
+],
+"C": [
+"C",
+"L",
+"REP_RET"
+],
+"D": [
+"D",
+"L",
+"REP_RET"
+],
+"S": [
+"S",
+"L",
+"REP_RET"
+],
+"z": [
+"z",
+"L",
+"REP_RET"
+],
+"s": [
+"s",
+"L",
+"REP_RET"
+],
+"p": [
+"p",
+"L",
+"REP_RET"
+],
+"y": [
+"y",
+"L",
+"REP_RET"
+]
+},
+"REP_DONE": {
+"B": [
+"b",
+"R",
+"REP_DONE"
+],
+"[": [
+"[",
+"R",
+"RD_S"
+]
+},
+"RD_S": {
+"_": [
+"_",
+"R",
+"RD_S"
+],
+"b": [
+"b",
+"R",
+"RD_S"
+],
+"B": [
+"B",
+"R",
+"RD_S"
+],
+"[": [
+"[",
+"R",
+"RD_S"
+],
+"]": [
+"]",
+"R",
+"RD_S"
+],
+"N": [
+"N",
+"R",
+"RD_S"
+],
+"u": [
+"u",
+"R",
+"RD_S"
+],
+"n": [
+"n",
+"R",
+"RD_S"
+],
+"v": [
+"v",
+"R",
+"RD_S"
+],
+"P": [
+"P",
+"R",
+"RD_S"
+],
+"d": [
+"d",
+"R",
+"RD_S"
+],
+"e": [
+"e",
+"R",
+"RD_S"
+],
+"T": [
+"T",
+"R",
+"RD_S"
+],
+"C": [
+"C",
+"R",
+"RD_S"
+],
+"D": [
+"D",
+"R",
+"RD_S"
+],
+"S": [
+"P",
+"R",
+"RD_Z"
+],
+"z": [
+"z",
+"R",
+"RD_S"
+],
+"s": [
+"s",
+"R",
+"RD_S"
+],
+"p": [
+"p",
+"R",
+"RD_S"
+],
+"y": [
+"y",
+"R",
+"RD_S"
+]
+},
+"RD_Z": {
+"_": [
+"_",
+"R",
+"RD_Z"
+],
+"b": [
+"b",
+"R",
+"RD_Z"
+],
+"B": [
+"B",
+"R",
+"RD_Z"
+],
+"[": [
+"[",
+"R",
+"RD_Z"
+],
+"]": [
+"]",
+"R",
+"RD_Z"
+],
+"N": [
+"N",
+"R",
+"RD_Z"
+],
+"u": [
+"u",
+"R",
+"RD_Z"
+],
+"n": [
+"n",
+"R",
+"RD_Z"
+],
+"v": [
+"v",
+"R",
+"RD_Z"
+],
+"P": [
+"P",
+"R",
+"RD_Z"
+],
+"d": [
+"d",
+"R",
+"RD_Z"
+],
+"e": [
+"e",
+"R",
+"RD_Z"
+],
+"T": [
+"T",
+"R",
+"RD_Z"
+],
+"C": [
+"C",
+"R",
+"RD_Z"
+],
+"D": [
+"D",
+"R",
+"RD_Z"
+],
+"S": [
+"S",
+"R",
+"RD_Z"
+],
+"z": [
+"d",
+"R",
+"GO_CHOP"
+],
+"s": [
+"s",
+"R",
+"RD_Z"
+],
+"p": [
+"p",
+"R",
+"RD_Z"
+],
+"y": [
+"y",
+"R",
+"RD_Z"
+]
+},
+"BEEP": {
+"_": [
+"_",
+"L",
+"BEEP"
+],
+"b": [
+"b",
+"L",
+"BEEP"
+],
+"B": [
+"B",
+"L",
+"BEEP"
+],
+"[": [
+"[",
+"L",
+"NS_ERASE"
+],
+"]": [
+"]",
+"L",
+"BEEP"
+],
+"N": [
+"N",
+"L",
+"BEEP"
+],
+"u": [
+"u",
+"L",
+"BEEP"
+],
+"n": [
+"n",
+"L",
+"BEEP"
+],
+"v": [
+"v",
+"L",
+"BEEP"
+],
+"P": [
+"P",
+"L",
+"BEEP"
+],
+"d": [
+"d",
+"L",
+"BEEP"
+],
+"e": [
+"e",
+"L",
+"BEEP"
+],
+"T": [
+"T",
+"L",
+"BEEP"
+],
+"C": [
+"C",
+"L",
+"BEEP"
+],
+"D": [
+"D",
+"L",
+"BEEP"
+],
+"S": [
+"S",
+"L",
+"BEEP"
+],
+"z": [
+"z",
+"L",
+"BEEP"
+],
+"s": [
+"s",
+"L",
+"BEEP"
+],
+"p": [
+"p",
+"L",
+"BEEP"
+],
+"y": [
+"y",
+"L",
+"BEEP"
+]
+},
+"NS_ERASE": {
+"_": [
+"_",
+"R",
+"NS_TOSEED"
+],
+"b": [
+"_",
+"L",
+"NS_ERASE"
+]
+},
+"NS_TOSEED": {
+"_": [
+"_",
+"R",
+"NS_TOSEED"
+],
+"b": [
+"b",
+"R",
+"NS_TOSEED"
+],
+"B": [
+"B",
+"R",
+"NS_TOSEED"
+],
+"[": [
+"[",
+"R",
+"NS_TOSEED"
+],
+"]": [
+"]",
+"L",
+"INC"
+],
+"N": [
+"N",
+"R",
+"NS_TOSEED"
+],
+"u": [
+"u",
+"R",
+"NS_TOSEED"
+],
+"n": [
+"n",
+"R",
+"NS_TOSEED"
+],
+"v": [
+"v",
+"R",
+"NS_TOSEED"
+],
+"P": [
+"P",
+"R",
+"NS_TOSEED"
+],
+"d": [
+"d",
+"R",
+"NS_TOSEED"
+],
+"e": [
+"e",
+"R",
+"NS_TOSEED"
+],
+"T": [
+"T",
+"R",
+"NS_TOSEED"
+],
+"C": [
+"C",
+"R",
+"NS_TOSEED"
+],
+"D": [
+"D",
+"R",
+"NS_TOSEED"
+],
+"S": [
+"S",
+"R",
+"NS_TOSEED"
+],
+"z": [
+"z",
+"R",
+"NS_TOSEED"
+],
+"s": [
+"s",
+"R",
+"NS_TOSEED"
+],
+"p": [
+"p",
+"R",
+"NS_TOSEED"
+],
+"y": [
+"y",
+"R",
+"NS_TOSEED"
+]
+},
+"INC": {
+"[": [
+"N",
+"L",
+"INC_NEWL"
+],
+"N": [
+"u",
+"L",
+"REBUILD"
+],
+"u": [
+"N",
+"L",
+"INC"
+]
+},
+"INC_NEWL": {
+"_": [
+"[",
+"L",
+"RB1"
+]
+},
+"REBUILD": {
+"_": [
+"_",
+"L",
+"REBUILD"
+],
+"b": [
+"b",
+"L",
+"REBUILD"
+],
+"B": [
+"B",
+"L",
+"REBUILD"
+],
+"[": [
+"[",
+"L",
+"RB1"
+],
+"]": [
+"]",
+"L",
+"REBUILD"
+],
+"N": [
+"N",
+"L",
+"REBUILD"
+],
+"u": [
+"u",
+"L",
+"REBUILD"
+],
+"n": [
+"n",
+"L",
+"REBUILD"
+],
+"v": [
+"v",
+"L",
+"REBUILD"
+],
+"P": [
+"P",
+"L",
+"REBUILD"
+],
+"d": [
+"d",
+"L",
+"REBUILD"
+],
+"e": [
+"e",
+"L",
+"REBUILD"
+],
+"T": [
+"T",
+"L",
+"REBUILD"
+],
+"C": [
+"C",
+"L",
+"REBUILD"
+],
+"D": [
+"D",
+"L",
+"REBUILD"
+],
+"S": [
+"S",
+"L",
+"REBUILD"
+],
+"z": [
+"z",
+"L",
+"REBUILD"
+],
+"s": [
+"s",
+"L",
+"REBUILD"
+],
+"p": [
+"p",
+"L",
+"REBUILD"
+],
+"y": [
+"y",
+"L",
+"REBUILD"
+]
+},
+"RB1": {
+"_": [
+"b",
+"L",
+"RB2"
+]
+},
+"RB2": {
+"_": [
+"b",
+"R",
+"DEC0"
+]
+},
+"BACK_CMP_CEXH": {
+"_": [
+"_",
+"L",
+"CMP_CEXH"
+],
+"b": [
+"b",
+"L",
+"CMP_CEXH"
+],
+"B": [
+"B",
+"L",
+"CMP_CEXH"
+],
+"[": [
+"[",
+"L",
+"CMP_CEXH"
+],
+"]": [
+"]",
+"L",
+"CMP_CEXH"
+],
+"N": [
+"N",
+"L",
+"CMP_CEXH"
+],
+"u": [
+"u",
+"L",
+"CMP_CEXH"
+],
+"n": [
+"n",
+"L",
+"CMP_CEXH"
+],
+"v": [
+"v",
+"L",
+"CMP_CEXH"
+],
+"P": [
+"P",
+"L",
+"CMP_CEXH"
+],
+"d": [
+"d",
+"L",
+"CMP_CEXH"
+],
+"e": [
+"e",
+"L",
+"CMP_CEXH"
+],
+"T": [
+"T",
+"L",
+"CMP_CEXH"
+],
+"C": [
+"C",
+"L",
+"CMP_CEXH"
+],
+"D": [
+"D",
+"L",
+"CMP_CEXH"
+],
+"S": [
+"S",
+"L",
+"CMP_CEXH"
+],
+"z": [
+"z",
+"L",
+"CMP_CEXH"
+],
+"s": [
+"s",
+"L",
+"CMP_CEXH"
+],
+"p": [
+"p",
+"L",
+"CMP_CEXH"
+],
+"y": [
+"y",
+"L",
+"CMP_CEXH"
+]
+},
+"BACK_REP_START": {
+"_": [
+"_",
+"L",
+"REP_START"
+],
+"b": [
+"b",
+"L",
+"REP_START"
+],
+"B": [
+"B",
+"L",
+"REP_START"
+],
+"[": [
+"[",
+"L",
+"REP_START"
+],
+"]": [
+"]",
+"L",
+"REP_START"
+],
+"N": [
+"N",
+"L",
+"REP_START"
+],
+"u": [
+"u",
+"L",
+"REP_START"
+],
+"n": [
+"n",
+"L",
+"REP_START"
+],
+"v": [
+"v",
+"L",
+"REP_START"
+],
+"P": [
+"P",
+"L",
+"REP_START"
+],
+"d": [
+"d",
+"L",
+"REP_START"
+],
+"e": [
+"e",
+"L",
+"REP_START"
+],
+"T": [
+"T",
+"L",
+"REP_START"
+],
+"C": [
+"C",
+"L",
+"REP_START"
+],
+"D": [
+"D",
+"L",
+"REP_START"
+],
+"S": [
+"S",
+"L",
+"REP_START"
+],
+"z": [
+"z",
+"L",
+"REP_START"
+],
+"s": [
+"s",
+"L",
+"REP_START"
+],
+"p": [
+"p",
+"L",
+"REP_START"
+],
+"y": [
+"y",
+"L",
+"REP_START"
+]
+},
+"BACK_CP_SCAN": {
+"_": [
+"_",
+"L",
+"CP_SCAN"
+],
+"b": [
+"b",
+"L",
+"CP_SCAN"
+],
+"B": [
+"B",
+"L",
+"CP_SCAN"
+],
+"[": [
+"[",
+"L",
+"CP_SCAN"
+],
+"]": [
+"]",
+"L",
+"CP_SCAN"
+],
+"N": [
+"N",
+"L",
+"CP_SCAN"
+],
+"u": [
+"u",
+"L",
+"CP_SCAN"
+],
+"n": [
+"n",
+"L",
+"CP_SCAN"
+],
+"v": [
+"v",
+"L",
+"CP_SCAN"
+],
+"P": [
+"P",
+"L",
+"CP_SCAN"
+],
+"d": [
+"d",
+"L",
+"CP_SCAN"
+],
+"e": [
+"e",
+"L",
+"CP_SCAN"
+],
+"T": [
+"T",
+"L",
+"CP_SCAN"
+],
+"C": [
+"C",
+"L",
+"CP_SCAN"
+],
+"D": [
+"D",
+"L",
+"CP_SCAN"
+],
+"S": [
+"S",
+"L",
+"CP_SCAN"
+],
+"z": [
+"z",
+"L",
+"CP_SCAN"
+],
+"s": [
+"s",
+"L",
+"CP_SCAN"
+],
+"p": [
+"p",
+"L",
+"CP_SCAN"
+],
+"y": [
+"y",
+"L",
+"CP_SCAN"
+]
+}
+}
+}
