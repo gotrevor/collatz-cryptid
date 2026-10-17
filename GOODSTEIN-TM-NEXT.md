@@ -102,3 +102,17 @@ Commit each green checkpoint, and record status at the bottom of this file.
   some forest `cs`.  Next attack: a prefix/context lemma for `chop`, induction on `RightChop`, then
   a right-to-left stack parser/inverse theorem for `WF`.  Do not begin tape simulation until those
   lemmas yield well-founded descent of the executable `chop`.
+- 2026-10-17 lap 3 (review): route item 1 is complete.  `Tree.exists_forestLevelsAt` parses every
+  admissible preorder sequence, and `exists_forestLevelsAt_of_wf` specializes it to `WF`.
+  `chop_append_forestLevelsAt_of_rightChop` closes the previously missing `RightChop.deep` seam;
+  `chop_strict_tree_descent` gives strict `TreeLt` witnesses for every nonempty executable chop;
+  and `chopBattle_terminates` proves that arbitrary schedules of finite copy counts reach `[]`.
+  The review also checked the frozen theorem's `t = []` edge: `Sim.empty_halts` proves the machine
+  halts after 13 steps at the undefined `CHOP_START`/`]` entry.  Route item 2 has therefore begun
+  in `GoodsteinTM/Sim.lean` with `treeCells`, `tapeCells`, and the arbitrary-blank-tail
+  `chopConfig`.  Verification:
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts` and the focused axiom gate on
+  `GoodsteinTM.chopBattle_terminates` — FORMALIZE-TIER GREEN, with exactly
+  `[Classical.choice, Quot.sound, propext]` for the hydra headline.  Current blocker: the concrete
+  table simulation.  Next attack: add compositional `stepN`/reachability lemmas and prove the
+  generic scan lemma, then discharge `CHOP_FINDL` as the first state loop from route item 3.
