@@ -690,6 +690,151 @@ theorem A_add_le (N r : ℕ) :
         rw [sum_add_distrib, hper, sum_const, card_range, nsmul_eq_mul]; push_cast; ring
     _ = _ := by rw [pow_add]; field_simp
 
+
+/-- Tilted digit weights `p_d l^d`. -/
+noncomputable def tilt (p : ℕ → ℝ) (l : ℝ) (d : ℕ) : ℝ := p d * l ^ d
+
+/-- Exponential Markov weight: since every legal word costs at least `V`,
+`Z_N(x) l^{V_N(x)} ≤ Z_N(x; p_d l^d)` for `l ≥ 1`. -/
+theorem Z_mul_pow_V_le (p : ℕ → ℝ) (hp : ∀ d, 0 ≤ p d) (l : ℝ) (hl : 1 ≤ l) :
+    ∀ N x, Z p N x * l ^ V N x ≤ Z (tilt p l) N x
+  | 0, x => by simp [Z]
+  | N + 1, x => by
+    have hZ := Z_nonneg p hp N
+    have hl0 : 0 ≤ l := by linarith
+    rw [Z_succ, Z_succ, V_succ]
+    split_ifs with hx
+    · have ha := Z_mul_pow_V_le p hp l hl N (step x 0)
+      have hb := Z_mul_pow_V_le p hp l hl N (step x 2)
+      have m1 : l ^ min (V N (step x 0)) (2 + V N (step x 2)) ≤ l ^ V N (step x 0) :=
+        pow_le_pow_right₀ hl (min_le_left _ _)
+      have m2 : l ^ min (V N (step x 0)) (2 + V N (step x 2)) ≤ l ^ (2 + V N (step x 2)) :=
+        pow_le_pow_right₀ hl (min_le_right _ _)
+      simp only [tilt, pow_zero, mul_one]
+      have hp0 := hp 0
+      have hp2 := hp 2
+      calc (p 0 * Z p N (step x 0) + p 2 * Z p N (step x 2)) *
+            l ^ min (V N (step x 0)) (2 + V N (step x 2))
+          = p 0 * (Z p N (step x 0) * l ^ min (V N (step x 0)) (2 + V N (step x 2))) +
+            p 2 * (Z p N (step x 2) * l ^ min (V N (step x 0)) (2 + V N (step x 2))) := by
+            ring
+        _ ≤ p 0 * (Z p N (step x 0) * l ^ V N (step x 0)) +
+            p 2 * (Z p N (step x 2) * l ^ (2 + V N (step x 2))) := by
+            gcongr
+            · exact hZ _
+            · exact hZ _
+        _ = p 0 * (Z p N (step x 0) * l ^ V N (step x 0)) +
+            p 2 * l ^ 2 * (Z p N (step x 2) * l ^ V N (step x 2)) := by rw [pow_add]; ring
+        _ ≤ p 0 * Z (tilt p l) N (step x 0) + p 2 * l ^ 2 * Z (tilt p l) N (step x 2) := by
+            gcongr
+    · have ha := Z_mul_pow_V_le p hp l hl N (step x 1)
+      simp only [tilt, pow_one]
+      have hp1 := hp 1
+      calc p 1 * Z p N (step x 1) * l ^ (1 + V N (step x 1))
+          = p 1 * l * (Z p N (step x 1) * l ^ V N (step x 1)) := by rw [pow_add]; ring
+        _ ≤ p 1 * l * Z (tilt p l) N (step x 1) := by gcongr
+
+/-- **Chernoff bound** for the spine cost: the `μ_p`-mass of residues with `V_N > (c+η)N` decays
+exponentially, `c = p₁ + 2p₂`. -/
+theorem chernoff (p : ℕ → ℝ) (hp : IsDigitLaw p) (η : ℝ) (hη : 0 < η) :
+    ∃ ρ : ℝ, 0 ≤ ρ ∧ ρ < 1 ∧ ∀ N, ∑ r ∈ (range (2 ^ N)).filter
+      (fun r => (p 1 + 2 * p 2 + η) * N < V N r), Z p N r ≤ ρ ^ N := by
+  have hp0 := hp.1 0
+  have hp1 := hp.1 1
+  have hp2 := hp.1 2
+  have hsum := hp.2
+  set a := p 1 + 2 * p 2 + η with ha
+  set h := η / (η + 8) with hh
+  have hh0 : 0 < h := by positivity
+  have hh1 : h < 1 := by rw [hh, div_lt_one (by linarith)]; linarith
+  have h4 : 4 * h < η := by
+    rw [hh, mul_div_assoc', div_lt_iff₀ (by linarith)]; nlinarith
+  clear_value h
+  set l := 1 + h with hl
+  have hl1 : 1 ≤ l := by linarith
+  have hlpos : 0 < l := by linarith
+  set φ := p 0 + p 1 * l + p 2 * l ^ 2 with hφ
+  have hφ0 : 0 ≤ φ := by positivity
+  have hla : 0 < l ^ a := Real.rpow_pos_of_pos hlpos a
+  refine ⟨φ / l ^ a, div_nonneg hφ0 hla.le, ?_, ?_⟩
+  · -- `φ(l) < l^a`
+    rw [div_lt_one hla]
+    have hlog : h / (1 + h) ≤ Real.log l := by
+      have := Real.one_sub_inv_le_log_of_pos hlpos
+      have e : 1 - l⁻¹ = h / (1 + h) := by rw [hl]; field_simp; ring
+      linarith
+    have hexp : 1 + a * Real.log l ≤ l ^ a := by
+      rw [Real.rpow_def_of_pos hlpos]
+      have := Real.add_one_le_exp (Real.log l * a)
+      linarith [mul_comm a (Real.log l)]
+    have ha0 : 0 ≤ a := by positivity
+    have h1 : 1 + a * (h / (1 + h)) ≤ l ^ a := le_trans (by gcongr) hexp
+    have e2 : φ = 1 + h * (p 1 + 2 * p 2) + p 2 * h ^ 2 := by
+      rw [hφ, hl]; have : p 0 = 1 - p 1 - p 2 := by linarith
+      rw [this]; ring
+    -- `(c + p₂ h)(1 + h) < a`
+    have key : (p 1 + 2 * p 2 + p 2 * h) * (1 + h) < a := by
+      have hc : p 1 + 2 * p 2 ≤ 2 := by linarith
+      have hp2' : p 2 ≤ 1 := by linarith
+      have : (p 1 + 2 * p 2 + p 2 * h) * (1 + h) ≤ p 1 + 2 * p 2 + 4 * h := by nlinarith
+      linarith
+    have h1h : 0 < 1 + h := by linarith
+    have h3 : (p 1 + 2 * p 2 + p 2 * h) * h < a * (h / (1 + h)) := by
+      rw [show a * (h / (1 + h)) = a * h / (1 + h) by ring, lt_div_iff₀ h1h]
+      nlinarith [mul_lt_mul_of_pos_left key hh0]
+    nlinarith
+  · intro N
+    have hlN : ∀ r ∈ (range (2 ^ N)).filter (fun r => a * N < V N r),
+        Z p N r ≤ Z p N r * l ^ V N r / (l ^ a) ^ N := by
+      intro r hr
+      have hV : a * N < V N r := (mem_filter.1 hr).2
+      have hle : (l ^ a) ^ N ≤ l ^ V N r := by
+        rw [← Real.rpow_mul_natCast hlpos.le, ← Real.rpow_natCast l (V N r)]
+        exact Real.rpow_le_rpow_of_exponent_le hl1 hV.le
+      rw [le_div_iff₀ (pow_pos hla N)]
+      exact mul_le_mul_of_nonneg_left hle (Z_nonneg p hp.1 N r)
+    calc ∑ r ∈ (range (2 ^ N)).filter (fun r => a * N < V N r), Z p N r
+        ≤ ∑ r ∈ (range (2 ^ N)).filter (fun r => a * N < V N r),
+            Z p N r * l ^ V N r / (l ^ a) ^ N := sum_le_sum hlN
+      _ ≤ ∑ r ∈ range (2 ^ N), Z p N r * l ^ V N r / (l ^ a) ^ N :=
+          sum_le_sum_of_subset_of_nonneg (filter_subset _ _) fun r _ _ =>
+            div_nonneg (mul_nonneg (Z_nonneg p hp.1 N r) (by positivity)) (by positivity)
+      _ ≤ ∑ r ∈ range (2 ^ N), Z (tilt p l) N r / (l ^ a) ^ N :=
+          sum_le_sum fun r _ => by gcongr; exact Z_mul_pow_V_le p hp.1 l hl1 N r
+      _ = φ ^ N / (l ^ a) ^ N := by
+          rw [← sum_div, sum_Z]; simp only [tilt, pow_zero, mul_one, pow_one, hφ]
+      _ = (φ / l ^ a) ^ N := (div_pow _ _ _).symm
+
+/-- **Young-type mass bound**: for any `K > 0` and residue set `B`,
+`μ_p(B) ≤ K m(B) + K^{-s} ∫ ρ_N^{1+s} dm` (a cheap substitute for Hölder). -/
+theorem mass_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (N : ℕ) (B : Finset ℕ)
+    (hB : B ⊆ range (2 ^ N)) (K : ℝ) (hK : 0 < K) :
+    ∑ r ∈ B, Z p N r ≤ K * ((B.card : ℝ) / 2 ^ N) + moment p s N / K ^ s := by
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have hKs : 0 < K ^ s := Real.rpow_pos_of_pos hK s
+  have hpt : ∀ x : ℝ, 0 ≤ x → x ≤ K + x ^ (1 + s) / K ^ s := by
+    intro x hx
+    rcases le_or_gt x K with h | h
+    · have : 0 ≤ x ^ (1 + s) / K ^ s := by positivity
+      linarith
+    · have h1 : 1 ≤ (x / K) ^ s := Real.one_le_rpow (by rw [le_div_iff₀ hK]; linarith) hs0.le
+      have e : x ^ (1 + s) / K ^ s = x * (x / K) ^ s := by
+        rw [rpow_one_add_eq hx hs0, Real.div_rpow hx hK.le]; ring
+      rw [e]; nlinarith
+  have hZ : ∀ r, Z p N r = rho p N r / 2 ^ N := fun r => by
+    rw [rho, mul_div_cancel_left₀ _ hP.ne']
+  calc ∑ r ∈ B, Z p N r = (∑ r ∈ B, rho p N r) / 2 ^ N := by rw [sum_div]; simp only [hZ]
+    _ ≤ (∑ r ∈ B, (K + rho p N r ^ (1 + s) / K ^ s)) / 2 ^ N := by
+        gcongr with r; exact hpt _ (rho_nonneg p hp.1 N r)
+    _ = K * ((B.card : ℝ) / 2 ^ N) + (∑ r ∈ B, rho p N r ^ (1 + s)) / 2 ^ N / K ^ s := by
+        rw [sum_add_distrib, sum_const, nsmul_eq_mul, ← sum_div]; ring
+    _ ≤ K * ((B.card : ℝ) / 2 ^ N) + moment p s N / K ^ s := by
+        rw [moment, haarAvg]
+        gcongr
+        intro r _ _
+        have := rho_nonneg p hp.1 N r
+        positivity
+
 /-! ## The crux and the spine reduction (`notes/37`) -/
 
 /-- **The crux (open).**  The adjacent cross-energy of `μ_p` is bounded uniformly in depth.
@@ -742,19 +887,272 @@ theorem moment_bound (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < 
     rw [hsplit]
     nlinarith [mul_le_mul_of_nonneg_left ih hq0]
 
+/-- A uniform `L^{1+s}` bound from `moment_bound`, `q < 1` and bounded cross-energy. -/
+theorem moment_uniform (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
+    (hq : spineRatio p s < 1) (hC : CrossEnergyBounded p) :
+    ∃ Mb : ℝ, 1 ≤ Mb ∧ ∀ N, moment p s N ≤ Mb := by
+  obtain ⟨C, hC⟩ := hC
+  have hq0 : 0 ≤ spineRatio p s := by
+    have := hp.1 0; have := hp.1 1; have := hp.1 2
+    unfold spineRatio; positivity
+  have hr0 : 0 ≤ siblingWeight p s := by
+    have := hp.1 0; have := hp.1 2
+    unfold siblingWeight; positivity
+  have hΛ0 : ∀ N, 0 ≤ crossEnergy p N := fun N => by
+    unfold crossEnergy haarAvg
+    exact div_nonneg (sum_nonneg fun r _ =>
+      mul_nonneg (rho_nonneg p hp.1 N r) (rho_nonneg p hp.1 N _)) (by positivity)
+  have hC0 : 0 ≤ C := (hΛ0 0).trans (hC 0)
+  have h1q : 0 < 1 - spineRatio p s := by linarith
+  refine ⟨1 + siblingWeight p s * (C ^ s / (1 - spineRatio p s)), ?_, fun N => ?_⟩
+  · have : 0 ≤ siblingWeight p s * (C ^ s / (1 - spineRatio p s)) := by positivity
+    linarith
+  refine (moment_bound p hp s hs0 hs1 N).trans ?_
+  have h1 : spineRatio p s ^ N ≤ 1 := pow_le_one₀ hq0 hq.le
+  have h2 : ∑ j ∈ range N, spineRatio p s ^ j * crossEnergy p (N - 1 - j) ^ s ≤
+      C ^ s / (1 - spineRatio p s) := by
+    calc ∑ j ∈ range N, spineRatio p s ^ j * crossEnergy p (N - 1 - j) ^ s
+        ≤ ∑ j ∈ range N, spineRatio p s ^ j * C ^ s :=
+          sum_le_sum fun j _ => mul_le_mul_of_nonneg_left
+            (Real.rpow_le_rpow (hΛ0 _) (hC _) hs0.le) (pow_nonneg hq0 _)
+      _ = (∑ j ∈ range N, spineRatio p s ^ j) * C ^ s := (sum_mul _ _ _).symm
+      _ ≤ (spineRatio p s ^ 0 / (1 - spineRatio p s)) * C ^ s := by
+          gcongr
+          rw [range_eq_Ico]
+          exact geom_sum_Ico_le_of_lt_one hq0 hq
+      _ = _ := by rw [pow_zero]; ring
+  have := mul_le_mul_of_nonneg_left h2 hr0
+  linarith
+
+/-- **The cheap set has Haar mass bounded below.**  With a uniform `L^{1+s}` bound, the residues
+where `V_N ≤ (c + η)N` occupy a fraction `≥ κ` of all residues, for all large `N`. -/
+theorem cheap_card (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (Mb : ℝ)
+    (hMb1 : 1 ≤ Mb) (hMb : ∀ N, moment p s N ≤ Mb) :
+    ∃ κ : ℝ, 0 < κ ∧ ∀ η > 0, ∃ N₁ : ℕ, ∀ N ≥ N₁, κ * 2 ^ N ≤
+      (((range (2 ^ N)).filter (fun r => (V N r : ℝ) ≤ (p 1 + 2 * p 2 + η) * N)).card : ℝ) := by
+  set K := (4 * Mb) ^ s⁻¹ with hK
+  have hKpos : 0 < K := Real.rpow_pos_of_pos (by linarith) _
+  have hKs : K ^ s = 4 * Mb := Real.rpow_inv_rpow (by linarith) hs0.ne'
+  refine ⟨1 / (2 * K), by positivity, fun η hη => ?_⟩
+  obtain ⟨ρ, hρ0, hρ1, hch⟩ := chernoff p hp η hη
+  obtain ⟨N₁, hN₁⟩ := exists_pow_lt_of_lt_one (by norm_num : (0 : ℝ) < 1 / 4) hρ1
+  refine ⟨N₁, fun N hN => ?_⟩
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have hρN : ρ ^ N ≤ 1 / 4 := (pow_le_pow_of_le_one hρ0 hρ1.le hN).trans hN₁.le
+  set E := (range (2 ^ N)).filter (fun r => (V N r : ℝ) ≤ (p 1 + 2 * p 2 + η) * N)
+  have hsplit := sum_filter_add_sum_filter_not (range (2 ^ N))
+    (fun r => (V N r : ℝ) ≤ (p 1 + 2 * p 2 + η) * N) (Z p N)
+  rw [sum_Z, hp.2, one_pow] at hsplit
+  have hexp := hch N
+  simp only [not_le] at hsplit
+  have hmass := mass_le p hp s hs0 N E (filter_subset _ _) K hKpos
+  have hmom : moment p s N / K ^ s ≤ 1 / 4 := by
+    rw [hKs, div_le_iff₀ (by linarith)]; linarith [hMb N]
+  -- `3/4 ≤ μ(E) ≤ K m(E) + 1/4`
+  have hm : 1 / 2 ≤ K * ((E.card : ℝ) / 2 ^ N) := by linarith
+  rw [div_mul_eq_mul_div, one_mul, div_le_iff₀ (by positivity)]
+  rw [mul_div_assoc'] at hm
+  rw [le_div_iff₀ hP] at hm
+  nlinarith
+
+/-- **The squeeze inequality** (finite form of notes/37 §4 steps 2–3).  For `N = qL` and any
+threshold `t`, with `E = {V_N ≤ t}`:
+`∑ V_N ≤ t|E| + (2^N − |E|) q A_L + 2^N (L/δ + δ q L)`.  It combines block commitment
+(`V_N ≤ blockCost`), the block-cost mean and variance, and `|y| ≤ y²/D + D`. -/
+theorem squeeze (L q : ℕ) (t δ : ℝ) (hδ : 0 < δ) (hL : 0 < L) (hq : 0 < q) :
+    (sumV (q * L) : ℝ) ≤
+      t * (((range (2 ^ (q * L))).filter (fun r => (V (q * L) r : ℝ) ≤ t)).card : ℝ) +
+      (2 ^ (q * L) - (((range (2 ^ (q * L))).filter (fun r => (V (q * L) r : ℝ) ≤ t)).card : ℝ)) *
+        (q * ((sumV L : ℝ) / 2 ^ L)) +
+      2 ^ (q * L) * (L / δ + δ * q * L) := by
+  set N := q * L with hN
+  set P : ℝ := 2 ^ N with hP
+  set μ0 : ℝ := q * ((sumV L : ℝ) / 2 ^ L) with hμ0
+  set E := (range (2 ^ N)).filter (fun r => (V N r : ℝ) ≤ t) with hE
+  set S : ℕ → ℝ := fun x => (blockCost L q x : ℝ) with hS
+  have hPpos : 0 < P := by positivity
+  have hD : 0 < δ * q * L := by positivity
+  have hVS : ∀ x, (V N x : ℝ) ≤ S x := fun x => by
+    simp only [hS, hN]; exact_mod_cast V_le_blockCost L q x
+  have hSsum : ∑ x ∈ range (2 ^ N), S x = P * μ0 := by
+    rw [hS, sum_blockCost]; ring
+  have hvar : ∑ x ∈ range (2 ^ N), (S x - μ0) ^ 2 ≤ (q : ℝ) * P * L ^ 2 := sum_sq_blockCost L q
+  -- `∑ |S − μ0| ≤ P L/δ + P δ q L`
+  have habs : ∑ x ∈ range (2 ^ N), |S x - μ0| ≤ P * (L / δ + δ * q * L) := by
+    set D := δ * q * L with hDdef
+    have hpt : ∀ y : ℝ, |y| ≤ y ^ 2 / D + D := fun y => by
+      rw [div_add' _ _ _ hD.ne', le_div_iff₀ hD]
+      nlinarith [sq_nonneg (|y| - D), sq_abs y, abs_nonneg y]
+    calc ∑ x ∈ range (2 ^ N), |S x - μ0|
+        ≤ ∑ x ∈ range (2 ^ N), ((S x - μ0) ^ 2 / D + D) := sum_le_sum fun x _ => hpt _
+      _ = (∑ x ∈ range (2 ^ N), (S x - μ0) ^ 2) / D + P * D := by
+          rw [sum_add_distrib, ← sum_div, sum_const, card_range, nsmul_eq_mul]
+          simp only [hP]; push_cast; ring
+      _ ≤ ((q : ℝ) * P * L ^ 2) / D + P * D := by
+          have := div_le_div_of_nonneg_right hvar hD.le; linarith
+      _ = P * (L / δ + D) := by
+          have : (q : ℝ) ≠ 0 := by positivity
+          have : (L : ℝ) ≠ 0 := by positivity
+          field_simp
+          rw [hDdef]; ring
+  have hsplit := sum_filter_add_sum_filter_not (range (2 ^ N)) (fun r => (V N r : ℝ) ≤ t)
+    (fun x => (V N x : ℝ))
+  have hsplitS := sum_filter_add_sum_filter_not (range (2 ^ N)) (fun r => (V N r : ℝ) ≤ t) S
+  have hEV : ∑ x ∈ E, (V N x : ℝ) ≤ t * E.card := by
+    calc ∑ x ∈ E, (V N x : ℝ) ≤ ∑ x ∈ E, t := sum_le_sum fun x hx => (mem_filter.1 hx).2
+      _ = t * E.card := by rw [sum_const, nsmul_eq_mul, mul_comm]
+  have hEcV : ∑ x ∈ (range (2 ^ N)).filter (fun r => ¬ (V N r : ℝ) ≤ t), (V N x : ℝ) ≤
+      ∑ x ∈ (range (2 ^ N)).filter (fun r => ¬ (V N r : ℝ) ≤ t), S x :=
+    sum_le_sum fun x _ => hVS x
+  have hES : (E.card : ℝ) * μ0 - P * (L / δ + δ * q * L) ≤ ∑ x ∈ E, S x := by
+    have h1 : ∑ x ∈ E, (μ0 - |S x - μ0|) ≤ ∑ x ∈ E, S x :=
+      sum_le_sum fun x _ => by linarith [neg_abs_le (S x - μ0)]
+    have h2 : ∑ x ∈ E, |S x - μ0| ≤ ∑ x ∈ range (2 ^ N), |S x - μ0| :=
+      sum_le_sum_of_subset_of_nonneg (filter_subset _ _) fun _ _ _ => abs_nonneg _
+    rw [sum_sub_distrib, sum_const, nsmul_eq_mul] at h1
+    linarith
+  rw [sumV_eq, ← hsplit]
+  linarith [hEV, hEcV, hsplitS, hSsum, hES]
+
+set_option maxHeartbeats 2000000 in
 /-- **Headline reduction** (notes/37 Theorem B, finite form).  If the spine ratio is below `1` at
 some `s ∈ (0,1]` (entropy above `log 2`) and the cross-energy is bounded, then the Haar-mean
 optimal cost satisfies `∑_{x<2^N} V N x ≤ (p₁ + 2p₂ + ε) N 2^N` for all large `N`, i.e.
 `a_* ≤ p₁ + 2p₂`.
 
-Proof route: `moment_bound` gives a uniform `L^{1+s}` bound; Hölder turns the spine law of large
-numbers (`V_N ≤ S_N`, the spine cost) into `m{V_N ≤ (c+ε)N} ≥ κ > 0`; block commitment with
-Haar-uniform restarts (OE2/AC1) plus Chebyshev makes `V_N/N` concentrate at `a_*` from above,
-which forces `a_* ≤ c + ε`.  Confidence ~85% (paper proof in notes/37 §4). -/
+Proof: `moment_uniform` (from `moment_bound`) bounds `∫ρ_N^{1+s}`; `chernoff` puts `μ_p`-mass
+`≥ 3/4` on `{V_N ≤ (c+η)N}`, and `mass_le` converts it to Haar mass `≥ κ` (`cheap_card`).  The
+`squeeze` (block commitment with exactly uniform block starts, block-cost variance) then shows
+`a_* = inf A_N/N ≤ c + η + 3δ/κ` for all `η, δ > 0`, and subadditivity (`A_mul_le`,
+`A_add_le`) turns `a_* ≤ c` into the finite form. -/
 theorem haarRate_le_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s)
     (hs1 : s ≤ 1) (hq : spineRatio p s < 1) (hC : CrossEnergyBounded p) :
     ∀ ε > 0, ∃ N₀, ∀ N ≥ N₀, (sumV N : ℝ) ≤ (p 1 + 2 * p 2 + ε) * N * 2 ^ N := by
-  sorry
+  set c := p 1 + 2 * p 2 with hc
+  have hc0 : 0 ≤ c := by have := hp.1 1; have := hp.1 2; positivity
+  obtain ⟨Mb, hMb1, hMb⟩ := moment_uniform p hp s hs0 hs1 hq hC
+  obtain ⟨κ, hκ0, hcheap⟩ := cheap_card p hp s hs0 Mb hMb1 hMb
+  set A : ℕ → ℝ := fun N => (sumV N : ℝ) / 2 ^ N with hA
+  have hA0 : ∀ N, 0 ≤ A N := fun N => by positivity
+  set f : ℕ → ℝ := fun M => A (M + 1) / (M + 1) with hf
+  have hbdd : BddBelow (Set.range f) :=
+    ⟨0, by rintro _ ⟨M, rfl⟩; exact div_nonneg (hA0 _) (by positivity)⟩
+  set astar := ⨅ M, f M with hastar
+  -- `a_* = inf A_N/N`: lower bound at every depth, approximate attainment
+  have hle : ∀ N : ℕ, 0 < N → (N : ℝ) * astar ≤ A N := by
+    intro N hN
+    obtain ⟨M, rfl⟩ : ∃ M : ℕ, N = M + 1 := ⟨N - 1, by omega⟩
+    have := ciInf_le hbdd M
+    simp only [hf] at this
+    rw [le_div_iff₀ (by positivity)] at this
+    push_cast; linarith
+  have hlt : ∀ δ > 0, ∃ L : ℕ, 0 < L ∧ A L ≤ L * (astar + δ) := by
+    intro δ hδ
+    obtain ⟨M, hM⟩ := exists_lt_of_ciInf_lt (show astar < astar + δ by linarith)
+    refine ⟨M + 1, by omega, ?_⟩
+    simp only [hf] at hM
+    rw [div_lt_iff₀ (by positivity)] at hM
+    push_cast; linarith
+  -- the squeeze forces `a_* ≤ c`
+  have hkey : astar ≤ c := by
+    by_contra hcon
+    push_neg at hcon
+    set g := astar - c with hg
+    have hg0 : 0 < g := by linarith
+    set η := g / 2 with hη
+    set δ := κ * g / 8 with hδ
+    have hδ0 : 0 < δ := by positivity
+    obtain ⟨L, hL, hAL⟩ := hlt δ hδ0
+    obtain ⟨N₁, hN₁⟩ := hcheap η (by positivity)
+    obtain ⟨q, hqN, hqδ, hq0⟩ : ∃ q : ℕ, N₁ ≤ q ∧ 1 / δ ^ 2 ≤ q ∧ 0 < q := by
+      refine ⟨N₁ + ⌈1 / δ ^ 2⌉₊ + 1, by omega, ?_, by omega⟩
+      have := Nat.le_ceil (1 / δ ^ 2)
+      push_cast; linarith
+    set N := q * L with hN
+    have hN1 : N₁ ≤ N := le_trans hqN (Nat.le_mul_of_pos_right q hL)
+    have hE := hN₁ N hN1
+    have hsq := squeeze L q ((c + η) * N) δ hδ0 hL hq0
+    have hAN := hle N (Nat.mul_pos hq0 hL)
+    set e : ℝ := (((range (2 ^ N)).filter (fun r => (V N r : ℝ) ≤ (c + η) * N)).card : ℝ)
+      with he
+    set P : ℝ := 2 ^ N with hP
+    have hPpos : 0 < P := by positivity
+    have heP : e ≤ P := by
+      have := card_filter_le (range (2 ^ N)) (fun r => (V N r : ℝ) ≤ (c + η) * N)
+      rw [card_range] at this
+      rw [he, hP]; exact_mod_cast this
+    have hNR : (N : ℝ) = q * L := by rw [hN]; push_cast; ring
+    have hNpos : (0 : ℝ) < N := by rw [hNR]; positivity
+    have hqA : (q : ℝ) * A L ≤ N * (astar + δ) := by
+      rw [hNR, mul_assoc]; exact mul_le_mul_of_nonneg_left hAL (by positivity)
+    have hLδ : (L : ℝ) / δ + δ * q * L ≤ 2 * δ * N := by
+      have h1 : (L : ℝ) / δ ≤ δ * q * L := by
+        rw [div_le_iff₀ hδ0]
+        have : 1 ≤ δ ^ 2 * q := by rwa [div_le_iff₀ (by positivity), mul_comm] at hqδ
+        have hL0 : (0 : ℝ) ≤ L := by positivity
+        nlinarith
+      rw [hNR]; linarith
+    have hsum : P * A N = sumV N := by
+      simp only [hA, hP]; field_simp
+    -- `P N a_* ≤ (c+η) N e + (P − e) N (a_* + δ) + 2 P δ N`
+    have h1 : P * (N * astar) ≤ (c + η) * N * e + (P - e) * (N * (astar + δ)) +
+        P * (2 * δ * N) := by
+      have hPe : 0 ≤ P - e := by linarith
+      calc P * (N * astar) ≤ P * A N := mul_le_mul_of_nonneg_left hAN hPpos.le
+        _ = sumV N := hsum
+        _ ≤ (c + η) * N * e + (P - e) * (q * A L) + P * (L / δ + δ * q * L) := hsq
+        _ ≤ _ := by gcongr
+    -- divide by `N`
+    have h2 : P * astar ≤ (c + η) * e + (P - e) * (astar + δ) + P * (2 * δ) := by
+      have : N * (P * astar) ≤ N * ((c + η) * e + (P - e) * (astar + δ) + P * (2 * δ)) := by
+        nlinarith
+      exact le_of_mul_le_mul_left this hNpos
+    -- `e (a_* − c − η) ≤ 3 P δ`, with `e ≥ κ P` and `a_* − c − η = g/2`
+    have h3 : e * (g / 2) ≤ 3 * P * δ := by
+      have : astar - c - η = g / 2 := by rw [hη, hg]; ring
+      nlinarith
+    have h4 : κ * P * (g / 2) ≤ e * (g / 2) := by
+      have : κ * P ≤ e := by rw [hP]; linarith
+      exact mul_le_mul_of_nonneg_right this (by positivity)
+    have h5 : κ * P * (g / 2) ≤ 3 * P * δ := le_trans h4 h3
+    rw [hδ] at h5
+    have hX := mul_pos (mul_pos hκ0 hPpos) hg0
+    linarith
+  -- conclusion from subadditivity
+  intro ε hε
+  obtain ⟨L, hL, hAL⟩ := hlt (ε / 2) (by positivity)
+  refine ⟨⌈2 * L / ε⌉₊ + 1, fun N hN => ?_⟩
+  have hNL : (2 * L / ε : ℝ) ≤ N := by
+    have := Nat.le_ceil (2 * L / ε)
+    have : ((⌈2 * L / ε⌉₊ + 1 : ℕ) : ℝ) ≤ N := by exact_mod_cast hN
+    push_cast at this; linarith
+  have hLN : (L : ℝ) ≤ ε / 2 * N := by
+    rw [div_le_iff₀ hε] at hNL; linarith
+  have hdecomp : N = N / L * L + N % L := by rw [mul_comm]; exact (Nat.div_add_mod N L).symm
+  have hr' : N % L ≤ L := (Nat.mod_lt N hL).le
+  generalize N / L = q at hdecomp
+  generalize N % L = r at hdecomp hr'
+  have hr : (r : ℝ) ≤ L := by exact_mod_cast hr'
+  have hqL : (q : ℝ) * L ≤ N := by
+    have : q * L ≤ N := by rw [hdecomp]; omega
+    exact_mod_cast this
+  have hAN : A N ≤ q * A L + r := by
+    have h1 := A_add_le (q * L) r
+    have h2 := A_mul_le L q
+    rw [← hdecomp] at h1
+    simp only [hA]
+    linarith
+  have hqAL : (q : ℝ) * A L ≤ N * (c + ε / 2) := by
+    calc (q : ℝ) * A L ≤ q * (L * (astar + ε / 2)) :=
+          mul_le_mul_of_nonneg_left hAL (by positivity)
+      _ ≤ q * (L * (c + ε / 2)) := by gcongr
+      _ = ((q : ℝ) * L) * (c + ε / 2) := by ring
+      _ ≤ N * (c + ε / 2) := mul_le_mul_of_nonneg_right hqL (add_nonneg hc0 (half_pos hε).le)
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have : A N ≤ (c + ε) * N := by linarith only [hAN, hqAL, hr, hLN]
+  simp only [hA] at this
+  rw [div_le_iff₀ hP] at this
+  exact this
 
 /-- The spine ratio of the candidate is below `1` at `s = 1/32` (entropy `0.7078 > log 2`;
 numerically `q(1/32) ≈ 0.99978`); proved from rational upper bounds on the four 32nd roots. -/
