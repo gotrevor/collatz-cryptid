@@ -528,10 +528,32 @@ theorem haarRate_le_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) 
   sorry
 
 /-- The spine ratio of the candidate is below `1` at `s = 1/32` (entropy `0.7078 > log 2`;
-numerically `q(1/32) ≈ 0.99978`).  Confidence ~99% (a numeric `rpow` bound, not yet checked in
-Lean). -/
+numerically `q(1/32) ≈ 0.99978`); proved from rational upper bounds on the four 32nd roots. -/
 theorem candidate_spineRatio_lt_one : spineRatio candidate (1 / 32) < 1 := by
-  sorry
+  -- `x^{1/32} ≤ u` whenever `x ≤ u^32`
+  have key : ∀ x u : ℝ, 0 ≤ x → 0 ≤ u → x ≤ u ^ 32 → x ^ (1 / 32 : ℝ) ≤ u := by
+    intro x u hx hu h
+    calc x ^ (1 / 32 : ℝ) ≤ (u ^ 32) ^ (1 / 32 : ℝ) := Real.rpow_le_rpow hx h (by norm_num)
+      _ = u := by
+        rw [show (1 / 32 : ℝ) = ((32 : ℕ) : ℝ)⁻¹ by norm_num]
+        exact Real.pow_rpow_inv_natCast hu (by norm_num)
+  have h2 := key 2 (510949 / 500000) (by norm_num) (by norm_num) (by norm_num)
+  have h0 := key (18 / 25) (989787 / 1000000) (by norm_num) (by norm_num) (by norm_num)
+  have h1 := key (6 / 25) (956383 / 1000000) (by norm_num) (by norm_num) (by norm_num)
+  have h3 := key (1 / 25) (56519 / 62500) (by norm_num) (by norm_num) (by norm_num)
+  have e : ∀ x : ℝ, 0 ≤ x → x ^ (1 + 1 / 32 : ℝ) = x * x ^ (1 / 32 : ℝ) :=
+    fun x hx => rpow_one_add_eq hx (by norm_num)
+  simp only [spineRatio, candidate]
+  rw [e _ (by norm_num), e _ (by norm_num), e _ (by norm_num)]
+  have n2 : (0 : ℝ) ≤ 2 ^ (1 / 32 : ℝ) := by positivity
+  have n0 : (0 : ℝ) ≤ (18 / 25 : ℝ) ^ (1 / 32 : ℝ) := by positivity
+  have n1 : (0 : ℝ) ≤ (6 / 25 : ℝ) ^ (1 / 32 : ℝ) := by positivity
+  have n3 : (0 : ℝ) ≤ (1 / 25 : ℝ) ^ (1 / 32 : ℝ) := by positivity
+  calc (2 : ℝ) ^ (1 / 32 : ℝ) * (18 / 25 * (18 / 25 : ℝ) ^ (1 / 32 : ℝ) +
+        6 / 25 * (6 / 25 : ℝ) ^ (1 / 32 : ℝ) + 1 / 25 * (1 / 25 : ℝ) ^ (1 / 32 : ℝ))
+      ≤ 510949 / 500000 * (18 / 25 * (989787 / 1000000) + 6 / 25 * (956383 / 1000000) +
+        1 / 25 * (56519 / 62500)) := by gcongr
+    _ < 1 := by norm_num
 
 /-- **Conditional `a_* ≤ 8/25 < 1/3`**: bounded adjacent cross-energy for Fornet's candidate would
 refute Fornet's mean inequality `a_* ≥ 1/3`. -/
