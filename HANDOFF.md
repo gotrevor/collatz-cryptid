@@ -1,3 +1,10 @@
+> **T4 track (branch `wip/t4-haar-rate`), stuck-bail strike 1, 2026-10-17.**  The T4 scope is
+> complete.  `HaarDigitRate.lean` and `HaarShift.lean` have no `sorry`, and the crux is an open
+> `Prop` (notes/37 §9).  The DIRECTION stop rule fired.  The 9 repo-wide `sorry`s belong to other
+> tracks (Tao, Korec, Bigfoot), which the T4 kickoff puts off-limits.  The ask to the operator:
+> relaunch with `--done-when 'sorry-free:lean/Collatz/Antihydra/HaarShift.lean'`, or end the run.
+> Details are in `HANDOFF-t4-haar-rate.md`.  The rest of this file is the Bigfoot handoff.
+
 # Handoff 🤝
 
 **Last session**: 2026-05-26 late evening (`V6KPos.lean` lands: strengthened invariant `InvB` with 9 b-counter clauses, sorry-free; `k_pos_orbit_of` is a sorry-free reduction; `k_pos_orbit` factored to 2 named cascade obligations, each a single sorry).
