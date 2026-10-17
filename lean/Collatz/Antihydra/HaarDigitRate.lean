@@ -259,7 +259,7 @@ the point `1`.  Its exact recursion (notes/37 §3) runs over integer shifts `δ`
 `δ = 1`: `λ_n(δ) = 2 ∑_{e ≡ δ (2)} π(e) λ_{n−1}((3δ − e)/2)`, `π = p ∗ p̃`.  The integers visited
 never return to `0`, and `|δ|` never decreases.
 
-Evidence [computed, `tmp/fwd.c`, sparse forward recursion, exact up to float rounding]:
+Evidence [computed, `tools/sandbox/haar_digit_rate/cross_energy_p.c`, sparse forward recursion]:
 `crossEnergy` at Fornet's candidate `(18,6,1)/25` is `0.5507, 0.5401, 0.5504, 0.5475, 0.5463`
 at `N = 16, 24, 32, 40, 46`.  For the tilted laws `p ∝ (1, e^{−θ}, e^{−2θ})` the values are flat
 in `N ≤ 48` at every `θ` tested: `0.811` (θ=0.5), `0.606` (1.0), `0.466` (1.24), `0.430` (1.3),
