@@ -1,5 +1,13 @@
 # Handoff: T3, rounding-choice foils for the whole Hydra schema (2026-10-17)
 
+**Checkpoint (2026-10-17, lap budget reached):** branch `wip/t3-hydra-foils`, HEAD `bd5e171`
+before this checkpoint commit.  `lake build` green (8784 jobs).  Targets 1-4 DONE; no uncommitted
+work; no Aristotle job.  `box done` not yet signalled: only the kickoff's stretch item is open.
+Next lap: either signal `box done "T3 targets 1-4 proved, notes/35 written"` or take the stretch
+(Bigfoot lifted certificate below defect 7, see "Open / next").  Kernel-cost tips for large
+certificates: notes/35 §4 build notes (`Nat.beq`, raw `Nat` ops, data in its own module,
+`Elab.async false` in chunk modules).
+
 Branch `wip/t3-hydra-foils`.  Kickoff: `KICKOFF-2026-10-17-t3-hydra-foils.md`.
 Write-up: `notes/35-hydra-foils-2026-10-17.md` (claims tagged Lean / computed / paper).
 Lean: `lean/Collatz/HydraFoils.lean`, in the default build; no `sorry`, axioms
