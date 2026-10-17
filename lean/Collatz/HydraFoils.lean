@@ -28,7 +28,10 @@ constant on blocks of `qL` consecutive integers (`member q L σ`, block `x / (qL
 * `Sys.halting_dense_of_window`: the cyclic window condition (every `d+1` consecutive residues mod
   `q` meet a residue with `w < 0`) is a certificate, for every `p > q ≥ 1`.
 * `Sys.window_two`: for `q = 2`, `d = 1`, any residue with `w < 0` gives the window condition.
-* Instances: Antihydra, int-y1 #323, BB(2,5) Hydra (`q = 2`, `d = 1`), #218 (`d = 2`), Bigfoot.
+* `Sys.halting_dense_of_resDrain`: certificates on `(x mod q, ⌊x/q⌋ mod q)`, checked by `decide`.
+* Instances: Antihydra, int-y1 #323, BB(2,5) Hydra (`q = 2`, `d = 1`), #218 (`d = 2`; the window
+  fails at `d = 1`), Bigfoot (window `d = 14`, reachable window `13`, drift certificate `7`:
+  `bigfoot_halting_member`).
 * T2 agreement: T2's family is the odd-supported part of `F_{L,1}` for Antihydra's data, with the
   same halting predicate (`antihydra_t2_halts_iff`, `t2_member_emb`).
 -/
