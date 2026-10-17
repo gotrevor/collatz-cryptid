@@ -436,6 +436,64 @@ theorem halting_dense_of_resDrain (hq : 0 < S.q) (hpq : S.q < S.p) {d L : ℕ} (
   · obtain ⟨c, hc, h1⟩ := hD.2 _ (S.res_lt hq x) hx _ (S.digit_lt hq x)
     exact ⟨⟨c, by omega⟩, by simp only [S.res_img_add hq]; exact h1⟩
 
+/-! ## Lifted certificates
+
+A certificate on `x mod Q` (any `Q`) is a finite check over `x mod qQ`, because the image mod `Q`
+depends only on `x mod qQ`.  Taking `Q = q^k` lets the steering look `k` digits ahead. -/
+
+theorem res_shift (y k : ℤ) : S.res (y + S.q * k) = S.res y := by
+  unfold res; rw [Int.add_mul_emod_self_left]
+
+theorem img_shift (hq : 0 < S.q) (Q : ℕ) (y k : ℤ) :
+    S.img (y + S.q * Q * k) = S.img y + S.p * Q * k := by
+  have hq0 : (S.q : ℤ) ≠ 0 := by exact_mod_cast hq.ne'
+  have e : y + (S.q : ℤ) * Q * k = y + S.q * (Q * k) := by ring
+  unfold img
+  rw [e, S.res_shift, Int.add_mul_ediv_left _ _ hq0]
+  ring
+
+/-- **Lifted gate.**  A potential `φ` on residues mod `Q`, with a choice `c ≤ d` at every
+`u < qQ` along which `m w + φ` falls by one, makes halting members dense in `F_{L,d}`. -/
+theorem halting_dense_of_modCert (hq : 0 < S.q) (hpq : S.q < S.p) {d L Q : ℕ} (hL : 1 ≤ L)
+    (hQ : 0 < Q) (φ : ℕ → ℕ) (m : ℕ)
+    (hcert : ∀ u < S.q * Q, ∃ c ≤ d, (m : ℤ) * S.w.getD (u % S.q) 0 +
+      φ (((S.img u + c) % Q).toNat) + 1 ≤ φ (u % Q))
+    (σ₀ : ℤ → Fin (d + 1)) (K : ℤ) (s : ℤ × ℤ) (hesc : ∀ x, s.1 ≤ x → x + 1 ≤ S.img x) :
+    ∃ σ : ℤ → Fin (d + 1), (∀ b < K, σ b = σ₀ b) ∧ S.Halts (member S.q L σ) s := by
+  refine S.halting_dense_of_drain hq hpq hL (fun _ => True) (fun _ => True)
+    (fun x => φ ((x % Q).toNat)) m (fun x _ => ?_) (fun _ _ => ⟨0, trivial⟩) σ₀ K s
+    (fun _ => trivial) (fun x hx _ => hesc x hx)
+  have hqQ : (0 : ℤ) < (S.q : ℤ) * Q := by positivity
+  set u : ℕ := (x % ((S.q : ℤ) * Q)).toNat with hu
+  have hu' : (u : ℤ) = x % ((S.q : ℤ) * Q) := Int.toNat_of_nonneg (Int.emod_nonneg _ hqQ.ne')
+  have hult : u < S.q * Q := by
+    have := Int.emod_lt_of_pos x hqQ
+    have : (u : ℤ) < (S.q * Q : ℕ) := by push_cast; omega
+    exact_mod_cast this
+  have hx : x = u + S.q * Q * (x / ((S.q : ℤ) * Q)) := by
+    rw [hu']; have := Int.emod_add_mul_ediv x ((S.q : ℤ) * Q); linarith
+  obtain ⟨c, hc, h⟩ := hcert u hult
+  refine ⟨⟨c, by omega⟩, trivial, ?_⟩
+  have hw : S.wt x = S.w.getD (u % S.q) 0 := by
+    unfold wt
+    congr 1
+    rw [hx, mul_assoc, S.res_shift]
+    unfold res
+    rw [← Int.natCast_mod, Int.toNat_natCast]
+  have hφx : (x % Q).toNat = u % Q := by
+    rw [hx, mul_comm (S.q : ℤ) Q, mul_assoc, Int.add_mul_emod_self_left, ← Int.natCast_mod,
+      Int.toNat_natCast]
+  have hφn : ((S.img x + ((⟨c, by omega⟩ : Fin (d + 1)) : ℕ)) % Q).toNat =
+      ((S.img u + c) % Q).toNat := by
+    congr 1
+    change (S.img x + (c : ℤ)) % Q = _
+    rw [hx, S.img_shift hq Q,
+      show S.img u + S.p * Q * (x / ((S.q : ℤ) * Q)) + c =
+        S.img u + c + Q * (S.p * (x / ((S.q : ℤ) * Q))) by ring,
+      Int.add_mul_emod_self_left]
+  rw [hw, hφx, hφn]
+  exact h
+
 end Sys
 
 /-! ## Instances: the census in the schema -/
@@ -597,15 +655,18 @@ theorem antihydra_t2_recovered {L : ℕ} (hL : 1 ≤ L) (K : ℕ) :
 theorem hydra218_window : hydra218Sys.Window 2 ∧ ¬ hydra218Sys.Window 1 := by
   unfold Sys.Window; decide
 
+/-- #218's image grows from `x ≥ 1`. -/
+theorem hydra218_esc (x : ℤ) (hx : (1, 3).1 ≤ x) : x + 1 ≤ hydra218Sys.img x := by
+  unfold Sys.img Sys.res
+  change x + 1 ≤ 4 * (x / 3) + [1, 2, 3].getD (x % 3).toNat 0
+  have : x % 3 = 0 ∨ x % 3 = 1 ∨ x % 3 = 2 := by omega
+  rcases this with h | h | h <;> simp [h] <;> omega
+
 /-- **T3, target 3 (#218).**  Halting members are dense in `F_{L,2}` for #218. -/
 theorem hydra218_halting_dense {L : ℕ} (hL : 1 ≤ L) (σ₀ : ℤ → Fin 3) (K : ℤ) :
     ∃ σ : ℤ → Fin 3, (∀ b < K, σ b = σ₀ b) ∧ hydra218Sys.Halts (member 3 L σ) (1, 3) :=
   hydra218Sys.halting_dense_of_window (by decide) (by decide) hL hydra218_window.1 σ₀ K (1, 3)
-    (fun x hx => by
-      unfold Sys.img Sys.res
-      change x + 1 ≤ 4 * (x / 3) + [1, 2, 3].getD (x % 3).toNat 0
-      have : x % 3 = 0 ∨ x % 3 = 1 ∨ x % 3 = 2 := by omega
-      rcases this with h | h | h <;> simp [h] <;> omega)
+    hydra218_esc
 
 /-! ## Bigfoot -/
 

@@ -16,6 +16,13 @@ Lean: `lean/Collatz/HydraFoils.lean`, in the default build; no `sorry`, axioms
    `Sys.halting_dense_of_drain`); #218 `d = 2` (`hydra218_window`, `hydra218_halting_dense`);
    Bigfoot: window 14, reachable window 13, drift certificate 7 (`bigfoot_window`,
    `bigfoot_resWindow`, `bigfoot_drift`, `bigfoot_halting_member`).  DONE.
-4. Sharpness: #218's `d_min = 2` is NOT sharp [computed]: lifted game on `u mod 3^10` has value
-   −0.074 at `d = 1`; energy certificate `m = 14`, `φ ≤ 135`, trap = all states.  Lean: IN
-   PROGRESS (see PENDING_WORK.md).
+4. Sharpness: #218's window `d_min = 2` is NOT sharp: `Cert218.hydra218_halting_dense_one`
+   (halting members dense in `F_{L,1}`), via the lifted gate `Sys.halting_dense_of_modCert` and a
+   `3^10`-state potential checked by `decide +kernel` (`Cert218Data`, `Cert218ChunkA/B/C`).  DONE.
+
+## Open / next
+- Bigfoot: lift the drift certificate to `X mod 24·3^j` (game solver `sim/hydra_foils/g.js`
+  generalizes) to push its defect below 7; `d ≤ 6` has no residue-level certificate [computed].
+- Lean statement of the lifted-game values (row 17 of notes/35) is not recorded; only the
+  certificate is.
+- Prior-work search (host session, no egress here).
