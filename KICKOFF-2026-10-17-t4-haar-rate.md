@@ -37,3 +37,7 @@ No `native_decide`, no new axioms; Lean lines ≤ 100 chars; commit after each t
 other notes.  Fornet's repo is read-only reference: cite paths, never copy their Lean (import or
 re-prove).  Do not commit `tmp/`.  Handoff: `HANDOFF-t4-haar-rate.md`.  Signal `box done` when
 target 2 is green and target 1 is either proved or reduced to a precisely stated obstruction.
+
+## Host addendum (2026-10-17)
+
+Prior route to the same conclusion, conditional: Fornet `notes/stationary-cost-variational.md` AC4 plus `iid-affinity-energy.md` (HE2.4) and `iid-refinement-energy.md` (IE2.3) give `a_* <= 8/25` *if* a specified biased self-similar law is absolutely continuous; that hypothesis is unproved there.  Read these before writing notes/37, cite them, and state how the second-moment route differs (it targets any `c > c*`).
