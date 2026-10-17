@@ -110,3 +110,8 @@ Commits `245f07f` (shift recursion), `2934324` (parity form), `25e3809` (multisc
 
 Outcome: the DIRECTION stop rule fired.  There is no viable mechanism for (S) or (C1); notes/37 §9
 records the obstruction.  `box done` signalled.
+
+**Scope note for the host.**  `box done` reports 9 open sorries repo-wide.  None is on this
+track: they sit in other tracks' modules (`Tao.lean`, `Korec.lean`, `Bigfoot/*`), outside the T4
+kickoff.  `HaarDigitRate.lean` and `HaarShift.lean` have no `sorry`.  This run should be scoped
+with `--done-when 'sorry-free:lean/Collatz/Antihydra/HaarShift.lean'` (or HaarDigitRate.lean).
