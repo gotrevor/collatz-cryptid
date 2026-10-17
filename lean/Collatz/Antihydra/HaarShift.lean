@@ -180,4 +180,172 @@ theorem crossEnergy_candidate_one : crossEnergy candidate 1 = 456 / 625 := by
   simp [shiftKernel, pairLaw, candidate]
   norm_num
 
+/-! ## The kernel as an operator, and the parity form of the crux
+
+`kernelOp p` is the one-step operator `𝒦` of the shift kernel acting on arbitrary test functions,
+so `shiftKernel p N = 𝒦^N 1`.  Since `𝒦 1 = 1 + β χ` with `χ(δ) = (−1)^δ` and
+`β = (p₀ − p₁ + p₂)²`, the cross-energy increments are the weighted parity correlations
+`P_n = (𝒦^n χ)(1)` (`crossEnergy_succ`, `crossEnergy_eq_one_add_sum`).  So the crux is exactly a
+bound on the partial sums of `P_n` (`crossEnergyBounded_iff_parity`).  The odd parents cancel
+exactly in `𝒦 χ` (`kernelOp_parity`), which is why `P_n` carries a 4-adic character. -/
+
+/-- The one-step operator of the shift kernel on a test function `g : ℕ → ℝ`. -/
+noncomputable def kernelOp (p : ℕ → ℝ) (g : ℕ → ℝ) (δ : ℕ) : ℝ :=
+  if δ % 2 = 1 then 2 * pairLaw p 1 * (g (3 * (δ / 2) + 1) + g (3 * (δ / 2) + 2))
+  else if δ = 0 then 2 * pairLaw p 0 * g 0 + 4 * pairLaw p 2 * g 1
+  else 2 * pairLaw p 0 * g (3 * (δ / 2)) +
+    2 * pairLaw p 2 * (g (3 * (δ / 2) - 1) + g (3 * (δ / 2) + 1))
+
+theorem shiftKernel_succ (p : ℕ → ℝ) (N : ℕ) :
+    shiftKernel p (N + 1) = kernelOp p (shiftKernel p N) := by
+  funext δ; simp only [shiftKernel, kernelOp]
+
+theorem shiftKernel_eq_iterate (p : ℕ → ℝ) (N : ℕ) :
+    shiftKernel p N = (kernelOp p)^[N] (fun _ => 1) := by
+  induction N with
+  | zero => funext δ; simp [shiftKernel]
+  | succ N ih => rw [shiftKernel_succ, ih, Function.iterate_succ_apply']
+
+theorem kernelOp_linear (p : ℕ → ℝ) (a b : ℝ) (f g : ℕ → ℝ) :
+    kernelOp p (fun δ => a * f δ + b * g δ) = fun δ => a * kernelOp p f δ + b * kernelOp p g δ := by
+  funext δ; simp only [kernelOp]; split_ifs <;> ring
+
+theorem iterate_kernelOp_linear (p : ℕ → ℝ) (a b : ℝ) (n : ℕ) : ∀ f g : ℕ → ℝ,
+    (kernelOp p)^[n] (fun δ => a * f δ + b * g δ) =
+      fun δ => a * (kernelOp p)^[n] f δ + b * (kernelOp p)^[n] g δ := by
+  induction n with
+  | zero => intro f g; rfl
+  | succ n ih =>
+    intro f g
+    rw [Function.iterate_succ_apply, Function.iterate_succ_apply, Function.iterate_succ_apply,
+      kernelOp_linear, ih]
+
+/-- The parity character `χ(δ) = (−1)^δ`. -/
+noncomputable def parityChar (δ : ℕ) : ℝ := (-1) ^ δ
+
+/-- The weighted parity correlation `P_n = (𝒦^n χ)(1) = ∑_δ m_n(δ)(−1)^δ` of the forward shift
+measure `m_n` from `δ = 1`. -/
+noncomputable def parityCorr (p : ℕ → ℝ) (n : ℕ) : ℝ := (kernelOp p)^[n] parityChar 1
+
+/-- The parity bias `β = (p₀ − p₁ + p₂)² = (2π(0) + 4π(2) − 4π(1))/2`. -/
+noncomputable def parityBias (p : ℕ → ℝ) : ℝ := (p 0 - p 1 + p 2) ^ 2
+
+theorem parityChar_of_odd (δ : ℕ) (h : δ % 2 = 1) : parityChar δ = -1 := by
+  rw [parityChar, neg_one_pow_eq_pow_mod_two, h, pow_one]
+
+theorem parityChar_of_even (δ : ℕ) (h : δ % 2 = 0) : parityChar δ = 1 := by
+  rw [parityChar, neg_one_pow_eq_pow_mod_two, h, pow_zero]
+
+/-- `𝒦 1 = 1 + β χ` for a digit law. -/
+theorem kernelOp_one (p : ℕ → ℝ) (hp : IsDigitLaw p) :
+    kernelOp p (fun _ => 1) = fun δ => 1 * 1 + parityBias p * parityChar δ := by
+  have h := hp.2
+  funext δ
+  simp only [kernelOp, parityBias, pairLaw]
+  split_ifs with h1 h0
+  · rw [parityChar_of_odd δ h1]
+    linear_combination (p 0 + p 1 + p 2 + 1) * h
+  · rw [parityChar_of_even δ (by omega)]
+    linear_combination (p 0 + p 1 + p 2 + 1) * h
+  · rw [parityChar_of_even δ (by omega)]
+    linear_combination (p 0 + p 1 + p 2 + 1) * h
+
+/-- **Increment identity**: `Λ_{n+1} = Λ_n + β P_n`. -/
+theorem crossEnergy_succ (p : ℕ → ℝ) (hp : IsDigitLaw p) (n : ℕ) :
+    crossEnergy p (n + 1) = crossEnergy p n + parityBias p * parityCorr p n := by
+  rw [crossEnergy_eq_shiftKernel, crossEnergy_eq_shiftKernel, shiftKernel_eq_iterate,
+    shiftKernel_eq_iterate, Function.iterate_succ_apply, kernelOp_one p hp,
+    iterate_kernelOp_linear, parityCorr]
+  ring
+
+/-- `Λ_N = 1 + β ∑_{n<N} P_n`. -/
+theorem crossEnergy_eq_one_add_sum (p : ℕ → ℝ) (hp : IsDigitLaw p) (N : ℕ) :
+    crossEnergy p N = 1 + parityBias p * ∑ n ∈ range N, parityCorr p n := by
+  induction N with
+  | zero => rw [crossEnergy_eq_shiftKernel]; simp [shiftKernel]
+  | succ N ih => rw [crossEnergy_succ p hp, ih, sum_range_succ]; ring
+
+/-- **The crux in parity form**: for a digit law with `p₁ ≠ p₀ + p₂`, the adjacent cross-energy
+is bounded iff the partial sums of the weighted parity correlations are bounded above. -/
+theorem crossEnergyBounded_iff_parity (p : ℕ → ℝ) (hp : IsDigitLaw p) (hβ : 0 < parityBias p) :
+    CrossEnergyBounded p ↔ ∃ C : ℝ, ∀ N, ∑ n ∈ range N, parityCorr p n ≤ C := by
+  constructor
+  · rintro ⟨C, hC⟩
+    refine ⟨(C - 1) / parityBias p, fun N => ?_⟩
+    have := hC N
+    rw [crossEnergy_eq_one_add_sum p hp] at this
+    rw [le_div_iff₀ hβ]; linarith
+  · rintro ⟨C, hC⟩
+    refine ⟨1 + parityBias p * C, fun N => ?_⟩
+    rw [crossEnergy_eq_one_add_sum p hp]
+    have := mul_le_mul_of_nonneg_left (hC N) hβ.le
+    linarith
+
+/-- The 4-adic character `χ₄(δ) = 1[δ even]·(−1)^{δ/2}`. -/
+noncomputable def char4 (δ : ℕ) : ℝ := if δ % 2 = 0 then (-1) ^ (δ / 2) else 0
+
+/-- **Parity cancellation**: `𝒦 χ = (2π(0) − 4π(2)) χ₄`.  The two successors of an odd shift are
+consecutive integers with equal weights, so odd parents contribute nothing. -/
+theorem kernelOp_parity (p : ℕ → ℝ) :
+    kernelOp p parityChar = fun δ => (2 * pairLaw p 0 - 4 * pairLaw p 2) * char4 δ := by
+  funext δ
+  obtain ⟨u, rfl | rfl⟩ := Nat.even_or_odd' δ
+  · rcases u with _ | u
+    · simp [kernelOp, char4, parityChar]; ring
+    · have h2 : 2 * (u + 1) / 2 = u + 1 := by omega
+      simp only [kernelOp, char4, parityChar, h2, if_neg (show ¬ 2 * (u + 1) % 2 = 1 by omega),
+        if_neg (show ¬ 2 * (u + 1) = 0 by omega), if_pos (show 2 * (u + 1) % 2 = 0 by omega)]
+      rw [show 3 * (u + 1) - 1 = 2 * (u + 1) + u by omega,
+        show 3 * (u + 1) = 2 * (u + 1) + (u + 1) by ring,
+        show 2 * (u + 1) + (u + 1) + 1 = 2 * (u + 2) + u by ring]
+      simp only [pow_add, pow_mul, neg_one_sq, one_pow, one_mul, pow_one]
+      ring
+  · have h2 : (2 * u + 1) / 2 = u := by omega
+    simp only [kernelOp, char4, parityChar, h2, if_pos (show (2 * u + 1) % 2 = 1 by omega),
+      if_neg (show ¬ (2 * u + 1) % 2 = 0 by omega)]
+    rw [show 3 * u + 1 = 2 * u + u + 1 by ring, show 3 * u + 2 = 2 * (u + 1) + u by ring]
+    simp only [pow_add, pow_mul, neg_one_sq, one_pow, one_mul, pow_one]
+    ring
+
+/-- `P_{n+1} = (2π(0) − 4π(2)) (𝒦^n χ₄)(1)`. -/
+theorem parityCorr_succ (p : ℕ → ℝ) (n : ℕ) :
+    parityCorr p (n + 1) = (2 * pairLaw p 0 - 4 * pairLaw p 2) * (kernelOp p)^[n] char4 1 := by
+  have h := iterate_kernelOp_linear p (2 * pairLaw p 0 - 4 * pairLaw p 2) 0 n char4 char4
+  simp only [zero_mul, add_zero] at h
+  rw [parityCorr, Function.iterate_succ_apply, kernelOp_parity, h]
+
+theorem candidate_parityBias : parityBias candidate = 169 / 625 := by
+  simp only [parityBias, candidate]; norm_num
+
+/-- **Open (sufficient for the crux).**  The weighted parity correlations of the shift chain are
+absolutely summable.  It implies `CrossEnergyBounded p` (`crossEnergyBounded_of_paritySummable`),
+which needs only bounded partial sums.
+
+Evidence [computed, `tools/sandbox/haar_digit_rate/parity_corr.c`, the forward recursion in doubles, exact up to rounding]: for the
+candidate `(18,6,1)/25`, `P_n/Λ_n` is `+8.1e−2` (n=10), `−1.5e−2` (20), `+1.8e−2` (30),
+`+2.9e−3` (40), `−4.6e−3` (42).  The decay is slow, about `e^{−0.07 n}`, and the signs oscillate.
+`Λ_n` stays in `[0.534, 0.551]` for `20 ≤ n ≤ 44`.  Control: the multiplier-1 sibling
+(`x ↦ (x + d)/2`, uniform `p`) has `Λ_n → ∞`, so its `P_n` are not summable.
+
+Finer scales [computed, `fwd_tv.c`]: the total-variation distance of the forward measure from
+uniform mod `2^k` fits `TV_{n,k} ≈ 0.18·exp(−0.10 n + 0.33 k)` on `16 ≤ n ≤ 44`, `k ≤ 20`.  No
+mechanism for the decay is known; it is a 2-adic analogue of the finest-scale smoothness of a
+self-similar measure with algebraic contraction `2/3` (notes/37 §8–9).  Confidence that it holds
+for the candidate: ~65%. -/
+def ParityCorrSummable (p : ℕ → ℝ) : Prop := Summable (fun n => |parityCorr p n|)
+
+theorem crossEnergyBounded_of_paritySummable (p : ℕ → ℝ) (hp : IsDigitLaw p)
+    (hβ : 0 < parityBias p) (h : ParityCorrSummable p) : CrossEnergyBounded p := by
+  rw [crossEnergyBounded_iff_parity p hp hβ]
+  refine ⟨∑' n, |parityCorr p n|, fun N => ?_⟩
+  calc ∑ n ∈ range N, parityCorr p n ≤ ∑ n ∈ range N, |parityCorr p n| :=
+        sum_le_sum fun n _ => le_abs_self _
+    _ ≤ ∑' n, |parityCorr p n| := h.sum_le_tsum _ fun n _ => abs_nonneg _
+
+/-- The headline from the parity form: summable parity correlations give `a_* ≤ 8/25`. -/
+theorem candidate_crossEnergyBounded_of_paritySummable (h : ParityCorrSummable candidate) :
+    CrossEnergyBounded candidate :=
+  crossEnergyBounded_of_paritySummable candidate candidate_isDigitLaw
+    (by rw [candidate_parityBias]; norm_num) h
+
 end Collatz.Antihydra.HaarDigitRate
