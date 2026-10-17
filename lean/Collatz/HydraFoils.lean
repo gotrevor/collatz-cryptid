@@ -35,7 +35,7 @@ constant on blocks of `qL` consecutive integers (`member q L σ`, block `x / (qL
 
 namespace Collatz.HydraFoils
 
-open Collatz.Bigfoot
+open Collatz.Bigfoot Collatz.Antihydra
 
 /-- A system in int-y1's `Hydra` schema: slope `p/q`, geometric offsets `g`, walk offsets `w`. -/
 structure Sys where
@@ -386,6 +386,292 @@ theorem window_two (h2 : S.q = 2) {r : ℕ} (hr : r < 2) (hw : S.w.getD r 0 < 0)
   rw [h2, show (a + (r + 2 - a) % 2) % 2 = r by omega]
   exact hw
 
+/-! ## Residue-table certificates
+
+The steering only sees `x` through its residue `r = x mod q` and the next digit
+`t = ⌊x/q⌋ mod q`, so a certificate on residues is a finite check (`decide`). -/
+
+/-- The residue of `p t + g[r] + c` mod `q`. -/
+def resNext (r t c : ℕ) : ℕ := (((S.p : ℤ) * t + S.g.getD r 0 + c) % S.q).toNat
+
+theorem res_img_add (hq : 0 < S.q) (x : ℤ) (c : ℕ) :
+    S.res (S.img x + c) = S.resNext (S.res x) ((x / S.q) % S.q).toNat c := by
+  have ht : (((x / S.q) % S.q).toNat : ℤ) = (x / S.q) % S.q :=
+    Int.toNat_of_nonneg (Int.emod_nonneg _ (by omega))
+  unfold res resNext img
+  rw [ht]
+  congr 1
+  exact ((((Int.mod_modEq (x / S.q) S.q).mul_left (S.p : ℤ)).add_right _).add_right _).symm
+
+theorem digit_lt (hq : 0 < S.q) (x : ℤ) : ((x / S.q) % S.q).toNat < S.q := by
+  have h1 := Int.emod_nonneg (x / S.q) (b := (S.q : ℤ)) (by omega)
+  have h2 := Int.emod_lt_of_pos (x / S.q) (b := (S.q : ℤ)) (by omega)
+  omega
+
+/-- A residue-table drain certificate at defect `d`: from every trap residue `r ∈ R` and next
+digit `t`, some choice `c ≤ d` lands in `R` with the potential `m w + φ` falling by one; from
+every entry residue `r ∈ E`, some choice lands in `R`. -/
+def ResDrain (d : ℕ) (E R : ℕ → Bool) (φ : ℕ → ℕ) (m : ℕ) : Prop :=
+  (∀ r < S.q, R r = true → ∀ t < S.q, ∃ c ≤ d, R (S.resNext r t c) = true ∧
+      (m : ℤ) * S.w.getD r 0 + φ (S.resNext r t c) + 1 ≤ φ r) ∧
+    ∀ r < S.q, E r = true → ∀ t < S.q, ∃ c ≤ d, R (S.resNext r t c) = true
+
+/-- **Residue-table gate.**  A residue-table certificate makes halting members dense, provided
+the starting member's orbit stays in the entry residues and the image grows there. -/
+theorem halting_dense_of_resDrain (hq : 0 < S.q) (hpq : S.q < S.p) {d L : ℕ} (hL : 1 ≤ L)
+    {E R : ℕ → Bool} {φ : ℕ → ℕ} {m : ℕ} (hD : S.ResDrain d E R φ m)
+    (σ₀ : ℤ → Fin (d + 1)) (K : ℤ) (s : ℤ × ℤ)
+    (horig : ∀ n, E (S.res (S.orbit (member S.q L σ₀) s n).1) = true)
+    (hesc : ∀ x, s.1 ≤ x → E (S.res x) = true → x + 1 ≤ S.img x) :
+    ∃ σ : ℤ → Fin (d + 1), (∀ b < K, σ b = σ₀ b) ∧ S.Halts (member S.q L σ) s := by
+  refine S.halting_dense_of_drain hq hpq hL (fun x => E (S.res x) = true)
+    (fun x => R (S.res x) = true) (fun x => φ (S.res x)) m (fun x hx => ?_) (fun x hx => ?_)
+    σ₀ K s horig hesc
+  · obtain ⟨c, hc, h1, h2⟩ := hD.1 _ (S.res_lt hq x) hx _ (S.digit_lt hq x)
+    exact ⟨⟨c, by omega⟩, by simp only [S.res_img_add hq]; exact h1,
+      by simp only [S.res_img_add hq, wt]; exact h2⟩
+  · obtain ⟨c, hc, h1⟩ := hD.2 _ (S.res_lt hq x) hx _ (S.digit_lt hq x)
+    exact ⟨⟨c, by omega⟩, by simp only [S.res_img_add hq]; exact h1⟩
+
 end Sys
+
+/-! ## Instances: the census in the schema -/
+
+/-- Antihydra's data (`Census.antihydra`). -/
+def antihydraSys : Sys := ⟨3, 2, [0, 1], [2, -1]⟩
+/-- int-y1's #323 (`Census.hydra323`). -/
+def hydra323Sys : Sys := ⟨3, 2, [1, 2], [2, -1]⟩
+/-- BB(2,5) Hydra (`Census.hydraBB25`). -/
+def hydraBB25Sys : Sys := ⟨3, 2, [3, 3], [-1, 2]⟩
+/-- int-y1's #218 (`Census.hydra218`). -/
+def hydra218Sys : Sys := ⟨4, 3, [1, 2, 3], [3, 1, -1]⟩
+/-- Bigfoot in the `X` coordinate (`Bigfoot.Dyn.nonhalt_iff_hydra`). -/
+def bigfootSys : Sys := ⟨32, 24, Dyn.bigfootH, Dyn.bigfootW⟩
+
+theorem antihydra_iff : Census.antihydra ↔ ¬ antihydraSys.Halts (fun _ => (0 : Fin 2)) (8, 0) :=
+  antihydraSys.hydra_iff 1 (8, 0)
+
+theorem hydra323_iff : Census.hydra323 ↔ ¬ hydra323Sys.Halts (fun _ => (0 : Fin 2)) (1, 2) :=
+  hydra323Sys.hydra_iff 1 (1, 2)
+
+theorem hydraBB25_iff : Census.hydraBB25 ↔ ¬ hydraBB25Sys.Halts (fun _ => (0 : Fin 2)) (3, 0) :=
+  hydraBB25Sys.hydra_iff 1 (3, 0)
+
+theorem hydra218_iff : Census.hydra218 ↔ ¬ hydra218Sys.Halts (fun _ => (0 : Fin 3)) (1, 3) :=
+  hydra218Sys.hydra_iff 2 (1, 3)
+
+theorem bigfoot_iff :
+    (∀ n, Dyn.orbit n ≠ none) ↔ ¬ bigfootSys.Halts (fun _ => (0 : Fin 1)) (10, 2) :=
+  Dyn.nonhalt_iff_hydra.trans (bigfootSys.hydra_iff 0 (10, 2))
+
+/-- For `q = 2`, the image read off by parity. -/
+theorem img_two (S : Sys) (h2 : S.q = 2) (a b : ℤ) (hg : S.g = [a, b]) (x : ℤ) :
+    S.img x = S.p * (x / 2) + if x % 2 = 0 then a else b := by
+  unfold Sys.img Sys.res
+  rw [h2, hg]
+  rcases Int.emod_two_eq_zero_or_one x with h | h <;> simp [h]
+
+/-- **T3, target 2 (Antihydra).**  Halting members are dense in `F_{L,1}` for Antihydra's data:
+every member agrees on all blocks `< K` with a member that halts from `(8, 0)`. -/
+theorem antihydra_halting_dense {L : ℕ} (hL : 1 ≤ L) (σ₀ : ℤ → Fin 2) (K : ℤ) :
+    ∃ σ : ℤ → Fin 2, (∀ b < K, σ b = σ₀ b) ∧ antihydraSys.Halts (member 2 L σ) (8, 0) :=
+  antihydraSys.halting_dense_of_window (by decide) (by decide) hL
+    (antihydraSys.window_two rfl (r := 1) (by norm_num) (by decide)) σ₀ K (8, 0)
+    (fun x hx => by
+      rw [img_two antihydraSys rfl 0 1 rfl]
+      change x + 1 ≤ 3 * (x / 2) + _
+      split_ifs <;> omega)
+
+/-- **T3, target 2 (#323).** -/
+theorem hydra323_halting_dense {L : ℕ} (hL : 1 ≤ L) (σ₀ : ℤ → Fin 2) (K : ℤ) :
+    ∃ σ : ℤ → Fin 2, (∀ b < K, σ b = σ₀ b) ∧ hydra323Sys.Halts (member 2 L σ) (1, 2) :=
+  hydra323Sys.halting_dense_of_window (by decide) (by decide) hL
+    (hydra323Sys.window_two rfl (r := 1) (by norm_num) (by decide)) σ₀ K (1, 2)
+    (fun x hx => by
+      rw [img_two hydra323Sys rfl 1 2 rfl]
+      change x + 1 ≤ 3 * (x / 2) + _
+      split_ifs <;> omega)
+
+/-- **T3, target 2 (BB(2,5) Hydra).** -/
+theorem hydraBB25_halting_dense {L : ℕ} (hL : 1 ≤ L) (σ₀ : ℤ → Fin 2) (K : ℤ) :
+    ∃ σ : ℤ → Fin 2, (∀ b < K, σ b = σ₀ b) ∧ hydraBB25Sys.Halts (member 2 L σ) (3, 0) :=
+  hydraBB25Sys.halting_dense_of_window (by decide) (by decide) hL
+    (hydraBB25Sys.window_two rfl (r := 0) (by norm_num) (by decide)) σ₀ K (3, 0)
+    (fun x hx => by
+      rw [img_two hydraBB25Sys rfl 3 3 rfl]
+      change x + 1 ≤ 3 * (x / 2) + _
+      split_ifs <;> omega)
+
+/-! ## T2's family is the odd-supported part of `F_{L,1}` for Antihydra -/
+
+/-- T2's choice `τ : ℕ → Bool`, read in the generic family: `+1` (ceiling) at the odd values
+where `τ` says so, `0` elsewhere (T2's choice is inert at even values). -/
+def t2emb (τ : ℕ → Bool) : ℤ → Fin 2 := fun x => if x % 2 = 1 ∧ τ x.toNat = true then 1 else 0
+
+theorem t2emb_floor : t2emb Foils.floorChoice = fun _ => 0 := by
+  funext x; simp [t2emb, Foils.floorChoice]
+
+theorem t2_step_fst (τ : ℕ → Bool) (u : ℕ × ℕ) (y : ℤ) :
+    ((Foils.step τ u).1 : ℤ) = (antihydraSys.step (t2emb τ) ((u.1 : ℤ), y)).1 := by
+  simp only [Foils.step, Sys.step]
+  rw [img_two antihydraSys rfl 0 1 rfl]
+  change (((3 * u.1 + if τ u.1 then 1 else 0) / 2 : ℕ) : ℤ) =
+    3 * ((u.1 : ℤ) / 2) + (if (u.1 : ℤ) % 2 = 0 then 0 else 1) + ((t2emb τ u.1 : ℕ) : ℤ)
+  simp only [t2emb, Int.toNat_natCast]
+  split_ifs <;> simp_all <;> omega
+
+theorem t2_orbit_fst (τ : ℕ → Bool) (x c : ℕ) (n : ℕ) :
+    ((Foils.orbit τ (x, c) n).1 : ℤ) = (antihydraSys.orbit (t2emb τ) ((x : ℤ), (c : ℤ)) n).1 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [Foils.orbit_succ, Sys.orbit_succ, t2_step_fst τ _ (antihydraSys.orbit _ _ n).2, ih]
+
+/-- Before T2's machine halts, its counter is the generic walk. -/
+theorem t2_orbit_snd (τ : ℕ → Bool) (x c : ℕ) (n : ℕ)
+    (h : ∀ m < n, ¬ Foils.HaltsAt τ (x, c) m) :
+    ((Foils.orbit τ (x, c) n).2 : ℤ) =
+      (antihydraSys.orbit (t2emb τ) ((x : ℤ), (c : ℤ)) n).2 := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    have ih := ih fun m hm => h m (by omega)
+    have hn := h n (by omega)
+    have hf := t2_orbit_fst τ x c n
+    rw [Foils.orbit_succ, Sys.orbit_succ]
+    simp only [Foils.HaltsAt] at hn
+    simp only [Sys.step, Sys.wt, Sys.res, ← hf, ← ih]
+    change _ = _ + [2, -1].getD (((Foils.orbit τ (x, c) n).1 : ℤ) % 2).toNat 0
+    rcases Nat.mod_two_eq_zero_or_one (Foils.orbit τ (x, c) n).1 with he | ho
+    · rw [Foils.step_snd_even _ _ he]
+      have : ((Foils.orbit τ (x, c) n).1 : ℤ) % 2 = 0 := by omega
+      rw [this]; simp
+    · rw [Foils.step_snd_odd _ _ ho]
+      have hc : (Foils.orbit τ (x, c) n).2 ≠ 0 := fun hc => hn ⟨ho, hc⟩
+      have : ((Foils.orbit τ (x, c) n).1 : ℤ) % 2 = 1 := by omega
+      rw [this]; simp; omega
+
+/-- **T2 and T3 agree.**  T2's member `τ` halts from `(x, c)` iff its embedding in the generic
+family for Antihydra's data halts from `(x, c)`. -/
+theorem antihydra_t2_halts_iff (τ : ℕ → Bool) (x c : ℕ) :
+    Foils.Halts τ (x, c) ↔ antihydraSys.Halts (t2emb τ) ((x : ℤ), (c : ℤ)) := by
+  classical
+  constructor
+  · intro h
+    have hn : Foils.HaltsAt τ (x, c) (Nat.find h) := Nat.find_spec h
+    have hy := t2_orbit_snd τ x c (Nat.find h) fun m hm => Nat.find_min h hm
+    have hf := t2_orbit_fst τ x c (Nat.find h)
+    refine ⟨Nat.find h + 1, ?_⟩
+    rw [Sys.orbit_succ]
+    simp only [Sys.step, Sys.wt, Sys.res, ← hf, ← hy]
+    change _ + [2, -1].getD (((Foils.orbit τ (x, c) (Nat.find h)).1 : ℤ) % 2).toNat 0 < 0
+    have : ((Foils.orbit τ (x, c) (Nat.find h)).1 : ℤ) % 2 = 1 := by have := hn.1; omega
+    rw [this, hn.2]; simp
+  · rintro ⟨n, hn⟩
+    by_contra hnh
+    have := t2_orbit_snd τ x c n fun m _ hm => hnh ⟨m, hm⟩
+    omega
+
+/-- T2's block members are the odd-supported block members of `F_{L,1}` (at values `≥ 0`). -/
+theorem t2_member_emb (L : ℕ) (σ : ℕ → Bool) (x : ℤ) (hx : 0 ≤ x) :
+    t2emb (Foils.member L σ) x =
+      if x % 2 = 1 then member 2 L (fun b => if σ b.toNat then (1 : Fin 2) else 0) x else 0 := by
+  obtain ⟨n, rfl⟩ := Int.eq_ofNat_of_zero_le hx
+  have hb : ((n : ℤ) / ((2 * L : ℕ) : ℤ)).toNat = n / (2 * L) := by
+    rw [← Int.natCast_div, Int.toNat_natCast]
+  simp only [t2emb, member, blk, Foils.member, Foils.blk, Int.toNat_natCast, hb]
+  by_cases h1 : (n : ℤ) % 2 = 1 <;> by_cases h2 : σ (n / (2 * L)) = true <;> simp [h1, h2]
+
+/-- **T2 recovered in the schema.**  For every `L ≥ 1` and `K`, a T2 member agreeing with
+Antihydra below block `K` halts from `(8, 0)` as a member of the generic family. -/
+theorem antihydra_t2_recovered {L : ℕ} (hL : 1 ≤ L) (K : ℕ) :
+    ∃ σ : ℕ → Bool, (∀ b < K, σ b = false) ∧
+      antihydraSys.Halts (t2emb (Foils.member L σ)) (8, 0) := by
+  obtain ⟨σ, hσ, h⟩ := Foils.exists_halting_member hL K
+  exact ⟨σ, hσ, (antihydra_t2_halts_iff _ 8 0).mp h⟩
+
+/-- #218 meets the window condition at defect `2`, not at defect `1` (`d_min = 2`). -/
+theorem hydra218_window : hydra218Sys.Window 2 ∧ ¬ hydra218Sys.Window 1 := by
+  unfold Sys.Window; decide
+
+/-- **T3, target 3 (#218).**  Halting members are dense in `F_{L,2}` for #218. -/
+theorem hydra218_halting_dense {L : ℕ} (hL : 1 ≤ L) (σ₀ : ℤ → Fin 3) (K : ℤ) :
+    ∃ σ : ℤ → Fin 3, (∀ b < K, σ b = σ₀ b) ∧ hydra218Sys.Halts (member 3 L σ) (1, 3) :=
+  hydra218Sys.halting_dense_of_window (by decide) (by decide) hL hydra218_window.1 σ₀ K (1, 3)
+    (fun x hx => by
+      unfold Sys.img Sys.res
+      change x + 1 ≤ 4 * (x / 3) + [1, 2, 3].getD (x % 3).toNat 0
+      have : x % 3 = 0 ∨ x % 3 = 1 ∨ x % 3 = 2 := by omega
+      rcases this with h | h | h <;> simp [h] <;> omega)
+
+/-! ## Bigfoot -/
+
+/-- Bigfoot's reachable residues of `X mod 24`: `X ≢ 0 (mod 4)` (`X ≡ 3c`, `c ∈ {2, 3, 5}`). -/
+def bigfootE (r : ℕ) : Bool := r % 4 != 0
+
+/-- Residues of `X mod 24` with negative walk: `14, 17, 23`. -/
+def bigfootNeg (r : ℕ) : Bool := decide (Dyn.bigfootW.getD r 0 < 0)
+
+/-- The plain cyclic window condition needs defect `14` for Bigfoot. -/
+theorem bigfoot_window : bigfootSys.Window 14 ∧ ¬ bigfootSys.Window 13 := by
+  unfold Sys.Window; decide +kernel
+
+/-- **The window condition on the reachable set needs defect `13`**: from reachable residues,
+some choice `≤ 13` lands on a negative residue, and `12` does not suffice. -/
+theorem bigfoot_resWindow :
+    bigfootSys.ResDrain 13 bigfootE bigfootNeg (fun _ => 0) 1 ∧
+      ¬ bigfootSys.ResDrain 12 bigfootE bigfootNeg (fun _ => 0) 1 := by
+  unfold Sys.ResDrain Sys.resNext
+  exact ⟨by decide +kernel, by decide +kernel⟩
+
+/-- Bigfoot's potential, found by value iteration on the residue game (`notes/35` §3). -/
+def bigfootφ : List ℕ := [2, 6, 3, 1, 2, 2, 2, 6, 2, 3, 6, 2, 2, 5, 0, 3, 2, 0, 2, 5, 2, 1, 5, 0]
+
+/-- **A drift certificate at defect `7`.**  With the trap the whole residue set, multiplier `3`
+and potential `bigfootφ`, every residue and next digit admit a choice `≤ 7` along which
+`3 a + φ` falls by one.  (Mean walk `≤ -1/3` per step under steering.) -/
+theorem bigfoot_drift :
+    bigfootSys.ResDrain 7 bigfootE (fun _ => true) (fun r => bigfootφ.getD r 0) 3 := by
+  unfold Sys.ResDrain Sys.resNext; decide +kernel
+
+/-- The all-zero map keeps `X ≢ 0 (mod 4)`. -/
+theorem bigfoot_E_step (x : ℤ) (h : bigfootE (bigfootSys.res x) = true) :
+    bigfootE (bigfootSys.res (bigfootSys.img x + ((0 : ℕ) : ℤ))) = true := by
+  have hfin : ∀ r < 24, bigfootE r = true → ∀ t < 24,
+      bigfootE (bigfootSys.resNext r t 0) = true := by
+    unfold Sys.resNext; decide +kernel
+  rw [bigfootSys.res_img_add (by decide)]
+  exact hfin _ (bigfootSys.res_lt (by decide) x) h _ (bigfootSys.digit_lt (by decide) x)
+
+theorem bigfoot_E_orbit {d : ℕ} (L : ℕ) (n : ℕ) :
+    bigfootE (bigfootSys.res
+      (bigfootSys.orbit (member 24 L (fun _ => (0 : Fin (d + 1)))) (10, 2) n).1) = true := by
+  induction n with
+  | zero => exact (by decide : bigfootE (bigfootSys.res 10) = true)
+  | succ n ih =>
+    rw [Sys.orbit_succ]
+    exact bigfoot_E_step _ ih
+
+/-- At reachable residues above `10`, Bigfoot's image grows. -/
+theorem bigfoot_esc (x : ℤ) (hx : 10 ≤ x) (hE : bigfootE (bigfootSys.res x) = true) :
+    x + 1 ≤ bigfootSys.img x := by
+  have hfin : ∀ r < 24, bigfootE r = true →
+      (10 ≤ r → (r : ℤ) + 1 ≤ Dyn.bigfootH.getD r 0) ∧ (r : ℤ) + 1 ≤ 8 + Dyn.bigfootH.getD r 0 := by
+    decide +kernel
+  have hr : bigfootSys.res x < 24 := bigfootSys.res_lt (by decide) x
+  obtain ⟨h1, h2⟩ := hfin _ hr hE
+  have hres : (bigfootSys.res x : ℤ) = x % 24 := Int.toNat_of_nonneg (Int.emod_nonneg _ (by decide))
+  change x + 1 ≤ 32 * (x / 24) + Dyn.bigfootH.getD (bigfootSys.res x) 0
+  rcases (show x / 24 = 0 ∨ 1 ≤ x / 24 by omega) with ht | ht
+  · have := h1 (by omega)
+    omega
+  · omega
+
+/-- **T3, target 3 (Bigfoot).**  For every `L ≥ 1` and `K`, some member of `F_{L,7}` agreeing
+with Bigfoot on every block `< K` halts from `(10, 2)`. -/
+theorem bigfoot_halting_member {L : ℕ} (hL : 1 ≤ L) (K : ℤ) :
+    ∃ σ : ℤ → Fin 8, (∀ b < K, σ b = 0) ∧ bigfootSys.Halts (member 24 L σ) (10, 2) :=
+  bigfootSys.halting_dense_of_resDrain (by decide) (by decide) hL bigfoot_drift (fun _ => 0) K
+    (10, 2) (bigfoot_E_orbit L) (fun x hx hE => bigfoot_esc x hx hE)
 
 end Collatz.HydraFoils
