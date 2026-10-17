@@ -76,3 +76,14 @@ Commit each green checkpoint, and record status at the bottom of this file.
 ## Status
 
 - 2026-10-17: skeleton builds green; one `sorry` (`halts_of_wf`).
+- 2026-10-17 lap 1: route item 1 is underway in `GoodsteinTM/Hydra.lean`.  Added the executable
+  rightmost move `chop`, with four kernel-computed controls matching `tools/goodstein_tm/check.py`,
+  and proved `chop_preserves_wf` for every copy count.  The proof identifies the rightmost parent
+  selected by the level encoding as depth `k - 1`, then checks the copied block internally and at
+  every concatenation boundary.  Verification:
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts` — FORMALIZE-TIER GREEN (the one
+  pre-existing `halts_of_wf` debt remains).  Current blocker: strict well-founded descent of `chop`;
+  `Ordinal.nadd` is absent at this mathlib pin.  Next attack: port the already kernel-checked
+  `Relation.CutExpand` recursive path order from lean-gallery's Hydra engine, define the preorder
+  level-sequence/tree bridge, and prove `chop` realizes one strict tree-hydra step.  Only after that
+  bridge is green, proceed to the tape encoding in route item 2.
