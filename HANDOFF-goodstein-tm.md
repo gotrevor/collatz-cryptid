@@ -3,53 +3,50 @@
 Branch `wip/goodstein-tm-lean`.  Operator plan: `GOODSTEIN-TM-NEXT.md`.  Scoped completion target:
 `sorry-free:lean/Collatz/GoodsteinTM`.
 
-## Checkpoint (2026-10-17, review lap 3)
+## Checkpoint (2026-10-17, lap 4)
 
-Route item 1 (hydra termination) is complete in
-`lean/Collatz/GoodsteinTM/HydraTree.lean`:
+Route item 1 remains complete (`chopBattle_terminates`).  Route items 2–3 advanced substantially
+in `lean/Collatz/GoodsteinTM/Sim.lean`:
 
-* `Tree.exists_forestLevelsAt` is a length-inductive parser/inverse for preorder level sequences;
-  `exists_forestLevelsAt_of_wf` proves every machine `WF` sequence has a rose-forest model.
-* `chop_append_forestLevelsAt_of_rightChop` handles arbitrary positive depth and prefix context,
-  closing the `RightChop.deep` bridge that was open last lap.
-* `chop_forestLevelsAt_of_rightStep` identifies every ordered tree step with executable `chop`;
-  `chop_strict_tree_descent` packages a strict `TreeLt` witness for every nonempty `WF` chop.
-* `rightStep_exists`, `rightBattle_encoding`, and `chopBattle_terminates` prove termination for
-  every schedule of finite copy counts.  This is the concrete list-level consequence of the
-  already proved `treeLt_wf` engine.
+* `stepN_add`, `Reaches`, `reaches_trans`, and `reaches_of_stepN` provide the compositional
+  simulation interface requested by the previous handoff.
+* `stepN_scanLeft` and `stepN_scanRight` prove the generic scan lemma in both directions for an
+  arbitrary symbol run and arbitrary tape tails.
+* `chopFind_reaches_candidate` proves the complete `CHOP_FINDL` loop, including its zero-mark
+  boundary, for every generated machine core.
+* `candidateFind_reaches_compare` proves the complete positive-depth `CAND_FIND` loop.
+* `chopStart_reaches_candidate` composes `CHOP_START`, `CHOP_D1`, and `CHOP_FINDL` for every final
+  depth at least two.  `chopStart_reaches_compare` then composes the first two search segments and
+  reaches a canonical `CMP_C` configuration for any positive-depth candidate.
 
-Route item 2 has begun in `lean/Collatz/GoodsteinTM/Sim.lean` with `treeCells`, `tapeCells`, and
-`chopConfig b t j`; the parameter `j` makes the explicit trailing blank tail arbitrary as required
-by the operator plan.  The review found and kernel-pinned the frozen theorem's empty-seed edge:
-`WF []` holds, and `empty_halts` proves that its machine reaches the undefined
-`CHOP_START`/`]` entry after 13 steps.  Thus later macro simulation may assume `t ≠ []` after
-dispatching this theorem.  No generated/frozen file or frozen theorem statement changed;
-`Halts.lean` only imports `Sim.lean`.
+All statements quantify over arbitrary left/right tape context, so in particular they preserve
+the operator plan's arbitrary explicit blank tail.  The generated/frozen files and the three
+frozen statements in `Halts.lean` remain unchanged.  The scoped target still has exactly one
+`sorry`, at `halts_of_wf`.
 
 ## Verification
 
-* `lake env lean lean/Collatz/GoodsteinTM/HydraTree.lean`
+* `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
 * `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`
 * `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts`
-* `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.HydraTree
-  --import Collatz.GoodsteinTM.HydraTree --axioms GoodsteinTM.chopBattle_terminates`
 
-All are green.  The focused axiom gate reports exactly
-`[Classical.choice, Quot.sound, propext]`.  The scoped target still has exactly the intended
-`halts_of_wf` `sorry`.
+All are green; the real gate ends `FORMALIZE-TIER GREEN` and reports only the intended
+`halts_of_wf` proof debt.
 
 ## Current blocker and next attack
 
-The remaining crux is route items 3–6: prove that the fixed 51-state table implements each hydra
-macro step, then compose those steps using `chopBattle_terminates`.
+The remaining crux is the rest of route items 3–6.  The current front is the comparison loop that
+starts at the canonical `CMP_C` configuration proved this lap.
 
 Next, in order:
 
-1. In `Sim.lean`, define a small existential reachability relation over `stepN`; prove the
-   `stepN` addition/composition lemmas once.
-2. Prove the generic scan lemma from route item 3 with arbitrary `List.replicate j .blank` tail.
-3. Use it first for `CHOP_FINDL`, then the compare/erase loops.  Keep exact step counts only where
-   they simplify composition; the headline needs existence.
+1. Prove one pairing iteration through `CMP_C/CMP_TOL/CMP_L/CMP_TOC`, parameterized by the
+   already-marked `D` prefix.
+2. Induct on candidate depth to split the comparison into: parent found (`CMP_CEXH/CMP_LCHK` to
+   `PAR_END`) and candidate rejected (`CMP_L` to `NOTPARENT`, restore `D`/`C`, retry
+   `CAND_FIND`).
+3. Compose the parent-found branch with `PAR_END/ERASE_L/MARK_END/UNMARK_S` before beginning the
+   copy loop.
 
 Do not revisit the hydra order or parser unless a concrete simulation lemma exposes an encoding
 mismatch.  The worktree's untracked `CLAUDE.local.md` predates this track and must not be committed.

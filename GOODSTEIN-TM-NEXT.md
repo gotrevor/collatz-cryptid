@@ -116,3 +116,16 @@ Commit each green checkpoint, and record status at the bottom of this file.
   `[Classical.choice, Quot.sound, propext]` for the hydra headline.  Current blocker: the concrete
   table simulation.  Next attack: add compositional `stepN`/reachability lemmas and prove the
   generic scan lemma, then discharge `CHOP_FINDL` as the first state loop from route item 3.
+- 2026-10-17 lap 4: route item 3 now has its common composition and scan infrastructure plus its
+  first two table loops.  `stepN_add` and `Reaches` support cost-free segment composition;
+  `stepN_scanLeft`/`stepN_scanRight` prove generic scans with arbitrary tape context;
+  `chopFind_reaches_candidate` and `candidateFind_reaches_compare` prove the complete
+  `CHOP_FINDL` and positive-depth `CAND_FIND` loops.  The composed
+  `chopStart_reaches_compare` starts at `CHOP_START` for any final depth at least two and reaches
+  the canonical `CMP_C` tape layout for any positive-depth candidate.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts` — FORMALIZE-TIER GREEN, with
+  only the intended `halts_of_wf` debt.  Current blocker: the depth-pairing comparison loop.
+  Next attack: prove one `CMP_C/CMP_TOL/CMP_L/CMP_TOC` pairing iteration, induct it to the
+  parent-found and `NOTPARENT` branches, then continue to the erase segment.
