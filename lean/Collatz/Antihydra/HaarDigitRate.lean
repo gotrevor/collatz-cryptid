@@ -375,10 +375,22 @@ theorem cross_terms_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 
           sum_congr rfl fun r _ => by rw [← hrho, div_mul_eq_mul_div]
       _ ≤ _ := jensen_rpow _ _ _ (fun r _ => hZnn _) hZ1' (fun r _ => hnn _) s hs0.le hs1
 
-/-- **One-step moment recursion** `M_{N+1} ≤ q M_N + r Λ_N^s` (notes/37 Theorem A, one digit). -/
-theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
-    (N : ℕ) : moment p s (N + 1) ≤
-      spineRatio p s * moment p s N + siblingWeight p s * crossEnergy p N ^ s := by
+/-- The **shift moments** `K⁺_N = ∫ ρ_N(y) ρ_N(y+1)^s dm = E_{μ_p}[ρ_N(Y+1)^s]`: the sibling terms
+of the one-step recursion before Jensen. -/
+noncomputable def shiftMomentPlus (p : ℕ → ℝ) (s : ℝ) (N : ℕ) : ℝ :=
+  haarAvg N (fun r => rho p N r * rho p N (r + 1) ^ s)
+
+/-- `K⁻_N = ∫ ρ_N(y) ρ_N(y−1)^s dm = E_{μ_p}[ρ_N(Y−1)^s]`, written with `y = r + 1`. -/
+noncomputable def shiftMomentMinus (p : ℕ → ℝ) (s : ℝ) (N : ℕ) : ℝ :=
+  haarAvg N (fun r => rho p N (r + 1) * rho p N r ^ s)
+
+/-- **One-step moment recursion, sharp form**
+`M_{N+1} ≤ q M_N + 2^s p₀ p₂^s K⁺_N + 2^s p₂ p₀^s K⁻_N` (notes/37 Theorem A, one digit, before
+Jensen). -/
+theorem moment_succ_le_shift (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s)
+    (hs1 : s ≤ 1) (N : ℕ) : moment p s (N + 1) ≤ spineRatio p s * moment p s N +
+      2 ^ s * p 0 * p 2 ^ s * shiftMomentPlus p s N +
+      2 ^ s * p 2 * p 0 ^ s * shiftMomentMinus p s N := by
   have hp0 := hp.1 0
   have hp1 := hp.1 1
   have hp2 := hp.1 2
@@ -386,7 +398,7 @@ theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 
   have hm : ∀ M, moment p s M = (∑ r ∈ range (2 ^ M), rho p M r * rho p M r ^ s) / 2 ^ M := by
     intro M; rw [moment, haarAvg]
     congr 1; exact sum_congr rfl fun r _ => rpow_one_add_eq (rho_nonneg p hp.1 M r) hs0
-  obtain ⟨hCp, hCm⟩ := cross_terms_le p hp s hs0 hs1 N
+  rw [shiftMomentPlus, shiftMomentMinus, haarAvg, haarAvg]
   set ρ := rho p N with hρdef
   have hnn : ∀ x, 0 ≤ ρ x := rho_nonneg p hp.1 N
   set S := ∑ r ∈ range (2 ^ N), ρ r * ρ r ^ s with hS
@@ -443,12 +455,11 @@ theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 
   have g0 : (2 * p 0) ^ s = 2 ^ s * p 0 ^ s := Real.mul_rpow (by norm_num) hp0
   have g1 : (2 * p 1) ^ s = 2 ^ s * p 1 ^ s := Real.mul_rpow (by norm_num) hp1
   have g2 : (2 * p 2) ^ s = 2 ^ s * p 2 ^ s := Real.mul_rpow (by norm_num) hp2
-  have h2s : (0 : ℝ) ≤ 2 ^ s := by positivity
   have hq : spineRatio p s * moment p s N =
       2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) := by
     rw [spineRatio, hm, rpow_one_add_eq hp0 hs0, rpow_one_add_eq hp1 hs0,
       rpow_one_add_eq hp2 hs0]
-  rw [hm, hq, siblingWeight]
+  rw [hm, hq]
   calc (∑ x ∈ range (2 ^ (N + 1)), rho p (N + 1) x * rho p (N + 1) x ^ s) / 2 ^ (N + 1)
       ≤ (2 * p 0 * (2 * p 0) ^ s * S + 2 * p 2 * (2 * p 2) ^ s * S +
           2 * p 1 * (2 * p 1) ^ s * S + 2 * p 0 * (2 * p 2) ^ s * Cp +
@@ -456,10 +467,71 @@ theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 
     _ = 2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) +
         2 ^ s * p 0 * p 2 ^ s * (Cp / 2 ^ N) + 2 ^ s * p 2 * p 0 ^ s * (Cm / 2 ^ N) := by
       rw [g0, g1, g2, pow_succ]; field_simp; ring
-    _ ≤ 2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) +
-        2 ^ s * p 0 * p 2 ^ s * crossEnergy p N ^ s +
-        2 ^ s * p 2 * p 0 ^ s * crossEnergy p N ^ s := by gcongr
-    _ = _ := by ring
+
+/-- **One-step moment recursion** `M_{N+1} ≤ q M_N + r Λ_N^s` (notes/37 Theorem A, one digit):
+`moment_succ_le_shift` with both shift moments bounded by `Λ_N^s` (`cross_terms_le`, Jensen). -/
+theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
+    (N : ℕ) : moment p s (N + 1) ≤
+      spineRatio p s * moment p s N + siblingWeight p s * crossEnergy p N ^ s := by
+  have h := moment_succ_le_shift p hp s hs0 hs1 N
+  obtain ⟨hCp, hCm⟩ := cross_terms_le p hp s hs0 hs1 N
+  have hKp : shiftMomentPlus p s N ≤ crossEnergy p N ^ s := by
+    simpa only [shiftMomentPlus, haarAvg] using hCp
+  have hKm : shiftMomentMinus p s N ≤ crossEnergy p N ^ s := by
+    simpa only [shiftMomentMinus, haarAvg] using hCm
+  have hp0 := hp.1 0
+  have hp2 := hp.1 2
+  have a1 : 0 ≤ 2 ^ s * p 0 * p 2 ^ s := by positivity
+  have a2 : 0 ≤ 2 ^ s * p 2 * p 0 ^ s := by positivity
+  rw [siblingWeight]
+  nlinarith [mul_le_mul_of_nonneg_left hKp a1, mul_le_mul_of_nonneg_left hKm a2]
+
+/-- **Shift moments are dominated by the moment** (weighted AM–GM `a b^s ≤ a^{1+s}/(1+s) +
+s b^{1+s}/(1+s)`, then translation invariance): `K^±_N ≤ ∫ ρ_N^{1+s} dm`. -/
+theorem shiftMoment_le_moment (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (N : ℕ) :
+    shiftMomentPlus p s N ≤ moment p s N ∧ shiftMomentMinus p s N ≤ moment p s N := by
+  have hnn := rho_nonneg p hp.1 N
+  have h1s : (0 : ℝ) < 1 + s := by linarith
+  have hyoung : ∀ a b : ℝ, 0 ≤ a → 0 ≤ b →
+      a * b ^ s ≤ 1 / (1 + s) * a ^ (1 + s) + s / (1 + s) * b ^ (1 + s) := by
+    intro a b ha hb
+    have key := Real.geom_mean_le_arith_mean2_weighted (w₁ := 1 / (1 + s)) (w₂ := s / (1 + s))
+      (p₁ := a ^ (1 + s)) (p₂ := b ^ (1 + s)) (by positivity) (by positivity) (by positivity)
+      (by positivity) (by field_simp)
+    have e1 : (a ^ (1 + s)) ^ (1 / (1 + s)) = a := by
+      rw [← Real.rpow_mul ha, mul_one_div_cancel h1s.ne', Real.rpow_one]
+    have e2 : (b ^ (1 + s)) ^ (s / (1 + s)) = b ^ s := by
+      rw [← Real.rpow_mul hb]; congr 1; field_simp
+    rwa [e1, e2] at key
+  have hper : ∀ x k, rho p N (x + 2 ^ N * k) ^ (1 + s) = rho p N x ^ (1 + s) := by
+    intro x k; rw [rho_add_pow_mul]
+  have hshift := sum_range_pow_affine N 1 1 rfl (fun x => rho p N x ^ (1 + s)) hper
+  simp only [one_mul] at hshift
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have hsum : ∀ a b : ℕ → ℝ, (∑ r ∈ range (2 ^ N), (1 / (1 + s) * a r + s / (1 + s) * b r)) =
+      1 / (1 + s) * ∑ r ∈ range (2 ^ N), a r + s / (1 + s) * ∑ r ∈ range (2 ^ N), b r := by
+    intro a b; rw [sum_add_distrib, ← mul_sum, ← mul_sum]
+  have hcomb : ∀ X : ℝ, 1 / (1 + s) * X + s / (1 + s) * X = X := by
+    intro X; field_simp
+  constructor
+  · rw [shiftMomentPlus, moment, haarAvg, haarAvg]
+    apply div_le_div_of_nonneg_right _ hP.le
+    calc ∑ r ∈ range (2 ^ N), rho p N r * rho p N (r + 1) ^ s
+        ≤ ∑ r ∈ range (2 ^ N), (1 / (1 + s) * rho p N r ^ (1 + s) +
+            s / (1 + s) * rho p N (r + 1) ^ (1 + s)) :=
+          sum_le_sum fun r _ => hyoung _ _ (hnn _) (hnn _)
+      _ = ∑ r ∈ range (2 ^ N), rho p N r ^ (1 + s) := by
+          rw [hsum (fun r => rho p N r ^ (1 + s)) (fun r => rho p N (r + 1) ^ (1 + s)), hshift,
+            hcomb]
+  · rw [shiftMomentMinus, moment, haarAvg, haarAvg]
+    apply div_le_div_of_nonneg_right _ hP.le
+    calc ∑ r ∈ range (2 ^ N), rho p N (r + 1) * rho p N r ^ s
+        ≤ ∑ r ∈ range (2 ^ N), (1 / (1 + s) * rho p N (r + 1) ^ (1 + s) +
+            s / (1 + s) * rho p N r ^ (1 + s)) :=
+          sum_le_sum fun r _ => hyoung _ _ (hnn _) (hnn _)
+      _ = ∑ r ∈ range (2 ^ N), rho p N r ^ (1 + s) := by
+          rw [hsum (fun r => rho p N (r + 1) ^ (1 + s)) (fun r => rho p N r ^ (1 + s)), hshift,
+            hcomb]
 
 /-! ## Theorem B ingredients: runs, block commitment, Chernoff, Hölder -/
 
@@ -858,6 +930,98 @@ on `δ ∈ {−1,0,1}`.  Its transfer matrix `[[2/3, 4/9], [4/9, 4/9]]` has spec
 Confidence that `CrossEnergyBounded candidate` holds: ~75%. -/
 def CrossEnergyBounded (p : ℕ → ℝ) : Prop := ∃ C : ℝ, ∀ N, crossEnergy p N ≤ C
 
+/-- **The crux, minimal form (open).**  The dyadic densities of `μ_p` are bounded in `L^{1+s}`:
+`sup_N ∫ ρ_N^{1+s} dm < ∞`.  This is the hypothesis `haarRate_le_of_momentBounded` uses, and it
+is equivalent to bounded shift moments (`momentBounded_iff_shiftMomentBounded`, when `q(s) < 1`).
+`CrossEnergyBounded` implies it (`momentBounded_of_crossEnergyBounded`).  The converse is not
+expected: an `L^{1+s}` density can have `∫ ρ(y) ρ(y+1) = ∞` when singularities of `ρ` sit at
+`2`-adic distance close to `1` apart, so `CrossEnergyBounded` adds a Diophantine condition at the
+point `1` (notes/37 §8).
+
+For the candidate at `s = 1/32` this is Fornet's `L^{33/32}` target (IE2.3).  It implies
+`μ_p ≪ m` for a near-critical `2`-adic self-similar measure: similarity dimension
+`H(p)/log 2 ≈ 1.021`, three maps `x ↦ (2x − d)/3`, level-`n` atoms separated by `≥ 3^{−n}/2`
+(product formula).  The real-line analogue, absolute continuity of a self-similar measure with an
+algebraic contraction such as `2/3`, is open in general; Garsia's separation argument covers only
+uniform weights here, at cost `1`. -/
+def MomentBounded (p : ℕ → ℝ) (s : ℝ) : Prop := ∃ C : ℝ, ∀ N, moment p s N ≤ C
+
+/-- Both shift moments `K^±_N = E_{μ_p}[ρ_N(Y ± 1)^s]` are bounded uniformly in depth. -/
+def ShiftMomentBounded (p : ℕ → ℝ) (s : ℝ) : Prop :=
+  ∃ C : ℝ, ∀ N, shiftMomentPlus p s N ≤ C ∧ shiftMomentMinus p s N ≤ C
+
+theorem moment_zero (p : ℕ → ℝ) (s : ℝ) : moment p s 0 = 1 := by
+  simp [moment, haarAvg, rho, Z]
+
+/-- Theorem A, sharp form: with `q(s) < 1`, bounded shift moments give a uniform `L^{1+s}` bound
+(induction on `moment_succ_le_shift`). -/
+theorem momentBounded_of_shiftMomentBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ)
+    (hs0 : 0 < s) (hs1 : s ≤ 1) (hq : spineRatio p s < 1) (hK : ShiftMomentBounded p s) :
+    MomentBounded p s := by
+  obtain ⟨C, hC⟩ := hK
+  have hp0 := hp.1 0
+  have hp1 := hp.1 1
+  have hp2 := hp.1 2
+  set C' := max C 0 with hC'
+  have hC'0 : 0 ≤ C' := le_max_right _ _
+  have hq0 : 0 ≤ spineRatio p s := by unfold spineRatio; positivity
+  have a1 : 0 ≤ 2 ^ s * p 0 * p 2 ^ s := by positivity
+  have a2 : 0 ≤ 2 ^ s * p 2 * p 0 ^ s := by positivity
+  have h1q : 0 < 1 - spineRatio p s := by linarith
+  set B := 1 + (2 ^ s * p 0 * p 2 ^ s + 2 ^ s * p 2 * p 0 ^ s) * C' / (1 - spineRatio p s)
+    with hB
+  have hB1 : 1 ≤ B := by
+    have : 0 ≤ (2 ^ s * p 0 * p 2 ^ s + 2 ^ s * p 2 * p 0 ^ s) * C' / (1 - spineRatio p s) := by
+      positivity
+    linarith
+  have hBfix : spineRatio p s * B + (2 ^ s * p 0 * p 2 ^ s + 2 ^ s * p 2 * p 0 ^ s) * C' =
+      B - (1 - spineRatio p s) := by
+    rw [hB]; field_simp; ring
+  refine ⟨B, fun N => ?_⟩
+  induction N with
+  | zero => rw [moment_zero]; exact hB1
+  | succ N ih =>
+    have h := moment_succ_le_shift p hp s hs0 hs1 N
+    have hKp : shiftMomentPlus p s N ≤ C' := (hC N).1.trans (le_max_left _ _)
+    have hKm : shiftMomentMinus p s N ≤ C' := (hC N).2.trans (le_max_left _ _)
+    nlinarith [mul_le_mul_of_nonneg_left hKp a1, mul_le_mul_of_nonneg_left hKm a2,
+      mul_le_mul_of_nonneg_left ih hq0]
+
+/-- **The minimal crux has two equivalent forms**: for `q(s) < 1`, a uniform `L^{1+s}` bound on the
+densities is equivalent to bounded shift moments `E_{μ_p}[ρ_N(Y ± 1)^s]`. -/
+theorem momentBounded_iff_shiftMomentBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ)
+    (hs0 : 0 < s) (hs1 : s ≤ 1) (hq : spineRatio p s < 1) :
+    MomentBounded p s ↔ ShiftMomentBounded p s := by
+  constructor
+  · rintro ⟨C, hC⟩
+    exact ⟨C, fun N => ⟨((shiftMoment_le_moment p hp s hs0 N).1).trans (hC N),
+      ((shiftMoment_le_moment p hp s hs0 N).2).trans (hC N)⟩⟩
+  · exact momentBounded_of_shiftMomentBounded p hp s hs0 hs1 hq
+
+/-- The linear crux implies the minimal one: `K^±_N ≤ Λ_N^s` (Jensen, `cross_terms_le`). -/
+theorem shiftMomentBounded_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ)
+    (hs0 : 0 < s) (hs1 : s ≤ 1) (hC : CrossEnergyBounded p) : ShiftMomentBounded p s := by
+  obtain ⟨C, hC⟩ := hC
+  have hΛ0 : ∀ N, 0 ≤ crossEnergy p N := fun N => by
+    unfold crossEnergy haarAvg
+    exact div_nonneg (sum_nonneg fun r _ =>
+      mul_nonneg (rho_nonneg p hp.1 N r) (rho_nonneg p hp.1 N _)) (by positivity)
+  refine ⟨C ^ s, fun N => ?_⟩
+  obtain ⟨hCp, hCm⟩ := cross_terms_le p hp s hs0 hs1 N
+  have hpow : crossEnergy p N ^ s ≤ C ^ s := Real.rpow_le_rpow (hΛ0 N) (hC N) hs0.le
+  constructor
+  · exact (by simpa only [shiftMomentPlus, haarAvg] using hCp : shiftMomentPlus p s N ≤ _).trans
+      hpow
+  · exact (by simpa only [shiftMomentMinus, haarAvg] using hCm : shiftMomentMinus p s N ≤ _).trans
+      hpow
+
+/-- `CrossEnergyBounded ⇒ MomentBounded` when `q(s) < 1`. -/
+theorem momentBounded_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ)
+    (hs0 : 0 < s) (hs1 : s ≤ 1) (hq : spineRatio p s < 1) (hC : CrossEnergyBounded p) :
+    MomentBounded p s :=
+  momentBounded_of_shiftMomentBounded p hp s hs0 hs1 hq
+    (shiftMomentBounded_of_crossEnergyBounded p hp s hs0 hs1 hC)
+
 /-- **Spine moment bound** (notes/37 Theorem A, finite form):
 `E_μ[ρ_N^s] ≤ q^N + r ∑_{j<N} q^j (cross-energy at depth N−1−j)^s`.  This is the spine
 decomposition of `ρ_N(X)`, `X ∼ μ_p`, unrolled one digit at a time: it is `moment_succ_le`
@@ -1015,22 +1179,22 @@ theorem squeeze (L q : ℕ) (t δ : ℝ) (hδ : 0 < δ) (hL : 0 < L) (hq : 0 < q
   linarith [hEV, hEcV, hsplitS, hSsum, hES]
 
 set_option maxHeartbeats 2000000 in
-/-- **Headline reduction** (notes/37 Theorem B, finite form).  If the spine ratio is below `1` at
-some `s ∈ (0,1]` (entropy above `log 2`) and the cross-energy is bounded, then the Haar-mean
-optimal cost satisfies `∑_{x<2^N} V N x ≤ (p₁ + 2p₂ + ε) N 2^N` for all large `N`, i.e.
-`a_* ≤ p₁ + 2p₂`.
+/-- **Headline reduction, minimal hypothesis** (notes/37 Theorem B, finite form).  If the dyadic
+densities of `μ_p` are bounded in `L^{1+s}` for some `s > 0`, then the Haar-mean optimal cost
+satisfies `∑_{x<2^N} V N x ≤ (p₁ + 2p₂ + ε) N 2^N` for all large `N`, i.e. `a_* ≤ p₁ + 2p₂`.
 
-Proof: `moment_uniform` (from `moment_bound`) bounds `∫ρ_N^{1+s}`; `chernoff` puts `μ_p`-mass
-`≥ 3/4` on `{V_N ≤ (c+η)N}`, and `mass_le` converts it to Haar mass `≥ κ` (`cheap_card`).  The
-`squeeze` (block commitment with exactly uniform block starts, block-cost variance) then shows
-`a_* = inf A_N/N ≤ c + η + 3δ/κ` for all `η, δ > 0`, and subadditivity (`A_mul_le`,
-`A_add_le`) turns `a_* ≤ c` into the finite form. -/
-theorem haarRate_le_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s)
-    (hs1 : s ≤ 1) (hq : spineRatio p s < 1) (hC : CrossEnergyBounded p) :
+Proof: `chernoff` puts `μ_p`-mass `≥ 3/4` on `{V_N ≤ (c+η)N}`, and `mass_le` converts it to Haar
+mass `≥ κ` (`cheap_card`).  The `squeeze` (block commitment with exactly uniform block starts,
+block-cost variance) then shows `a_* = inf A_N/N ≤ c + η + 3δ/κ` for all `η, δ > 0`, and
+subadditivity (`A_mul_le`, `A_add_le`) turns `a_* ≤ c` into the finite form. -/
+theorem haarRate_le_of_momentBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s)
+    (hM : MomentBounded p s) :
     ∀ ε > 0, ∃ N₀, ∀ N ≥ N₀, (sumV N : ℝ) ≤ (p 1 + 2 * p 2 + ε) * N * 2 ^ N := by
   set c := p 1 + 2 * p 2 with hc
   have hc0 : 0 ≤ c := by have := hp.1 1; have := hp.1 2; positivity
-  obtain ⟨Mb, hMb1, hMb⟩ := moment_uniform p hp s hs0 hs1 hq hC
+  obtain ⟨C, hC⟩ := hM
+  obtain ⟨Mb, hMb1, hMb⟩ : ∃ Mb : ℝ, 1 ≤ Mb ∧ ∀ N, moment p s N ≤ Mb :=
+    ⟨max C 1, le_max_right _ _, fun N => (hC N).trans (le_max_left _ _)⟩
   obtain ⟨κ, hκ0, hcheap⟩ := cheap_card p hp s hs0 Mb hMb1 hMb
   set A : ℕ → ℝ := fun N => (sumV N : ℝ) / 2 ^ N with hA
   have hA0 : ∀ N, 0 ≤ A N := fun N => by positivity
@@ -1154,6 +1318,15 @@ theorem haarRate_le_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) 
   rw [div_le_iff₀ hP] at this
   exact this
 
+/-- **Headline reduction from the linear crux** (notes/37 Theorems A and B): `q(s) < 1` and
+bounded cross-energy give `a_* ≤ p₁ + 2p₂`, through `moment_uniform` and
+`haarRate_le_of_momentBounded`. -/
+theorem haarRate_le_of_crossEnergyBounded (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s)
+    (hs1 : s ≤ 1) (hq : spineRatio p s < 1) (hC : CrossEnergyBounded p) :
+    ∀ ε > 0, ∃ N₀, ∀ N ≥ N₀, (sumV N : ℝ) ≤ (p 1 + 2 * p 2 + ε) * N * 2 ^ N := by
+  obtain ⟨Mb, -, hMb⟩ := moment_uniform p hp s hs0 hs1 hq hC
+  exact haarRate_le_of_momentBounded p hp s hs0 ⟨Mb, hMb⟩
+
 /-- The spine ratio of the candidate is below `1` at `s = 1/32` (entropy `0.7078 > log 2`;
 numerically `q(1/32) ≈ 0.99978`); proved from rational upper bounds on the four 32nd roots. -/
 theorem candidate_spineRatio_lt_one : spineRatio candidate (1 / 32) < 1 := by
@@ -1189,6 +1362,16 @@ theorem haarRate_le_eight_twentyfifths (hC : CrossEnergyBounded candidate) :
   intro ε hε
   obtain ⟨N₀, h⟩ := haarRate_le_of_crossEnergyBounded candidate candidate_isDigitLaw (1 / 32)
     (by norm_num) (by norm_num) candidate_spineRatio_lt_one hC ε hε
+  exact ⟨N₀, fun N hN => by simpa [candidate_cost] using h N hN⟩
+
+/-- **Conditional `a_* ≤ 8/25`, minimal hypothesis**: a uniform `L^{33/32}` bound on the densities
+of Fornet's candidate law (Fornet's IE2.3 target) refutes the mean inequality `a_* ≥ 1/3`. -/
+theorem haarRate_le_eight_twentyfifths_of_momentBounded
+    (hM : MomentBounded candidate (1 / 32)) :
+    ∀ ε > 0, ∃ N₀, ∀ N ≥ N₀, (sumV N : ℝ) ≤ (8 / 25 + ε) * N * 2 ^ N := by
+  intro ε hε
+  obtain ⟨N₀, h⟩ := haarRate_le_of_momentBounded candidate candidate_isDigitLaw (1 / 32)
+    (by norm_num) hM ε hε
   exact ⟨N₀, fun N hN => by simpa [candidate_cost] using h N hN⟩
 
 /-! ## Finite Paley–Zygmund -/
