@@ -249,6 +249,218 @@ theorem candidate_isDigitLaw : IsDigitLaw candidate := by
 theorem candidate_cost : candidate 1 + 2 * candidate 2 = 8 / 25 := by
   show (6 / 25 : ℝ) + 2 * (1 / 25) = 8 / 25; norm_num
 
+/-! ## The one-step moment recursion
+
+`moment_bound` is the unrolled form of `M_{N+1} ≤ q M_N + r Λ_N^s` (`moment_succ_le`).  The
+first digit splits `ρ_{N+1}(2m) = 2p₀ρ_N(3m) + 2p₂ρ_N(3m+1)` and `ρ_{N+1}(2m+1) = 2p₁ρ_N(3m+2)`;
+subadditivity of `x ↦ x^s` separates the two even branches, `m ↦ 3m + c` permutes residues mod
+`2^N`, and concave Jensen under the probability weights `Z p N r` bounds the two cross terms by
+`Λ_N^s`. -/
+
+/-- Reindexing a `2^N`-periodic sum by an odd affine map `m ↦ a m + c`. -/
+theorem sum_range_pow_affine {β : Type*} [AddCommMonoid β] (N a c : ℕ) (ha : a % 2 = 1)
+    (g : ℕ → β) (hg : ∀ x k, g (x + 2 ^ N * k) = g x) :
+    ∑ m ∈ range (2 ^ N), g (a * m + c) = ∑ r ∈ range (2 ^ N), g r := by
+  have hmod : ∀ x, g (x % 2 ^ N) = g x := fun x => by
+    conv_rhs => rw [← Nat.mod_add_div x (2 ^ N)]
+    rw [hg]
+  set f : ℕ → ℕ := fun m => (a * m + c) % 2 ^ N with hf
+  have hinj : Set.InjOn f (range (2 ^ N)) := by
+    intro m hm m' hm' h
+    simp only [coe_range, Set.mem_Iio] at hm hm'
+    have h2 : a * m ≡ a * m' [MOD 2 ^ N] := Nat.ModEq.add_right_cancel' c h
+    have hcop : Nat.gcd (2 ^ N) a = 1 :=
+      Nat.Coprime.pow_left N (Nat.coprime_two_left.2 (Nat.odd_iff.2 ha))
+    have h3 := Nat.ModEq.cancel_left_of_coprime hcop h2
+    rwa [Nat.ModEq, Nat.mod_eq_of_lt hm, Nat.mod_eq_of_lt hm'] at h3
+  have himg : (range (2 ^ N)).image f = range (2 ^ N) := by
+    apply eq_of_subset_of_card_le
+    · intro y hy
+      obtain ⟨m, -, rfl⟩ := mem_image.1 hy
+      exact mem_range.2 (Nat.mod_lt _ (by positivity))
+    · rw [card_image_of_injOn hinj]
+  conv_rhs => rw [← himg]
+  rw [sum_image hinj]
+  exact sum_congr rfl fun m _ => (hmod _).symm
+
+/-- Split a sum over `x < 2n` into even and odd halves. -/
+theorem sum_range_two_mul {β : Type*} [AddCommMonoid β] (f : ℕ → β) (n : ℕ) :
+    ∑ x ∈ range (2 * n), f x = ∑ m ∈ range n, (f (2 * m) + f (2 * m + 1)) := by
+  induction n with
+  | zero => simp
+  | succ n ih =>
+    rw [show 2 * (n + 1) = 2 * n + 1 + 1 by ring, sum_range_succ, sum_range_succ, ih,
+      sum_range_succ]
+    abel
+
+theorem Z_succ_even (p : ℕ → ℝ) (N m : ℕ) :
+    Z p (N + 1) (2 * m) = p 0 * Z p N (3 * m) + p 2 * Z p N (3 * m + 1) := by
+  have h0 : step (2 * m) 0 = 3 * m := by unfold step; omega
+  have h2 : step (2 * m) 2 = 3 * m + 1 := by unfold step; omega
+  rw [Z_succ, if_pos (by omega), h0, h2]
+
+theorem Z_succ_odd (p : ℕ → ℝ) (N m : ℕ) : Z p (N + 1) (2 * m + 1) = p 1 * Z p N (3 * m + 2) := by
+  have h1 : step (2 * m + 1) 1 = 3 * m + 2 := by unfold step; omega
+  rw [Z_succ, if_neg (by omega), h1]
+
+/-- Total mass: `∑_{r < 2^N} Z p N r = (p₀ + p₁ + p₂)^N`. -/
+theorem sum_Z (p : ℕ → ℝ) (N : ℕ) : ∑ r ∈ range (2 ^ N), Z p N r = (p 0 + p 1 + p 2) ^ N := by
+  induction N with
+  | zero => simp [Z]
+  | succ N ih =>
+    have hper := Z_add_pow_mul p N
+    have e0 := sum_range_pow_affine N 3 0 rfl (Z p N) hper
+    have e1 := sum_range_pow_affine N 3 1 rfl (Z p N) hper
+    have e2 := sum_range_pow_affine N 3 2 rfl (Z p N) hper
+    simp only [add_zero] at e0
+    rw [pow_succ', sum_range_two_mul]
+    simp only [Z_succ_even, Z_succ_odd, sum_add_distrib, ← mul_sum, e0, e1, e2, ih]
+    ring
+
+theorem rho_nonneg (p : ℕ → ℝ) (hp : ∀ d, 0 ≤ p d) (N x : ℕ) : 0 ≤ rho p N x :=
+  mul_nonneg (by positivity) (Z_nonneg p hp N x)
+
+theorem rho_add_pow_mul (p : ℕ → ℝ) (N x k : ℕ) : rho p N (x + 2 ^ N * k) = rho p N x := by
+  simp only [rho, Z_add_pow_mul]
+
+theorem rho_succ_even (p : ℕ → ℝ) (N m : ℕ) :
+    rho p (N + 1) (2 * m) = 2 * p 0 * rho p N (3 * m) + 2 * p 2 * rho p N (3 * m + 1) := by
+  simp only [rho, Z_succ_even, pow_succ]; ring
+
+theorem rho_succ_odd (p : ℕ → ℝ) (N m : ℕ) :
+    rho p (N + 1) (2 * m + 1) = 2 * p 1 * rho p N (3 * m + 2) := by
+  simp only [rho, Z_succ_odd, pow_succ]; ring
+
+theorem rpow_one_add_eq {x s : ℝ} (hx : 0 ≤ x) (hs : 0 < s) : x ^ (1 + s) = x * x ^ s := by
+  rw [Real.rpow_add' hx (by linarith), Real.rpow_one]
+
+/-- Concave Jensen for a shifted cross term: if `w ≥ 0` sums to `1` over residues then
+`∑ w r · y_r^s ≤ (∑ w r · y_r)^s`. -/
+theorem jensen_rpow (t : Finset ℕ) (w y : ℕ → ℝ) (hw : ∀ r ∈ t, 0 ≤ w r) (h1 : ∑ r ∈ t, w r = 1)
+    (hy : ∀ r ∈ t, 0 ≤ y r) (s : ℝ) (hs0 : 0 ≤ s) (hs1 : s ≤ 1) :
+    ∑ r ∈ t, w r * y r ^ s ≤ (∑ r ∈ t, w r * y r) ^ s := by
+  have := (Real.concaveOn_rpow hs0 hs1).le_map_sum hw h1 (fun r hr => Set.mem_Ici.2 (hy r hr))
+  simpa only [smul_eq_mul] using this
+
+/-- The two cross terms of the one-step recursion are bounded by `Λ_N^s`. -/
+theorem cross_terms_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
+    (N : ℕ) :
+    (∑ r ∈ range (2 ^ N), rho p N r * rho p N (r + 1) ^ s) / 2 ^ N ≤ crossEnergy p N ^ s ∧
+    (∑ r ∈ range (2 ^ N), rho p N (r + 1) * rho p N r ^ s) / 2 ^ N ≤ crossEnergy p N ^ s := by
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have hZ1 : ∑ r ∈ range (2 ^ N), Z p N r = 1 := by rw [sum_Z, hp.2, one_pow]
+  have hZ1' : ∑ r ∈ range (2 ^ N), Z p N (r + 1) = 1 := by
+    have := sum_range_pow_affine N 1 1 rfl (Z p N) (Z_add_pow_mul p N)
+    simp only [one_mul] at this
+    rw [this, hZ1]
+  have hrho : ∀ r, rho p N r / 2 ^ N = Z p N r := fun r => by
+    rw [rho, mul_div_cancel_left₀ _ hP.ne']
+  have hΛ : crossEnergy p N = ∑ r ∈ range (2 ^ N), Z p N r * rho p N (r + 1) := by
+    rw [crossEnergy, haarAvg, sum_div]
+    exact sum_congr rfl fun r _ => by rw [← hrho, div_mul_eq_mul_div]
+  have hΛ' : crossEnergy p N = ∑ r ∈ range (2 ^ N), Z p N (r + 1) * rho p N r := by
+    rw [crossEnergy, haarAvg, sum_div]
+    exact sum_congr rfl fun r _ => by rw [← hrho, div_mul_eq_mul_div, mul_comm]
+  have hnn := rho_nonneg p hp.1 N
+  have hZnn := Z_nonneg p hp.1 N
+  constructor
+  · rw [hΛ, sum_div]
+    calc ∑ r ∈ range (2 ^ N), rho p N r * rho p N (r + 1) ^ s / 2 ^ N
+        = ∑ r ∈ range (2 ^ N), Z p N r * rho p N (r + 1) ^ s :=
+          sum_congr rfl fun r _ => by rw [← hrho, div_mul_eq_mul_div]
+      _ ≤ _ := jensen_rpow _ _ _ (fun r _ => hZnn r) hZ1 (fun r _ => hnn _) s hs0.le hs1
+  · rw [hΛ', sum_div]
+    calc ∑ r ∈ range (2 ^ N), rho p N (r + 1) * rho p N r ^ s / 2 ^ N
+        = ∑ r ∈ range (2 ^ N), Z p N (r + 1) * rho p N r ^ s :=
+          sum_congr rfl fun r _ => by rw [← hrho, div_mul_eq_mul_div]
+      _ ≤ _ := jensen_rpow _ _ _ (fun r _ => hZnn _) hZ1' (fun r _ => hnn _) s hs0.le hs1
+
+/-- **One-step moment recursion** `M_{N+1} ≤ q M_N + r Λ_N^s` (notes/37 Theorem A, one digit). -/
+theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
+    (N : ℕ) : moment p s (N + 1) ≤
+      spineRatio p s * moment p s N + siblingWeight p s * crossEnergy p N ^ s := by
+  have hp0 := hp.1 0
+  have hp1 := hp.1 1
+  have hp2 := hp.1 2
+  have hP : (0 : ℝ) < 2 ^ N := by positivity
+  have hm : ∀ M, moment p s M = (∑ r ∈ range (2 ^ M), rho p M r * rho p M r ^ s) / 2 ^ M := by
+    intro M; rw [moment, haarAvg]
+    congr 1; exact sum_congr rfl fun r _ => rpow_one_add_eq (rho_nonneg p hp.1 M r) hs0
+  obtain ⟨hCp, hCm⟩ := cross_terms_le p hp s hs0 hs1 N
+  set ρ := rho p N with hρdef
+  have hnn : ∀ x, 0 ≤ ρ x := rho_nonneg p hp.1 N
+  set S := ∑ r ∈ range (2 ^ N), ρ r * ρ r ^ s with hS
+  set Cp := ∑ r ∈ range (2 ^ N), ρ r * ρ (r + 1) ^ s with hCpdef
+  set Cm := ∑ r ∈ range (2 ^ N), ρ (r + 1) * ρ r ^ s with hCmdef
+  have hper : ∀ x k, ρ (x + 2 ^ N * k) = ρ x := fun x k => rho_add_pow_mul p N x k
+  have hper1 : ∀ x k, ρ (x + 2 ^ N * k) * ρ (x + 2 ^ N * k) ^ s = ρ x * ρ x ^ s := by
+    intro x k; rw [hper]
+  have hperp : ∀ x k, ρ (x + 2 ^ N * k) * ρ (x + 2 ^ N * k + 1) ^ s = ρ x * ρ (x + 1) ^ s := by
+    intro x k; rw [show x + 2 ^ N * k + 1 = (x + 1) + 2 ^ N * k by ring, hper, hper]
+  have hperm : ∀ x k, ρ (x + 2 ^ N * k + 1) * ρ (x + 2 ^ N * k) ^ s = ρ (x + 1) * ρ x ^ s := by
+    intro x k; rw [show x + 2 ^ N * k + 1 = (x + 1) + 2 ^ N * k by ring, hper, hper]
+  have e0 := sum_range_pow_affine N 3 0 rfl (fun x => ρ x * ρ x ^ s) hper1
+  have e1 := sum_range_pow_affine N 3 1 rfl (fun x => ρ x * ρ x ^ s) hper1
+  have e2 := sum_range_pow_affine N 3 2 rfl (fun x => ρ x * ρ x ^ s) hper1
+  have ep := sum_range_pow_affine N 3 0 rfl (fun x => ρ x * ρ (x + 1) ^ s) hperp
+  have em := sum_range_pow_affine N 3 0 rfl (fun x => ρ (x + 1) * ρ x ^ s) hperm
+  simp only [add_zero] at e0 ep em
+  beta_reduce at e1 e2
+  -- pointwise bound on one even/odd pair
+  have hpt : ∀ m, rho p (N + 1) (2 * m) * rho p (N + 1) (2 * m) ^ s +
+      rho p (N + 1) (2 * m + 1) * rho p (N + 1) (2 * m + 1) ^ s ≤
+      2 * p 0 * (2 * p 0) ^ s * (ρ (3 * m) * ρ (3 * m) ^ s) +
+      2 * p 2 * (2 * p 2) ^ s * (ρ (3 * m + 1) * ρ (3 * m + 1) ^ s) +
+      2 * p 1 * (2 * p 1) ^ s * (ρ (3 * m + 2) * ρ (3 * m + 2) ^ s) +
+      2 * p 0 * (2 * p 2) ^ s * (ρ (3 * m) * ρ (3 * m + 1) ^ s) +
+      2 * p 2 * (2 * p 0) ^ s * (ρ (3 * m + 1) * ρ (3 * m) ^ s) := by
+    intro m
+    rw [rho_succ_even, rho_succ_odd]
+    have ha : 0 ≤ 2 * p 0 * ρ (3 * m) := mul_nonneg (by positivity) (hnn _)
+    have hb : 0 ≤ 2 * p 2 * ρ (3 * m + 1) := mul_nonneg (by positivity) (hnn _)
+    have hsub := Real.rpow_add_le_add_rpow ha hb hs0.le hs1
+    have f0 : (2 * p 0 * ρ (3 * m)) ^ s = (2 * p 0) ^ s * ρ (3 * m) ^ s :=
+      Real.mul_rpow (by positivity) (hnn _)
+    have f2 : (2 * p 2 * ρ (3 * m + 1)) ^ s = (2 * p 2) ^ s * ρ (3 * m + 1) ^ s :=
+      Real.mul_rpow (by positivity) (hnn _)
+    have f1 : (2 * p 1 * ρ (3 * m + 2)) ^ s = (2 * p 1) ^ s * ρ (3 * m + 2) ^ s :=
+      Real.mul_rpow (by positivity) (hnn _)
+    calc (2 * p 0 * ρ (3 * m) + 2 * p 2 * ρ (3 * m + 1)) *
+          (2 * p 0 * ρ (3 * m) + 2 * p 2 * ρ (3 * m + 1)) ^ s +
+          2 * p 1 * ρ (3 * m + 2) * (2 * p 1 * ρ (3 * m + 2)) ^ s
+        ≤ (2 * p 0 * ρ (3 * m) + 2 * p 2 * ρ (3 * m + 1)) *
+          ((2 * p 0 * ρ (3 * m)) ^ s + (2 * p 2 * ρ (3 * m + 1)) ^ s) +
+          2 * p 1 * ρ (3 * m + 2) * (2 * p 1 * ρ (3 * m + 2)) ^ s := by
+          gcongr
+      _ = _ := by rw [f0, f2, f1]; ring
+  have hsum : ∑ x ∈ range (2 ^ (N + 1)), rho p (N + 1) x * rho p (N + 1) x ^ s ≤
+      2 * p 0 * (2 * p 0) ^ s * S + 2 * p 2 * (2 * p 2) ^ s * S + 2 * p 1 * (2 * p 1) ^ s * S +
+      2 * p 0 * (2 * p 2) ^ s * Cp + 2 * p 2 * (2 * p 0) ^ s * Cm := by
+    rw [pow_succ', sum_range_two_mul]
+    refine (sum_le_sum fun m _ => hpt m).trans (le_of_eq ?_)
+    simp only [sum_add_distrib, ← mul_sum, e0, e1, e2, ep, em]
+    rfl
+  have g0 : (2 * p 0) ^ s = 2 ^ s * p 0 ^ s := Real.mul_rpow (by norm_num) hp0
+  have g1 : (2 * p 1) ^ s = 2 ^ s * p 1 ^ s := Real.mul_rpow (by norm_num) hp1
+  have g2 : (2 * p 2) ^ s = 2 ^ s * p 2 ^ s := Real.mul_rpow (by norm_num) hp2
+  have h2s : (0 : ℝ) ≤ 2 ^ s := by positivity
+  have hq : spineRatio p s * moment p s N =
+      2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) := by
+    rw [spineRatio, hm, rpow_one_add_eq hp0 hs0, rpow_one_add_eq hp1 hs0,
+      rpow_one_add_eq hp2 hs0]
+  rw [hm, hq, siblingWeight]
+  calc (∑ x ∈ range (2 ^ (N + 1)), rho p (N + 1) x * rho p (N + 1) x ^ s) / 2 ^ (N + 1)
+      ≤ (2 * p 0 * (2 * p 0) ^ s * S + 2 * p 2 * (2 * p 2) ^ s * S +
+          2 * p 1 * (2 * p 1) ^ s * S + 2 * p 0 * (2 * p 2) ^ s * Cp +
+          2 * p 2 * (2 * p 0) ^ s * Cm) / 2 ^ (N + 1) := by gcongr
+    _ = 2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) +
+        2 ^ s * p 0 * p 2 ^ s * (Cp / 2 ^ N) + 2 ^ s * p 2 * p 0 ^ s * (Cm / 2 ^ N) := by
+      rw [g0, g1, g2, pow_succ]; field_simp; ring
+    _ ≤ 2 ^ s * (p 0 * p 0 ^ s + p 1 * p 1 ^ s + p 2 * p 2 ^ s) * (S / 2 ^ N) +
+        2 ^ s * p 0 * p 2 ^ s * crossEnergy p N ^ s +
+        2 ^ s * p 2 * p 0 ^ s * crossEnergy p N ^ s := by gcongr
+    _ = _ := by ring
+
 /-! ## The crux and the spine reduction (`notes/37`) -/
 
 /-- **The crux (open).**  The adjacent cross-energy of `μ_p` is bounded uniformly in depth.
@@ -272,18 +484,34 @@ on `δ ∈ {−1,0,1}`.  Its transfer matrix `[[2/3, 4/9], [4/9, 4/9]]` has spec
 Confidence that `CrossEnergyBounded candidate` holds: ~75%. -/
 def CrossEnergyBounded (p : ℕ → ℝ) : Prop := ∃ C : ℝ, ∀ N, crossEnergy p N ≤ C
 
-/-- **Spine moment bound** (notes/37 Theorem A, finite form).  Decompose `ρ_N(X)` along the
-spine word of `X ∼ μ_p`: siblings branch off at even states, where the other even digit leads to
-the spine's next state `± 1`, and the spine tail beyond step `j` is independent of the first
-`j + 1` digits.  Subadditivity of `x ↦ x^s` and Jensen for the sibling subtrees give
-`E_μ[ρ_N^s] ≤ q^N + r ∑_{j<N} q^j (cross-energy at depth N−1−j)^s`.
-
-Confidence ~90% (English proof in notes/37 §2; each step is a finite-sum identity or inequality). -/
+/-- **Spine moment bound** (notes/37 Theorem A, finite form):
+`E_μ[ρ_N^s] ≤ q^N + r ∑_{j<N} q^j (cross-energy at depth N−1−j)^s`.  This is the spine
+decomposition of `ρ_N(X)`, `X ∼ μ_p`, unrolled one digit at a time: it is `moment_succ_le`
+iterated from `moment p s 0 = 1`. -/
 theorem moment_bound (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 < s) (hs1 : s ≤ 1)
     (N : ℕ) :
     moment p s N ≤ spineRatio p s ^ N + siblingWeight p s *
       ∑ j ∈ range N, spineRatio p s ^ j * crossEnergy p (N - 1 - j) ^ s := by
-  sorry
+  have hq0 : 0 ≤ spineRatio p s := by
+    have := hp.1 0; have := hp.1 1; have := hp.1 2
+    unfold spineRatio; positivity
+  have hr0 : 0 ≤ siblingWeight p s := by
+    have := hp.1 0; have := hp.1 2
+    unfold siblingWeight; positivity
+  induction N with
+  | zero =>
+    simp only [pow_zero, range_zero, sum_empty, mul_zero, add_zero, moment, haarAvg, rho]
+    simp [Z]
+  | succ N ih =>
+    refine (moment_succ_le p hp s hs0 hs1 N).trans ?_
+    rw [sum_range_succ', pow_succ', add_tsub_cancel_right, Nat.sub_zero, pow_zero, one_mul]
+    have hsplit : ∑ j ∈ range N, spineRatio p s ^ (j + 1) * crossEnergy p (N - (j + 1)) ^ s
+        = spineRatio p s * ∑ j ∈ range N, spineRatio p s ^ j * crossEnergy p (N - 1 - j) ^ s := by
+      rw [mul_sum]
+      exact sum_congr rfl fun j _ => by
+        rw [show N - (j + 1) = N - 1 - j by omega, pow_succ']; ring
+    rw [hsplit]
+    nlinarith [mul_le_mul_of_nonneg_left ih hq0]
 
 /-- **Headline reduction** (notes/37 Theorem B, finite form).  If the spine ratio is below `1` at
 some `s ∈ (0,1]` (entropy above `log 2`) and the cross-energy is bounded, then the Haar-mean
