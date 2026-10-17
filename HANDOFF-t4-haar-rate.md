@@ -72,3 +72,12 @@ Crux findings this lap (none of them proves (C1) yet):
 Next: state the shift-recursion form of `crossEnergy` in Lean (`crossEnergy p N = lam p N 1`).
 That makes (C1) an elementary integer-recursion statement, with `decide` anchors.  Then attack it
 through the increment/parity structure.
+
+## Checkpoint (lap 2 end, 2026-10-17)
+
+Branch `wip/t4-haar-rate`, HEAD `65dc9e8`.  The tree is clean apart from the untracked
+`CLAUDE.local.md` (not ours) and `tmp/` (scratch, not committed).  `tmp/mdp/` holds `lam.c`
+(MDP gain), `tk.c` (the increment formula `T_k`) and `cand*.txt` (`Λ_N` up to N=44, plus a
+45..52 background run).  `HaarDigitRate.lean` has no `sorry`.  The only open obligation is
+`CrossEnergyBounded candidate`.  First task next lap: the Lean statement
+`crossEnergy p N = lam p N 1` for the integer shift recursion.
