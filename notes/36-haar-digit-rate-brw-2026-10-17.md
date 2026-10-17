@@ -6,7 +6,9 @@ Antihydra route that passes the Foils gate.  Fornet's inventory reduces (G) to s
 canonical-digit cost: the root slope `γ = liminf V_N(1)/N` (`global-digit-slope.md`) and the Haar
 mean `a_* = lim A_N/N`, `A_N = ∫ V_N dm` over `Z_2` (`stationary-cost-variational.md`), with
 rigorous bounds `0.3042471157… ≤ a_* ≤ 0.36661`.  The lower bound is the first-moment (counting)
-threshold `c*` (`optimal-extension-mean.md` OE2).  Whether `a_* ≥ 1/3` is recorded there as open.
+threshold `c*` (`optimal-extension-mean.md` OE2).  Whether `a_* ≥ 1/3` is recorded there as open.  Fornet also has a *conditional* route below 1/3: absolute continuity of a specified biased
+self-similar law would give `a_* ≤ 8/25` (`stationary-cost-variational.md` AC4, via
+`iid-affinity-energy.md` HE2.4 and `iid-refinement-energy.md` IE2.3); that hypothesis is unproved.
 
 Recurrence (Fornet's AC/PT1): legal step `x ↦ (3x + d)/2`, `d ≡ x (mod 2)`, cost `d`;
 `V_{N+1}(2m) = min(V_N(3m), 2 + V_N(3m+1))`, `V_{N+1}(2m+1) = 1 + V_N(3m+2)`, arguments mod `2^N`.
