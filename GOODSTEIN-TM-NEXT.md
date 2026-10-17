@@ -87,3 +87,18 @@ Commit each green checkpoint, and record status at the bottom of this file.
   `Relation.CutExpand` recursive path order from lean-gallery's Hydra engine, define the preorder
   level-sequence/tree bridge, and prove `chop` realizes one strict tree-hydra step.  Only after that
   bridge is green, proceed to the tape encoding in route item 2.
+- 2026-10-17 lap 2: the `Relation.CutExpand` termination engine is now local and kernel-checked in
+  `GoodsteinTM/HydraTree.lean`.  `treeLt_wf` proves the recursive rose-tree order well-founded;
+  `RightChop`/`RightStep` isolate the machine's ordered rightmost move; `rightStep_lt` proves every
+  such move descends; and `rightBattle_terminates` proves every rightmost tree battle terminates.
+  The concrete preorder bridge is proved for both constructors at the root:
+  `chop_forestLevelsAt_root` (depth-one deletion) and `chop_forestLevelsAt_grand` (depth-two
+  regrowth, including the exact `n + 1` surviving-parent multiplicity).  Verification:
+  `lake build Collatz.GoodsteinTM.HydraTree Collatz.GoodsteinTM.Halts` and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts` — FORMALIZE-TIER GREEN (the one
+  intended `halts_of_wf` debt remains).  The focused axiom gate on `rightBattle_terminates` reports
+  exactly `[Classical.choice, Quot.sound, propext]`.  Current blocker: finish the bridge through the
+  `RightChop.deep` context and prove every `WF` level sequence is `Tree.forestLevelsAt cs 1` for
+  some forest `cs`.  Next attack: a prefix/context lemma for `chop`, induction on `RightChop`, then
+  a right-to-left stack parser/inverse theorem for `WF`.  Do not begin tape simulation until those
+  lemmas yield well-founded descent of the executable `chop`.
