@@ -1,12 +1,16 @@
 # Handoff: T3, rounding-choice foils for the whole Hydra schema (2026-10-17)
 
-**Checkpoint (2026-10-17, lap budget reached):** branch `wip/t3-hydra-foils`, HEAD `bd5e171`
-before this checkpoint commit.  `lake build` green (8784 jobs).  Targets 1-4 DONE; no uncommitted
-work; no Aristotle job.  `box done` not yet signalled: only the kickoff's stretch item is open.
-Next lap: either signal `box done "T3 targets 1-4 proved, notes/35 written"` or take the stretch
-(Bigfoot lifted certificate below defect 7, see "Open / next").  Kernel-cost tips for large
-certificates: notes/35 §4 build notes (`Nat.beq`, raw `Nat` ops, data in its own module,
-`Elab.async false` in chunk modules).
+**Checkpoint (2026-10-17, lap 2):** branch `wip/t3-hydra-foils`.  `lake build` green (8785
+jobs).  Targets 1-4 DONE, and the stretch's Bigfoot half is DONE: Bigfoot drains at defect 1
+(`bigfoot_halting_member_one`, lifted certificate on `X mod 1944`) and at defect 2
+(`bigfoot_halting_member_two`, `X mod 72`), via the new general-period lifted gate
+`Sys.halting_dense_of_modCertN`; module `lean/Collatz/HydraFoils/BigfootLift.lean`.  Defect 0 is
+the cryptid, so the Bigfoot ladder `14 → 13 → 7 → 2 → 1` is closed in the `X` coordinate.
+Remaining stretch item (optional): the clocked block map (`step4_block`, slope `256/81`) as the
+coordinate; since `d = 1` is already reached in `X`, its interest is only a different family.
+Build tip: after editing `HydraFoils.lean`, rebuild the Cert218 chunk modules one at a time
+(parallel rebuild hits the box's "too many open files"; reference corpus
+`lean-box-fd-exhaustion-is-mmap-not-nofile.md`).
 
 Branch `wip/t3-hydra-foils`.  Kickoff: `KICKOFF-2026-10-17-t3-hydra-foils.md`.
 Write-up: `notes/35-hydra-foils-2026-10-17.md` (claims tagged Lean / computed / paper).
@@ -28,9 +32,11 @@ Lean: `lean/Collatz/HydraFoils.lean`, in the default build; no `sorry`, axioms
    (halting members dense in `F_{L,1}`), via the lifted gate `Sys.halting_dense_of_modCert` and a
    `3^10`-state potential checked by `decide +kernel` (`Cert218Data`, `Cert218ChunkA/B/C`).  DONE.
 
+5. Stretch, Bigfoot lifted: `bigfoot_halting_member_two` (`d = 2`), `bigfoot_halting_member_one`
+   (`d = 1`), notes/35 rows 18-21 and §3.  DONE.
+
 ## Open / next
-- Bigfoot: lift the drift certificate to `X mod 24·3^j` (game solver `sim/hydra_foils/g.js`
-  generalizes) to push its defect below 7; `d ≤ 6` has no residue-level certificate [computed].
+- Stretch: clocked block map coordinate (`Dyn.step4_block`).  Optional.
 - Lean statement of the lifted-game values (row 17 of notes/35) is not recorded; only the
   certificate is.
 - Prior-work search (host session, no egress here).
