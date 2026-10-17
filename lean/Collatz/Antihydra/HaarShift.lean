@@ -321,9 +321,9 @@ theorem candidate_parityBias : parityBias candidate = 169 / 625 := by
 absolutely summable.  It implies `CrossEnergyBounded p` (`crossEnergyBounded_of_paritySummable`),
 which needs only bounded partial sums.
 
-Evidence [computed, `tools/sandbox/haar_digit_rate/parity_corr.c`, the forward recursion in doubles, exact up to rounding]: for the
-candidate `(18,6,1)/25`, `P_n/Λ_n` is `+8.1e−2` (n=10), `−1.5e−2` (20), `+1.8e−2` (30),
-`+2.9e−3` (40), `−4.6e−3` (42).  The decay is slow, about `e^{−0.07 n}`, and the signs oscillate.
+Evidence [computed, `tools/sandbox/haar_digit_rate/parity_corr.c`: the forward recursion in
+doubles, exact up to rounding].  For the candidate `(18,6,1)/25`, `P_n/Λ_n` is `+8.1e−2`
+(n=10), `−1.5e−2` (20), `+1.8e−2` (30), `+2.9e−3` (40), `−4.6e−3` (42).  The decay is slow, about `e^{−0.07 n}`, and the signs oscillate.
 `Λ_n` stays in `[0.534, 0.551]` for `20 ≤ n ≤ 44`.  Control: the multiplier-1 sibling
 (`x ↦ (x + d)/2`, uniform `p`) has `Λ_n → ∞`, so its `P_n` are not summable.
 
