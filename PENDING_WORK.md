@@ -1,9 +1,15 @@
-# PENDING_WORK (t1-bigfoot-clock)
+# PENDING_WORK (t3-hydra-foils)
 
-2026-10-15: the kickoff scope is complete; see `HANDOFF-t1-bigfoot-clock.md`.
-Advance on the crux this lap: `KPosCascade` (the repo's Bigfoot crux) is now *proved equivalent*
-to `Margin2` in Ligocki coordinates (`V6Bridge.kPosCascade_iff_margin2`).  It is a single-orbit
-walk statement whose counter is not digit-local (`Gate.a_not_local`), so it is the open problem
-in costume.  Next attack, if anyone reopens Bigfoot: there is none within the horizon.  Any
-proof must control the partial sums of `walkInc (b_n mod 6)` along one orbit (the Antihydra-type
-wall).
+2026-10-17: kickoff targets 1-4 are complete; see `HANDOFF-t3-hydra-foils.md` and
+`notes/35-hydra-foils-2026-10-17.md`.  Advance this lap: the T2 gate is now a theorem for the
+whole `Hydra` schema (`Sys.halting_dense_of_drain`, window / residue-table / lifted forms), with
+instances for all five census cryptids.  #218's window bound `d_min = 2` is not sharp:
+`Cert218.hydra218_halting_dense_one` (defect 1, lifted `3^10` certificate).  Bigfoot drains at
+defect 7 (`bigfoot_halting_member`).
+
+Next attack (stretch): lift Bigfoot's certificate to `X mod 24·3^j` with the lifted gate
+`Sys.halting_dense_of_modCert`, and find the least defect it reaches; then the clocked block map
+(`Dyn.step4_block`, slope `256/81`) as the coordinate.
+
+Earlier (t1-bigfoot-clock, 2026-10-15): `KPosCascade` is proved equivalent to `Margin2`
+(`V6Bridge.kPosCascade_iff_margin2`); a single-orbit walk statement, the open problem in costume.
