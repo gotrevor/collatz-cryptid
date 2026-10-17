@@ -461,6 +461,235 @@ theorem moment_succ_le (p : ℕ → ℝ) (hp : IsDigitLaw p) (s : ℝ) (hs0 : 0 
         2 ^ s * p 2 * p 0 ^ s * crossEnergy p N ^ s := by gcongr
     _ = _ := by ring
 
+/-! ## Theorem B ingredients: runs, block commitment, Chernoff, Hölder -/
+
+/-- The state reached from `x` after the word `w`. -/
+def run : ℕ → List ℕ → ℕ
+  | x, [] => x
+  | x, d :: w => run (step x d) w
+
+/-- A legal word from `x` is legal from every `x + 2^|w| u`, and its endpoint moves by `3^|w| u`
+(Fornet OE1: block endpoints of a residue class are Haar). -/
+theorem legal_run_add : ∀ (w : List ℕ) (x u : ℕ), Legal x w →
+    Legal (x + 2 ^ w.length * u) w ∧ run (x + 2 ^ w.length * u) w = run x w + 3 ^ w.length * u
+  | [], x, u, _ => by simp [Legal, run]
+  | d :: w, x, u, ⟨hd, hpar, hw⟩ => by
+    have hs : step (x + 2 ^ (w.length + 1) * u) d = step x d + 2 ^ w.length * (3 * u) := by
+      unfold step
+      have : 2 ^ (w.length + 1) * u = 2 * (2 ^ w.length * u) := by ring
+      rw [this, show 2 ^ w.length * (3 * u) = 3 * (2 ^ w.length * u) by ring]
+      generalize 2 ^ w.length * u = K
+      omega
+    obtain ⟨h1, h2⟩ := legal_run_add w (step x d) (3 * u) hw
+    simp only [List.length_cons]
+    refine ⟨⟨hd, ?_, ?_⟩, ?_⟩
+    · rw [show 2 ^ (w.length + 1) * u = 2 * (2 ^ w.length * u) by ring]; omega
+    · rw [hs]; exact h1
+    · simp only [run]; rw [hs, h2]; ring
+
+theorem legal_append : ∀ (w w' : List ℕ) (x : ℕ), Legal x w → Legal (run x w) w' →
+    Legal x (w ++ w')
+  | [], _, _, _, h => h
+  | d :: w, w', x, ⟨hd, hpar, hw⟩, h => ⟨hd, hpar, legal_append w w' (step x d) hw h⟩
+
+/-- Concatenation: `V_{|w|+M}(x) ≤ cost w + V_M(run x w)` for a legal `w`. -/
+theorem V_add_le (w : List ℕ) (x M : ℕ) (h : Legal x w) :
+    V (w.length + M) x ≤ cost w + V M (run x w) := by
+  obtain ⟨w', hl, hL, hc⟩ := exists_legal_cost_eq_V M (run x w)
+  have h2 := V_le_cost (w ++ w') x (legal_append w w' x h hL)
+  rw [List.length_append, hl] at h2
+  rw [← hc]
+  simpa [cost, List.sum_append] using h2
+
+/-- `V (N + r) x ≤ V N x + r`. -/
+theorem V_add_le_add (N r x : ℕ) : V (N + r) x ≤ V N x + r := by
+  obtain ⟨w, hl, hL, hc⟩ := exists_legal_cost_eq_V N x
+  have := V_add_le w x r hL
+  rw [hl, hc] at this
+  exact this.trans (by have := V_le r (run x w); omega)
+
+/-- An optimal length-`L` word from the residue `r`. -/
+noncomputable def wopt (L r : ℕ) : List ℕ := Classical.choose (exists_legal_cost_eq_V L r)
+
+theorem wopt_spec (L r : ℕ) :
+    (wopt L r).length = L ∧ Legal r (wopt L r) ∧ cost (wopt L r) = V L r :=
+  Classical.choose_spec (exists_legal_cost_eq_V L r)
+
+/-- Block commitment: the start of the next length-`L` block after the optimal word of the
+current residue. -/
+noncomputable def nxt (L x : ℕ) : ℕ := run x (wopt L (x % 2 ^ L))
+
+theorem nxt_eq (L x : ℕ) :
+    nxt L x = run (x % 2 ^ L) (wopt L (x % 2 ^ L)) + 3 ^ L * (x / 2 ^ L) := by
+  obtain ⟨hl, hL, -⟩ := wopt_spec L (x % 2 ^ L)
+  have := (legal_run_add _ (x % 2 ^ L) (x / 2 ^ L) hL).2
+  rw [hl, Nat.mod_add_div] at this
+  exact this
+
+theorem nxt_add (L x u : ℕ) : nxt L (x + 2 ^ L * u) = nxt L x + 3 ^ L * u := by
+  have h1 : (x + 2 ^ L * u) % 2 ^ L = x % 2 ^ L := by simp
+  have h2 : (x + 2 ^ L * u) / 2 ^ L = x / 2 ^ L + u := by
+    rw [Nat.add_mul_div_left _ _ (by positivity)]
+  rw [nxt_eq, nxt_eq, h1, h2]; ring
+
+theorem V_add_le_nxt (L M x : ℕ) : V (L + M) x ≤ V L x + V M (nxt L x) := by
+  obtain ⟨hl, hL, hc⟩ := wopt_spec L (x % 2 ^ L)
+  have hL' : Legal x (wopt L (x % 2 ^ L)) := by
+    have := (legal_run_add _ (x % 2 ^ L) (x / 2 ^ L) hL).1
+    rwa [hl, Nat.mod_add_div] at this
+  have := V_add_le _ x M hL'
+  rwa [hl, hc, V_mod] at this
+
+/-- Split a sum over `x < a b` along `x = r + a u`. -/
+theorem sum_range_mul_split {β : Type*} [AddCommMonoid β] (f : ℕ → β) (a b : ℕ) :
+    ∑ x ∈ range (a * b), f x = ∑ u ∈ range b, ∑ r ∈ range a, f (r + a * u) := by
+  induction b with
+  | zero => simp
+  | succ b ih =>
+    rw [mul_add, mul_one, sum_range_add, ih, sum_range_succ]
+    congr 1
+    exact sum_congr rfl fun r _ => by rw [add_comm]
+
+/-- **Block independence.**  Under the uniform law on residues mod `2^{L+M}`, the residue
+mod `2^L` and the next block start mod `2^M` are independent and uniform. -/
+theorem sum_block {β : Type*} [AddCommMonoid β] (L M : ℕ) (F : ℕ → ℕ → β)
+    (hF : ∀ r y k, F r (y + 2 ^ M * k) = F r y) :
+    ∑ x ∈ range (2 ^ (L + M)), F (x % 2 ^ L) (nxt L x) =
+      ∑ r ∈ range (2 ^ L), ∑ y ∈ range (2 ^ M), F r y := by
+  rw [pow_add, sum_range_mul_split, sum_comm]
+  refine sum_congr rfl fun r hr => ?_
+  have hr' : r < 2 ^ L := mem_range.1 hr
+  have h1 : ∀ u, (r + 2 ^ L * u) % 2 ^ L = r := fun u => by
+    rw [Nat.add_mul_mod_self_left, Nat.mod_eq_of_lt hr']
+  simp only [h1, nxt_add]
+  have hodd : 3 ^ L % 2 = 1 := Nat.odd_iff.1 (Odd.pow (by decide))
+  have := sum_range_pow_affine M (3 ^ L) (nxt L r) hodd (F r) (hF r)
+  rw [← this]
+  exact sum_congr rfl fun u _ => by rw [add_comm]
+
+
+/-- Cost of `q` committed optimal blocks of length `L` from `x`. -/
+noncomputable def blockCost (L : ℕ) : ℕ → ℕ → ℕ
+  | 0, _ => 0
+  | q + 1, x => V L x + blockCost L q (nxt L x)
+
+theorem V_le_blockCost (L : ℕ) : ∀ q x, V (q * L) x ≤ blockCost L q x
+  | 0, x => by simp [blockCost]
+  | q + 1, x => by
+    have h1 := V_add_le_nxt L (q * L) x
+    have h2 := V_le_blockCost L q (nxt L x)
+    rw [show (q + 1) * L = L + q * L by ring]
+    simp only [blockCost]
+    omega
+
+theorem blockCost_add (L : ℕ) : ∀ q x k, blockCost L q (x + 2 ^ (q * L) * k) = blockCost L q x
+  | 0, x, k => rfl
+  | q + 1, x, k => by
+    simp only [blockCost]
+    have e : 2 ^ ((q + 1) * L) * k = 2 ^ L * (2 ^ (q * L) * k) := by ring
+    rw [e, V_add_pow_mul, nxt_add,
+      show 3 ^ L * (2 ^ (q * L) * k) = 2 ^ (q * L) * (3 ^ L * k) by ring, blockCost_add L q]
+
+theorem sumV_eq (N : ℕ) : (sumV N : ℝ) = ∑ x ∈ range (2 ^ N), (V N x : ℝ) := by
+  rw [sumV, sumTo_eq]; push_cast; rfl
+
+/-- Sum of a doubly indexed square, expanded. -/
+theorem sum_sum_add_sq (R Y : Finset ℕ) (f g : ℕ → ℝ) :
+    ∑ r ∈ R, ∑ y ∈ Y, (f r + g y) ^ 2 =
+      Y.card * ∑ r ∈ R, f r ^ 2 + 2 * (∑ r ∈ R, f r) * (∑ y ∈ Y, g y) +
+        R.card * ∑ y ∈ Y, g y ^ 2 := by
+  simp only [add_sq, sum_add_distrib, ← sum_mul, ← mul_sum, sum_const, nsmul_eq_mul]
+
+/-- Mean of the block cost: `∑_x blockCost = q 2^{qL} a`, `a = A_L`. -/
+theorem sum_blockCost (L : ℕ) : ∀ q, ∑ x ∈ range (2 ^ (q * L)), (blockCost L q x : ℝ) =
+    q * 2 ^ (q * L) * ((sumV L : ℝ) / 2 ^ L)
+  | 0 => by simp [blockCost]
+  | q + 1 => by
+    have hP : (2 : ℝ) ^ L ≠ 0 := by positivity
+    rw [show (q + 1) * L = L + q * L by ring]
+    simp only [blockCost]
+    push_cast
+    have := sum_block L (q * L) (fun r y => (V L r : ℝ) + (blockCost L q y : ℝ))
+      (fun r y k => by simp only [blockCost_add])
+    simp only [V_mod] at this
+    rw [this]
+    simp only [sum_add_distrib, sum_const, card_range, nsmul_eq_mul, ← mul_sum]
+    rw [← sumV_eq, sum_blockCost L q]
+    push_cast
+    field_simp
+    ring
+
+/-- Variance of the block cost: `∑_x (blockCost − q a)² ≤ q 2^{qL} L²`. -/
+theorem sum_sq_blockCost (L : ℕ) : ∀ q, ∑ x ∈ range (2 ^ (q * L)),
+    ((blockCost L q x : ℝ) - q * ((sumV L : ℝ) / 2 ^ L)) ^ 2 ≤ (q : ℝ) * 2 ^ (q * L) * (L : ℝ) ^ 2
+  | 0 => by simp [blockCost]
+  | q + 1 => by
+    set a := (sumV L : ℝ) / 2 ^ L with ha
+    have hP : (2 : ℝ) ^ L ≠ 0 := by positivity
+    rw [show (q + 1) * L = L + q * L by ring]
+    simp only [blockCost]
+    push_cast
+    have := sum_block L (q * L)
+      (fun r y => (((V L r : ℝ) - a) + ((blockCost L q y : ℝ) - q * a)) ^ 2)
+      (fun r y k => by simp only [blockCost_add])
+    simp only [V_mod] at this
+    have e : ∀ x, ((V L x : ℝ) + (blockCost L q (nxt L x) : ℝ) - (q + 1) * a) ^ 2 =
+        (((V L x : ℝ) - a) + ((blockCost L q (nxt L x) : ℝ) - q * a)) ^ 2 := fun x => by ring
+    simp only [e]
+    rw [this, sum_sum_add_sq]
+    have h0 : ∑ r ∈ range (2 ^ L), ((V L r : ℝ) - a) = 0 := by
+      rw [sum_sub_distrib, ← sumV_eq, sum_const, card_range, nsmul_eq_mul, ha]
+      push_cast; field_simp; ring
+    have h1 : ∑ r ∈ range (2 ^ L), ((V L r : ℝ) - a) ^ 2 ≤ 2 ^ L * L ^ 2 := by
+      have hle : ∀ r ∈ range (2 ^ L),
+          ((V L r : ℝ) - a) ^ 2 ≤ (V L r : ℝ) ^ 2 - 2 * a * V L r + a ^ 2 :=
+        fun r _ => le_of_eq (by ring)
+      refine (sum_le_sum hle).trans ?_
+      rw [sum_add_distrib, sum_sub_distrib, ← mul_sum, ← sumV_eq, sum_const, card_range,
+        nsmul_eq_mul]
+      have hV : ∀ r ∈ range (2 ^ L), (V L r : ℝ) ^ 2 ≤ (L : ℝ) ^ 2 := fun r _ => by
+        have := V_le L r
+        have : (V L r : ℝ) ≤ L := by exact_mod_cast this
+        nlinarith [(Nat.cast_nonneg (V L r) : (0 : ℝ) ≤ V L r)]
+      have hs := sum_le_sum hV
+      rw [sum_const, card_range, nsmul_eq_mul] at hs
+      have : (sumV L : ℝ) = 2 ^ L * a := by rw [ha]; field_simp
+      push_cast at hs ⊢
+      rw [this]
+      nlinarith [sq_nonneg a, (by positivity : (0 : ℝ) < 2 ^ L)]
+    have h2 := sum_sq_blockCost L q
+    rw [h0]
+    simp only [card_range]
+    push_cast
+    rw [pow_add]
+    nlinarith [(by positivity : (0 : ℝ) < 2 ^ L), (by positivity : (0 : ℝ) < 2 ^ (q * L))]
+
+/-- Haar-mean subadditivity along multiples: `A_{qL} ≤ q A_L`. -/
+theorem A_mul_le (L q : ℕ) :
+    (sumV (q * L) : ℝ) / 2 ^ (q * L) ≤ q * ((sumV L : ℝ) / 2 ^ L) := by
+  have hP : (0 : ℝ) < 2 ^ (q * L) := by positivity
+  rw [div_le_iff₀ hP, sumV_eq]
+  calc ∑ x ∈ range (2 ^ (q * L)), (V (q * L) x : ℝ)
+      ≤ ∑ x ∈ range (2 ^ (q * L)), (blockCost L q x : ℝ) :=
+        sum_le_sum fun x _ => by exact_mod_cast V_le_blockCost L q x
+    _ = _ := by rw [sum_blockCost]; ring
+
+/-- `A_{N+r} ≤ A_N + r`. -/
+theorem A_add_le (N r : ℕ) :
+    (sumV (N + r) : ℝ) / 2 ^ (N + r) ≤ (sumV N : ℝ) / 2 ^ N + r := by
+  have hP : (0 : ℝ) < 2 ^ (N + r) := by positivity
+  have hper : ∑ x ∈ range (2 ^ (N + r)), (V N x : ℝ) = 2 ^ r * sumV N := by
+    rw [pow_add, sum_range_mul_split, sumV_eq]
+    simp only [V_add_pow_mul, sum_const, card_range, nsmul_eq_mul]
+    push_cast; ring
+  rw [div_le_iff₀ hP, sumV_eq]
+  calc ∑ x ∈ range (2 ^ (N + r)), (V (N + r) x : ℝ)
+      ≤ ∑ x ∈ range (2 ^ (N + r)), ((V N x : ℝ) + r) :=
+        sum_le_sum fun x _ => by exact_mod_cast V_add_le_add N r x
+    _ = 2 ^ r * sumV N + 2 ^ (N + r) * r := by
+        rw [sum_add_distrib, hper, sum_const, card_range, nsmul_eq_mul]; push_cast; ring
+    _ = _ := by rw [pow_add]; field_simp
+
 /-! ## The crux and the spine reduction (`notes/37`) -/
 
 /-- **The crux (open).**  The adjacent cross-energy of `μ_p` is bounded uniformly in depth.
