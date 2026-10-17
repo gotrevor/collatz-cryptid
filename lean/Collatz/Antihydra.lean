@@ -6,3 +6,5 @@ Authors: Trevor Morris
 import Collatz.Antihydra.Foils
 import Collatz.Antihydra.RationalBase
 import Collatz.Antihydra.AkiyamaDubickas
+import Collatz.Antihydra.HaarDigitRate
+import Collatz.Antihydra.HaarShift
