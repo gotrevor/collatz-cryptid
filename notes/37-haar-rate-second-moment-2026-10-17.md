@@ -182,3 +182,39 @@ touches the fixed-integer rate, global (G), or Antihydra's orbit.  Theorems A an
 in Lean (no `sorry`); (C1) is the single open hypothesis of the headline.
 
 Build: `lake build Collatz.Antihydra.HaarDigitRate`.
+
+## 8. Lap 3: the minimal crux and how hard it is  [Lean + paper]
+
+**Minimal hypothesis [Lean].**  `MomentBounded p s` (`sup_N ∫ρ_N^{1+s} < ∞`) is all Theorem B
+needs (`haarRate_le_of_momentBounded`, `haarRate_le_eight_twentyfifths_of_momentBounded`).  For
+`q(s) < 1` it is equivalent to bounded shift moments `K^±_N = E_μ[ρ_N(Y±1)^s]`
+(`momentBounded_iff_shiftMomentBounded`).  Forward: `K ≤ M` by weighted AM–GM.  Backward:
+`moment_succ_le_shift`, which is Theorem A before Jensen.  (C1) implies it
+(`momentBounded_of_crossEnergyBounded`).
+
+**(C1) is AC plus a Diophantine condition [paper 80%].**  `ρ` has singularities of strength
+`|y − T_w(0)|^{−log₂(2p₀)} = |·|^{−0.526}` at the dense set of points `T_w(0)`.  That is
+compatible with `L^{1+s}`, but `∫ρ(y)ρ(y+1)` diverges if two singularities sit at distance exactly
+`1`.  This never happens exactly: the δ-chain never reaches 0.  (C1) asks that near-alignments be
+rare in the weighted sense, so (C1) is strictly stronger than `MomentBounded`.  It is attractive
+because it is linear.
+
+**Hardness [paper 75%].**  `MomentBounded candidate (1/32)` gives `μ_p ≪ m` for a 2-adic
+self-similar measure with three maps `x ↦ (2x−d)/3`.  Its similarity dimension is
+`H/log 2 = 1.021`.  It has no exact overlaps, and level-`n` atoms are `≥ 3^{−n}/2` apart (product
+formula).  This is the 2-adic analogue of absolute continuity of a self-similar measure with an
+algebraic contraction (for example, the real λ = 2/3).  That problem is open.  Varjú/Kittle need a
+dimension excess far beyond 2%, and Garsia's argument works here only for uniform `p`, where the
+density is `≤ 4`, at cost 1.  Every law of cost `< 1/3` has `2∑p_d² > 1`, so the `L²` regime is
+unavailable.  In the Galton–Watson model, with independent sibling subtrees, the criterion is
+exactly Biggins' `H > log 2`.  The only obstruction is the dependence of the subtrees at `y`
+and `y+1`.
+
+**Fourier/odd–even recursion (direction).**  `F_n(θ) = ∑_t m_n(t)e(tθ)` (forward measure on the
+integers) satisfies `F_{n+1}(θ) = 4π(1)cos(πθ)·O_n(3θ/2) + (2π(0) + 4π(2)cos 2πθ)·E_n(3θ/2)`,
+where `O_n` and `E_n` are the odd and even parts.  The fair coin at odd δ kills the parity
+character in one step (the `cos(π/2) = 0` term).  Also `Λ_{n+k} = Λ_n + ∑_{ξ∈2^{−k}ℤ∖0}
+|μ̂(ξ)|² F_n(−ξ)`.  **Sufficient condition (S):** `max_{ξ ∈ 2^{−k}ℤ∖0}|F_n(ξ)| ≤ C Λ_n e^{−cn}`
+for `k = αn` with `c > α log γ`, where `γ ≈ 1.155` is the diagonal growth.  (S) implies (C1).
+Numerics: `T_k` (`tmp/mdp/tk`, `k ≤ 30`) has `|T_k|/absmass ≈ 1.7e−4` at `k = 30`, far below
+`γ^{−30} = 0.013`.

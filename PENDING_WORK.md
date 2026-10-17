@@ -1,5 +1,16 @@
 # PENDING_WORK (t4-haar-rate)
 
+2026-10-17 lap 3 (review): the crux now has a minimal form, `MomentBounded candidate (1/32)`.  It
+is equivalent to bounded shift moments, and the headline follows from it
+(`haarRate_le_eight_twentyfifths_of_momentBounded`).  (C1) is only sufficient: it adds a
+Diophantine condition at 1.  Hardness: the 2-adic analogue of an open AC problem (notes/37 §8).
+Next, in order:
+1. Lean: the integer shift recursion `crossEnergy p N = crossShift p N 1`, with
+   `C_{N+1}(2u) = 2[π₀C(3u) + π₂(C(3u+1)+C(3u−1))]` and `C_{N+1}(2u+1) = 2π₁[C(3u+1)+C(3u+2)]` for
+   `δ ≥ 1`.  The proof expands `rho_succ_even/odd` and reindexes with `sum_range_pow_affine`.
+2. Numerics for condition (S) (notes/37 §8): `max |F_n(ξ)|` over `ξ ∈ 2^{−k}ℤ∖0` against `n, k`.
+3. Stop rule (DIRECTION.md): if (S) shows no mechanism, record the obstruction and `box done`.
+
 2026-10-17 lap 2: Theorems A and B are proved in Lean.  The headline
 `haarRate_le_eight_twentyfifths` is sorry-free and conditional only on `CrossEnergyBounded
 candidate` (the crux).  Next attack on the crux: Lean statement of the shift recursion

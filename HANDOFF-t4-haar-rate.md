@@ -81,3 +81,18 @@ Branch `wip/t4-haar-rate`, HEAD `65dc9e8`.  The tree is clean apart from the unt
 45..52 background run).  `HaarDigitRate.lean` has no `sorry`.  The only open obligation is
 `CrossEnergyBounded candidate`.  First task next lap: the Lean statement
 `crossEnergy p N = lam p N 1` for the integer shift recursion.
+
+## Lap 3 (2026-10-17, review lap)
+
+Branch `wip/t4-haar-rate`.  Commit `babde70` adds the minimal crux:
+* `MomentBounded`, `ShiftMomentBounded`, `shiftMomentPlus/Minus`, `moment_succ_le_shift`,
+  `shiftMoment_le_moment`, `momentBounded_iff_shiftMomentBounded`, and
+  `momentBounded_of_crossEnergyBounded`;
+* `haarRate_le_of_momentBounded` (the old Theorem B body, which now needs only `MomentBounded`);
+* `haarRate_le_eight_twentyfifths_of_momentBounded`.
+
+All of these are axiom-clean (trust base only).  `DIRECTION.md` (CURRENT DIRECTIVE, stop rule)
+and `STATUS.md` are new.  notes/37 §8 records the hardness assessment and condition (S).
+
+Next: PENDING_WORK top entry.  First the integer shift recursion in Lean, then numerics for (S).
+`tmp/` is scratch and not committed.
