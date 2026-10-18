@@ -182,3 +182,17 @@ Commit each green checkpoint, and record status at the bottom of this file.
   `PAR_END/ERASE_L/MARK_END/UNMARK_S` segment to the canonical `REP_START` configuration, handling
   uniformly whether the copied parent block's final depth mark belongs to the parent or to a
   nonempty suffix; then induct over the copy and base-counter loops.
+- 2026-10-18 lap 8: the complete search-and-erase prefix is proved.  `parEnd_reaches_markEnd`,
+  `unmarkStart_reaches_repStart`, and `eraseLeaf_reaches_repStart` verify the table from `PAR_END`
+  through the generated stay move into `REP_START`.  `parentFound_reaches_repStart` handles the
+  real empty/nonempty suffix split, and `chopStart_reaches_repStart_of_wf` composes it with the
+  rightmost-parent search from the actual well-formed `CHOP_START` tape.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.chopStart_reaches_repStart_of_wf` —
+  FORMALIZE-TIER GREEN; the new headline uses exactly
+  `[Classical.choice, Quot.sound, propext]`, and only the intended `halts_of_wf` debt remains.
+  Current blocker: copy and replicate loops.  Next attack: induct over the marked block in
+  `CP_SCAN/CARRY_*/CP_RET`, ending at `CARRY_DL/CP_END`, then lift one completed copy through the
+  remaining base counters.

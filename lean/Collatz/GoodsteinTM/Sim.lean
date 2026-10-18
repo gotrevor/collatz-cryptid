@@ -1408,6 +1408,214 @@ theorem chopStart_reaches_parent_of_wf (cells : List Sy) (a : ℕ)
   simpa [List.reverse_append, List.reverse_replicate, List.replicate_succ,
     replicate_append_cons_self, List.append_assoc] using hsearch
 
+/-- After `MARK_END` has marked the right edge of the copy block, `UNMARK_S` restores all
+comparison marks on the block, changes its initial `C` to `S`, and executes the generated stay
+move into `REP_START`.  `front` is in forward tape order; the source configuration scans it in
+reverse order. -/
+theorem unmarkStart_reaches_repStart (cells : List Sy) (front l r : List Sy) (y : Sy)
+    (hfront : ∀ x ∈ front, x = .P ∨ x = .d ∨ x = .D) :
+    Reaches (machine cells)
+      ⟨.core .UNMARK_S, (front.reverse ++ .C :: l).tail,
+        (front.reverse ++ .C :: l).headD .blank, y :: r⟩
+      ⟨.core .REP_START, l, .S, front.map restoreD ++ y :: r⟩ := by
+  induction front using List.reverseRecOn generalizing y r with
+  | nil =>
+      refine ⟨2, ?_⟩
+      cases y <;> rfl
+  | append_singleton pre x ih =>
+      have hx : x = Sy.P ∨ x = Sy.d ∨ x = Sy.D := hfront x (by simp)
+      have hpre : ∀ y ∈ pre, y = Sy.P ∨ y = Sy.d ∨ y = Sy.D := by
+        intro y hy
+        exact hfront y (by simp [hy])
+      have hone :
+          Reaches (machine cells)
+            ⟨.core .UNMARK_S,
+              ((pre ++ [x]).reverse ++ .C :: l).tail,
+              ((pre ++ [x]).reverse ++ .C :: l).headD .blank, y :: r⟩
+            ⟨.core .UNMARK_S, (pre.reverse ++ .C :: l).tail,
+              (pre.reverse ++ .C :: l).headD .blank, restoreD x :: y :: r⟩ := by
+        rcases hx with rfl | rfl | rfl <;>
+          simpa [List.reverse_append] using
+            (show Reaches (machine cells)
+              ⟨.core .UNMARK_S, pre.reverse ++ .C :: l, _, y :: r⟩
+              ⟨.core .UNMARK_S, (pre.reverse ++ .C :: l).tail,
+                (pre.reverse ++ .C :: l).headD .blank, _ :: y :: r⟩ from ⟨1, rfl⟩)
+      have hrest := ih (y :: r) (restoreD x) hpre
+      simpa [List.map_append, List.append_assoc] using reaches_trans hone hrest
+
+/-- `PAR_END` crosses the blank tail, erases the marked last node, and stops on the final symbol
+of the copy block in `MARK_END`. -/
+theorem parEnd_reaches_markEnd (cells : List Sy) (a : ℕ)
+    (last : Sy) (front l r : List Sy) :
+    Reaches (machine cells)
+      ⟨.core .PAR_END,
+        .d :: List.replicate (a + 1) .D ++ .T :: last :: front.reverse ++ .C :: l,
+        .blank, r⟩
+      ⟨.core .MARK_END, front.reverse ++ .C :: l, last,
+        List.replicate (a + 4) .blank ++ r⟩ := by
+  have henter :
+      stepN (machine cells) 1
+        ⟨.core .PAR_END,
+          .d :: List.replicate (a + 1) .D ++ .T :: last :: front.reverse ++ .C :: l,
+          .blank, r⟩ =
+        some ⟨.core .ERASE_L,
+          List.replicate (a + 1) .D ++ .T :: last :: front.reverse ++ .C :: l,
+          .d, .blank :: r⟩ := by
+    rfl
+  have herase := stepN_scanLeftMap (machine cells) (.core .ERASE_L)
+    (fun _ : Sy => Sy.blank) .d (List.replicate (a + 1) .D)
+    (.T :: last :: front.reverse ++ .C :: l) (.blank :: r) (by
+      intro x hx
+      rcases List.mem_cons.mp hx with rfl | hx
+      · rfl
+      · have : x = Sy.D := (List.mem_replicate.mp hx).2
+        subst x
+        rfl)
+  have herase' :
+      stepN (machine cells) (a + 2)
+        ⟨.core .ERASE_L,
+          List.replicate (a + 1) .D ++ .T :: last :: front.reverse ++ .C :: l,
+          .d, .blank :: r⟩ =
+        some ⟨.core .ERASE_L, last :: front.reverse ++ .C :: l, .T,
+          List.replicate (a + 3) .blank ++ r⟩ := by
+    simpa [List.map_replicate, List.reverse_replicate, List.replicate_succ,
+      replicate_append_cons_self, List.append_assoc] using herase
+  have hmark :
+      stepN (machine cells) 1
+        ⟨.core .ERASE_L, last :: front.reverse ++ .C :: l, .T,
+          List.replicate (a + 3) .blank ++ r⟩ =
+        some ⟨.core .MARK_END, front.reverse ++ .C :: l, last,
+          List.replicate (a + 4) .blank ++ r⟩ := by
+    simpa [List.replicate_succ, replicate_append_cons_self, List.append_assoc] using
+      (show stepN (machine cells) 1
+        ⟨.core .ERASE_L, last :: front.reverse ++ .C :: l, .T,
+          List.replicate (a + 3) .blank ++ r⟩ =
+        some ⟨.core .MARK_END, front.reverse ++ .C :: l, last,
+          .blank :: List.replicate (a + 3) .blank ++ r⟩ by rfl)
+  exact reaches_trans (reaches_of_stepN henter)
+    (reaches_trans (reaches_of_stepN herase') (reaches_of_stepN hmark))
+
+/-- Complete erase/mark/restore phase.  `front ++ [last]` is the copy block after its initial
+node marker, in forward tape order. -/
+theorem eraseLeaf_reaches_repStart (cells : List Sy) (a : ℕ)
+    (last : Sy) (front l r : List Sy)
+    (hlast : last = .d ∨ last = .D)
+    (hfront : ∀ x ∈ front, x = .P ∨ x = .d ∨ x = .D) :
+    Reaches (machine cells)
+      ⟨.core .PAR_END,
+        .d :: List.replicate (a + 1) .D ++ .T :: last :: front.reverse ++ .C :: l,
+        .blank, r⟩
+      ⟨.core .REP_START, l, .S,
+        front.map restoreD ++ .z :: List.replicate (a + 4) .blank ++ r⟩ := by
+  have htoMark := parEnd_reaches_markEnd cells a last front l r
+  have hmark :
+      Reaches (machine cells)
+        ⟨.core .MARK_END, front.reverse ++ .C :: l, last,
+          List.replicate (a + 4) .blank ++ r⟩
+        ⟨.core .UNMARK_S, (front.reverse ++ .C :: l).tail,
+          (front.reverse ++ .C :: l).headD .blank,
+          .z :: List.replicate (a + 4) .blank ++ r⟩ := by
+    rcases hlast with rfl | rfl <;> exact ⟨1, rfl⟩
+  have hunmark := unmarkStart_reaches_repStart cells front l
+    (List.replicate (a + 4) Sy.blank ++ r) .z hfront
+  simpa [List.append_assoc] using
+    reaches_trans htoMark (reaches_trans hmark hunmark)
+
+/-- The copy block after `MARK_END`: the parent marker is scanned as `S`, and the final depth
+mark of the parent's pruned subtree is `z`. -/
+def markedCopyTail (a : ℕ) (u : List ℕ) : List Sy :=
+  (List.replicate (a + 1) Sy.d ++ treeCells u).dropLast ++ [Sy.z]
+
+/-- Specialization of the erase phase to the canonical parent-search output.  The suffix depths
+are positive, so the final symbol of a nonempty suffix encoding is a depth mark; for an empty
+suffix the final parent-depth mark is used instead. -/
+theorem parentFound_reaches_repStart (cells : List Sy) (a : ℕ)
+    (u : List ℕ) (l r : List Sy) (hpositive : ∀ k ∈ u, 1 ≤ k) :
+    Reaches (machine cells)
+      ⟨.core .PAR_END,
+        .d :: List.replicate (a + 1) .D ++ .T ::
+          (treeCells u).reverse ++ List.replicate (a + 1) .D ++ .C :: l,
+        .blank, r⟩
+      ⟨.core .REP_START, l, .S,
+        markedCopyTail a u ++ List.replicate (a + 4) .blank ++ r⟩ := by
+  induction u using List.reverseRecOn with
+  | nil =>
+      have h := eraseLeaf_reaches_repStart cells a Sy.D
+        (List.replicate a Sy.D) l r (.inr rfl) (by
+          intro x hx
+          exact .inr (.inr (List.mem_replicate.mp hx).2))
+      simpa [markedCopyTail, restoreD, List.map_replicate,
+        List.reverse_replicate, List.replicate_succ,
+        replicate_append_cons_self, List.append_assoc] using h
+  | append_singleton pre k _ =>
+      have hk : 1 ≤ k := hpositive k (by simp)
+      obtain ⟨q, rfl⟩ : ∃ q, k = q + 1 := ⟨k - 1, by omega⟩
+      let front := List.replicate (a + 1) Sy.D ++ treeCells pre ++
+        Sy.P :: List.replicate q Sy.d
+      have htree : treeCells (pre ++ [q + 1]) =
+          treeCells pre ++ Sy.P :: List.replicate q Sy.d ++ [Sy.d] := by
+        rw [treeCells_append, treeCells_cons]
+        simp [List.replicate_succ', List.append_assoc]
+      have hmarked : markedCopyTail a (pre ++ [q + 1]) =
+          List.replicate (a + 1) Sy.d ++ treeCells pre ++
+            Sy.P :: List.replicate q Sy.d ++ [Sy.z] := by
+        unfold markedCopyTail
+        rw [htree]
+        have hconcat : List.replicate (a + 1) Sy.d ++
+              (treeCells pre ++ Sy.P :: List.replicate q Sy.d ++ [Sy.d]) =
+            (List.replicate (a + 1) Sy.d ++ treeCells pre ++
+              Sy.P :: List.replicate q Sy.d) ++ [Sy.d] := by
+          simp [List.append_assoc]
+        rw [hconcat, List.dropLast_concat]
+      have hfront : ∀ x ∈ front, x = Sy.P ∨ x = Sy.d ∨ x = Sy.D := by
+        intro x hx
+        dsimp [front] at hx
+        rw [List.mem_append] at hx
+        rcases hx with hx | hx
+        · rw [List.mem_append] at hx
+          rcases hx with hx | hx
+          · exact .inr (.inr (List.mem_replicate.mp hx).2)
+          · rcases mem_treeCells hx with rfl | rfl
+            · exact .inl rfl
+            · exact .inr (.inl rfl)
+        · rcases List.mem_cons.mp hx with rfl | hx
+          · exact .inl rfl
+          · exact .inr (.inl (List.mem_replicate.mp hx).2)
+      have h := eraseLeaf_reaches_repStart cells a Sy.d front l r (.inl rfl) hfront
+      rw [hmarked]
+      simpa [front, htree,
+        restoreD, map_restoreD_treeCells, List.map_append, List.map_replicate,
+        List.reverse_append, List.reverse_replicate, List.replicate_succ',
+        replicate_append_cons_self, List.append_assoc] using h
+
+/-- The full search-and-erase prefix of a deep chop.  Starting on the final depth mark of a
+well-formed tree, the machine finds the rightmost parent, deletes the leaf, and presents the
+exact marked parent block to the replicate loop. -/
+theorem chopStart_reaches_repStart_of_wf (cells : List Sy) (a : ℕ)
+    (s : List ℕ) (l r : List Sy) (ht : WF (s ++ [a + 2])) :
+    ∃ p u, s = p ++ (a + 1) :: u ∧
+      Reaches (machine cells)
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells s).reverse ++ l,
+          .d, .blank :: r⟩
+        ⟨.core .REP_START, (treeCells p).reverse ++ l, .S,
+          markedCopyTail a u ++ List.replicate (a + 4) .blank ++ r⟩ := by
+  obtain ⟨p, u, hsplit, hparent⟩ :=
+    chopStart_reaches_parent_of_wf cells a s l r ht
+  have hpositive : ∀ k ∈ u, 1 ≤ k := by
+    intro k hk
+    apply wf_mem_lower ht
+    rw [hsplit]
+    simp [hk]
+  have herase := parentFound_reaches_repStart cells a u
+    ((treeCells p).reverse ++ l) r hpositive
+  have hparent' := hparent
+  simp only [List.cons_append, List.append_assoc] at hparent'
+  have herase' := herase
+  simp only [List.cons_append, List.append_assoc] at herase'
+  refine ⟨p, u, hsplit, ?_⟩
+  simpa [List.cons_append, List.append_assoc] using reaches_trans hparent' herase'
+
 /-- The complete finite nonblank tape segment at the start of a chop. -/
 def tapeCells (b : ℕ) (t : List ℕ) : List Sy :=
   List.replicate b .b ++ [.lb, .rb] ++ treeCells t
