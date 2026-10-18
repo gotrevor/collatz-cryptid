@@ -145,3 +145,22 @@ Commit each green checkpoint, and record status at the bottom of this file.
   node reaches `NOTPARENT`, prove restoration of all `D`/`C` marks and return to `CAND_FIND`, and
   induct over rejected candidate blocks.  Then compose the successful branch with
   `PAR_END/ERASE_L/MARK_END/UNMARK_S`.
+- 2026-10-18 lap 6 (review): the review corrected an adjacency gap in lap 5.  After a rejected
+  candidate, its restored encoded block remains between the next candidate and `T`, so the old
+  `compareParent_reaches` was not strong enough for the real parent search.  The generalized
+  `comparePairThrough_reaches` / `comparePairsThrough_reaches_exhausted` circuits now preserve an
+  arbitrary encoded middle segment, and `compareParentThrough_reaches` proves the successful
+  branch in that actual tape shape.  The rejection/retry branch is also complete for one
+  candidate: `compareEqualThrough_reaches_retry` and `compareDeeperThrough_reaches_retry` cover
+  the two table exits, while `candidateRejectedThrough_reaches_retry` restores all marks and
+  prepends the rejected node to the middle-segment invariant.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts`, plus focused axiom gates on
+  `GoodsteinTM.compareParentThrough_reaches` and
+  `GoodsteinTM.candidateRejectedThrough_reaches_retry` — FORMALIZE-TIER GREEN; both focused
+  declarations use exactly `[Classical.choice, Quot.sound, propext]`, and only the intended
+  `halts_of_wf` debt remains.  Current blocker: lift the one-candidate retry invariant through the
+  whole suffix after the rightmost depth-`k - 1` parent of a final depth-`k` node.  Next attack:
+  prove that `WF` suffix decomposition and induct right-to-left over its depth-≥`k` blocks, then
+  compose `compareParentThrough_reaches` and begin `PAR_END/ERASE_L/MARK_END/UNMARK_S`.
