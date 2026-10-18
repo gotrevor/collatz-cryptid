@@ -132,6 +132,66 @@ private theorem parentBlock_mem_lower {s : List ℕ} {k x : ℕ} (hk : 1 ≤ k)
     simp only [decide_eq_true_eq] at h
     omega
 
+/-- In a well-formed level sequence ending at depth `k > 1`, the rightmost node at depth
+`k - 1` exists, and every node after it has depth at least `k`.  This is the semantic
+decomposition used by the machine's right-to-left parent search. -/
+theorem exists_parent_split_of_wf {s : List ℕ} {k : ℕ}
+    (ht : WF (s ++ [k])) (hk : 2 ≤ k) :
+    ∃ p u, s = p ++ (k - 1) :: u ∧ ∀ x ∈ u, k ≤ x := by
+  let before := s.rdropWhile (k ≤ ·)
+  let after := s.rtakeWhile (k ≤ ·)
+  have hsplit : before ++ after = s := by
+    simpa [before, after] using
+      List.rdropWhile_append_rtakeWhile (p := (k ≤ ·)) (l := s)
+  have hsne : s ≠ [] := by
+    rintro rfl
+    simp [WF] at ht
+    omega
+  have hbefore_ne : before ≠ [] := by
+    intro hnil
+    have hall : ∀ x ∈ s, k ≤ x := by
+      simpa [before] using (List.rdropWhile_eq_nil_iff.mp hnil)
+    have hhead_mem : s.head hsne ∈ s := List.head_mem hsne
+    have hhead_one : s.head hsne = 1 := by
+      have h := ht.1
+      rw [List.head?_append_of_ne_nil _ hsne, List.head?_eq_some_head hsne] at h
+      simpa using h
+    have := hall (s.head hsne) hhead_mem
+    omega
+  have hlast_lt : before.getLast hbefore_ne < k := by
+    have h := List.rdropWhile_last_not (p := (k ≤ ·)) (l := s) hbefore_ne
+    simpa [before] using h
+  have hchain : (before ++ after).IsChain LevelRel := by
+    rw [hsplit]
+    exact ht.2.left_of_append
+  have hlast : before.getLast hbefore_ne = k - 1 := by
+    by_cases hafter : after = []
+    · have hbefore_s : before = s := by simpa [hafter] using hsplit
+      have hrel : LevelRel (s.getLast hsne) k :=
+        ht.2.rel_getLast_head_of_append hsne (by simp)
+      have heq : before.getLast hbefore_ne = s.getLast hsne :=
+        List.getLast_congr hbefore_ne hsne hbefore_s
+      rw [heq]
+      unfold LevelRel at hrel
+      omega
+    · have hboundary : LevelRel (before.getLast hbefore_ne) (after.head hafter) :=
+        hchain.rel_getLast_head_of_append hbefore_ne hafter
+      have hafter_lower : k ≤ after.head hafter := by
+        have hmem : after.head hafter ∈ after := List.head_mem hafter
+        have h := List.mem_rtakeWhile_imp (p := (k ≤ ·)) (l := s) hmem
+        simpa [after] using h
+      unfold LevelRel at hboundary
+      omega
+  refine ⟨before.dropLast, after, ?_, ?_⟩
+  · calc
+      s = before ++ after := hsplit.symm
+      _ = (before.dropLast ++ [before.getLast hbefore_ne]) ++ after := by
+        rw [List.dropLast_append_getLast hbefore_ne]
+      _ = before.dropLast ++ (k - 1) :: after := by simp [hlast]
+  · intro x hx
+    have h := List.mem_rtakeWhile_imp (p := (k ≤ ·)) (l := s) hx
+    simpa [after] using h
+
 /-- A hydra chop preserves the level-sequence well-formedness invariant. -/
 theorem chop_preserves_wf (n : ℕ) (t : List ℕ) (ht : WF t) : WF (chop n t) := by
   induction t using List.reverseRecOn with

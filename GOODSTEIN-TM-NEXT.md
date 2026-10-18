@@ -164,3 +164,21 @@ Commit each green checkpoint, and record status at the bottom of this file.
   whole suffix after the rightmost depth-`k - 1` parent of a final depth-`k` node.  Next attack:
   prove that `WF` suffix decomposition and induct right-to-left over its depth-≥`k` blocks, then
   compose `compareParentThrough_reaches` and begin `PAR_END/ERASE_L/MARK_END/UNMARK_S`.
+- 2026-10-18 lap 7: the whole rightmost-parent search is complete.  In `Hydra.lean`,
+  `exists_parent_split_of_wf` proves that a well-formed sequence ending at depth `k > 1` splits
+  at its rightmost depth-`k - 1` node and that every following node has depth at least `k`.  In
+  `Sim.lean`, `candidateSuffix_reaches_retry` inducts right-to-left across that entire suffix,
+  composing the one-candidate retry theorem while preserving the exact encoded middle segment.
+  `chopStartThrough_reaches_parent` composes the suffix traversal with the successful comparison,
+  and `chopStart_reaches_parent_of_wf` applies the semantic split to the actual well-formed tape
+  and reaches the canonical `PAR_END` configuration.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Hydra.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.chopStart_reaches_parent_of_wf` —
+  FORMALIZE-TIER GREEN; the new headline uses exactly
+  `[Classical.choice, Quot.sound, propext]`, and only the intended `halts_of_wf` debt remains.
+  Current blocker: the erase/copy/replicate half of route item 3.  Next attack: prove the
+  `PAR_END/ERASE_L/MARK_END/UNMARK_S` segment to the canonical `REP_START` configuration, handling
+  uniformly whether the copied parent block's final depth mark belongs to the parent or to a
+  nonempty suffix; then induct over the copy and base-counter loops.

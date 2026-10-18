@@ -311,6 +311,10 @@ def treeCells (t : List ℕ) : List Sy :=
 @[simp] theorem treeCells_cons (k : ℕ) (t : List ℕ) :
     treeCells (k :: t) = .P :: List.replicate k .d ++ treeCells t := rfl
 
+@[simp] theorem treeCells_append (s t : List ℕ) :
+    treeCells (s ++ t) = treeCells s ++ treeCells t := by
+  simp [treeCells]
+
 /-- Unmarked encoded tree cells contain only node markers and depth marks. -/
 theorem mem_treeCells {t : List ℕ} {x : Sy} (hx : x ∈ treeCells t) :
     x = .P ∨ x = .d := by
@@ -1270,6 +1274,139 @@ theorem candidateRejectedThrough_reaches_retry (cells : List Sy) (a q : ℕ)
             List.replicate (a + 1) .d ++ .blank :: r⟩ := by
     simpa [List.append_assoc] using hfind
   simpa [treeCells_cons, List.append_assoc] using reaches_trans hfind' hreject
+
+/-- Starting at the right edge of a suffix whose nodes are all at least as deep as the marked
+last node, repeated rejected-candidate iterations cross the whole suffix.  Restored nodes are
+accumulated in their original left-to-right order in front of `middle`. -/
+theorem candidateSuffix_reaches_retry (cells : List Sy) (a : ℕ)
+    (suffix middle : List ℕ) (l r : List Sy)
+    (hdeep : ∀ k ∈ suffix, a + 1 ≤ k) :
+    Reaches (machine cells)
+      ⟨.core .CAND_FIND, ((treeCells suffix).reverse ++ l).tail,
+        ((treeCells suffix).reverse ++ l).headD .blank,
+        treeCells middle ++ .T :: List.replicate (a + 1) .d ++ .blank :: r⟩
+      ⟨.core .CAND_FIND, l.tail, l.headD .blank,
+        treeCells (suffix ++ middle) ++ .T ::
+          List.replicate (a + 1) .d ++ .blank :: r⟩ := by
+  induction suffix using List.reverseRecOn generalizing middle with
+  | nil =>
+      change Reaches (machine cells)
+        ⟨.core .CAND_FIND, l.tail, l.headD .blank,
+          treeCells middle ++ .T :: List.replicate (a + 1) .d ++ .blank :: r⟩
+        ⟨.core .CAND_FIND, l.tail, l.headD .blank,
+          treeCells middle ++ .T :: List.replicate (a + 1) .d ++ .blank :: r⟩
+      exact reaches_refl _ _
+  | append_singleton pre k ih =>
+      have hk : a + 1 ≤ k := hdeep k (by simp)
+      obtain ⟨q, hk_eq⟩ : ∃ q, k = a + q + 1 := by
+        exact ⟨k - (a + 1), by omega⟩
+      subst k
+      have hone := candidateRejectedThrough_reaches_retry cells a q middle
+        ((treeCells pre).reverse ++ l) r
+      have hone' :
+          Reaches (machine cells)
+            ⟨.core .CAND_FIND,
+              ((treeCells (pre ++ [a + q + 1])).reverse ++ l).tail,
+              ((treeCells (pre ++ [a + q + 1])).reverse ++ l).headD .blank,
+              treeCells middle ++ .T ::
+                List.replicate (a + 1) .d ++ .blank :: r⟩
+            ⟨.core .CAND_FIND,
+              ((treeCells pre).reverse ++ l).tail,
+              ((treeCells pre).reverse ++ l).headD .blank,
+              treeCells ((a + q + 1) :: middle) ++ .T ::
+                List.replicate (a + 1) .d ++ .blank :: r⟩ := by
+        simpa [List.reverse_append, List.reverse_replicate, List.replicate_succ,
+          replicate_append_cons_self, List.append_assoc] using hone
+      have hprefix : ∀ k ∈ pre, a + 1 ≤ k := by
+        intro k hk
+        exact hdeep k (by simp [hk])
+      have hrest := ih ((a + q + 1) :: middle) hprefix
+      simpa [List.append_assoc] using reaches_trans hone' hrest
+
+/-- The complete right-to-left search through a deep suffix finds the actual rightmost parent of
+a final node of depth `a + 2`.  The result is the canonical `PAR_END` configuration used by the
+erase-and-copy phase. -/
+theorem chopStartThrough_reaches_parent (cells : List Sy) (a : ℕ)
+    (suffix : List ℕ) (l r : List Sy)
+    (hdeep : ∀ k ∈ suffix, a + 2 ≤ k) :
+    Reaches (machine cells)
+      ⟨.core .CHOP_START,
+        List.replicate (a + 1) .d ++ .P :: (treeCells suffix).reverse ++
+          List.replicate (a + 1) .d ++ .P :: l,
+        .d, .blank :: r⟩
+      ⟨.core .PAR_END,
+        .d :: List.replicate (a + 1) .D ++ .T ::
+          (treeCells suffix).reverse ++ List.replicate (a + 1) .D ++ .C :: l,
+        .blank, r⟩ := by
+  let parentTape := List.replicate (a + 1) Sy.d ++ Sy.P :: l
+  have hstart := reaches_of_stepN
+    (chopStart_reaches_candidate cells a ((treeCells suffix).reverse ++ parentTape)
+      (.blank :: r))
+  have hsuffix := candidateSuffix_reaches_retry cells (a + 1) suffix [] parentTape r (by
+    simpa [Nat.add_assoc] using hdeep)
+  have hfind := reaches_of_stepN
+    (candidateFind_reaches_compare cells a l
+      (treeCells suffix ++ .T :: List.replicate (a + 2) .d ++ .blank :: r))
+  have hparent := compareParentThrough_reaches cells a suffix .blank l r
+  have hstart' :
+      Reaches (machine cells)
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells suffix).reverse ++ parentTape,
+          .d, .blank :: r⟩
+        ⟨.core .CAND_FIND,
+          ((treeCells suffix).reverse ++ parentTape).tail,
+          ((treeCells suffix).reverse ++ parentTape).headD .blank,
+          .T :: List.replicate (a + 2) .d ++ .blank :: r⟩ := by
+    simpa [List.append_assoc] using hstart
+  have hsuffix' :
+      Reaches (machine cells)
+        ⟨.core .CAND_FIND,
+          ((treeCells suffix).reverse ++ parentTape).tail,
+          ((treeCells suffix).reverse ++ parentTape).headD .blank,
+          .T :: List.replicate (a + 2) .d ++ .blank :: r⟩
+        ⟨.core .CAND_FIND, List.replicate a .d ++ .P :: l, .d,
+          treeCells suffix ++ .T :: List.replicate (a + 2) .d ++ .blank :: r⟩ := by
+    simpa [parentTape, List.replicate_succ, List.append_assoc] using hsuffix
+  have hfind' :
+      Reaches (machine cells)
+        ⟨.core .CAND_FIND, List.replicate a .d ++ .P :: l, .d,
+          treeCells suffix ++ .T :: List.replicate (a + 2) .d ++ .blank :: r⟩
+        ⟨.core .CMP_C, .C :: l, .d,
+          List.replicate a .d ++ treeCells suffix ++ .T ::
+            List.replicate (a + 2) .d ++ .blank :: r⟩ := by
+    simpa [List.append_assoc] using hfind
+  simpa [parentTape, List.append_assoc] using
+    reaches_trans hstart' (reaches_trans hsuffix'
+      (reaches_trans hfind' hparent))
+
+/-- For an actual well-formed level sequence, the machine's search finds the rightmost node one
+level above the final leaf.  The witnesses expose exactly the prefix/suffix decomposition used by
+`parentBlock`. -/
+theorem chopStart_reaches_parent_of_wf (cells : List Sy) (a : ℕ)
+    (s : List ℕ) (l r : List Sy) (ht : WF (s ++ [a + 2])) :
+    ∃ p u, s = p ++ (a + 1) :: u ∧
+      Reaches (machine cells)
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells s).reverse ++ l,
+          .d, .blank :: r⟩
+        ⟨.core .PAR_END,
+          .d :: List.replicate (a + 1) .D ++ .T ::
+            (treeCells u).reverse ++ List.replicate (a + 1) .D ++
+              .C :: (treeCells p).reverse ++ l,
+          .blank, r⟩ := by
+  obtain ⟨p, u, hsplit, hdeep⟩ :=
+    exists_parent_split_of_wf ht (by omega)
+  have hsplit' : s = p ++ (a + 1) :: u := by
+    simpa using hsplit
+  refine ⟨p, u, hsplit', ?_⟩
+  have hsearch := chopStartThrough_reaches_parent cells a u
+    ((treeCells p).reverse ++ l) r (by
+      intro k hk
+      have := hdeep k hk
+      omega)
+  rw [hsplit']
+  simpa [List.reverse_append, List.reverse_replicate, List.replicate_succ,
+    replicate_append_cons_self, List.append_assoc] using hsearch
 
 /-- The complete finite nonblank tape segment at the start of a chop. -/
 def tapeCells (b : ℕ) (t : List ℕ) : List Sy :=
