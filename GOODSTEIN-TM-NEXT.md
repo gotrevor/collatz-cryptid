@@ -129,3 +129,19 @@ Commit each green checkpoint, and record status at the bottom of this file.
   only the intended `halts_of_wf` debt.  Current blocker: the depth-pairing comparison loop.
   Next attack: prove one `CMP_C/CMP_TOL/CMP_L/CMP_TOC` pairing iteration, induct it to the
   parent-found and `NOTPARENT` branches, then continue to the erase segment.
+- 2026-10-18 lap 5: the comparison loop's successful branch is complete in
+  `GoodsteinTM/Sim.lean`.  `stepN_scanRightUntilRight` and `stepN_scanRightUntilLeft` handle
+  possibly empty scans whose stop transition changes state.  `comparePair_reaches` proves one
+  complete depth-pairing circuit; `comparePairs_reaches_exhausted` inducts it over the candidate
+  depth; and `compareExhausted_reaches_parent` / `compareParent_reaches` prove that a candidate
+  exactly one level above the last node reaches `PAR_END` through `CMP_CEXH/CMP_LCHK`.
+  Verification: `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts`, plus the focused gate with
+  `--import Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.compareParent_reaches` — FORMALIZE-TIER
+  GREEN; the new headline uses exactly `[Classical.choice, Quot.sound, propext]`, and only the
+  intended `halts_of_wf` debt remains.  Current blocker: the comparison rejection/retry branch
+  for candidates at least as deep as the last node.  Next attack: prove exhaustion of the last
+  node reaches `NOTPARENT`, prove restoration of all `D`/`C` marks and return to `CAND_FIND`, and
+  induct over rejected candidate blocks.  Then compose the successful branch with
+  `PAR_END/ERASE_L/MARK_END/UNMARK_S`.

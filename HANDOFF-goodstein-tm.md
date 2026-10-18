@@ -3,21 +3,19 @@
 Branch `wip/goodstein-tm-lean`.  Operator plan: `GOODSTEIN-TM-NEXT.md`.  Scoped completion target:
 `sorry-free:lean/Collatz/GoodsteinTM`.
 
-## Checkpoint (2026-10-17, lap 4)
+## Checkpoint (2026-10-18, lap 5)
 
-Route item 1 remains complete (`chopBattle_terminates`).  Route items 2–3 advanced substantially
-in `lean/Collatz/GoodsteinTM/Sim.lean`:
+Route item 1 remains complete (`chopBattle_terminates`).  Route item 3 now includes the complete
+successful depth-comparison branch in `lean/Collatz/GoodsteinTM/Sim.lean`:
 
-* `stepN_add`, `Reaches`, `reaches_trans`, and `reaches_of_stepN` provide the compositional
-  simulation interface requested by the previous handoff.
-* `stepN_scanLeft` and `stepN_scanRight` prove the generic scan lemma in both directions for an
-  arbitrary symbol run and arbitrary tape tails.
-* `chopFind_reaches_candidate` proves the complete `CHOP_FINDL` loop, including its zero-mark
-  boundary, for every generated machine core.
-* `candidateFind_reaches_compare` proves the complete positive-depth `CAND_FIND` loop.
-* `chopStart_reaches_candidate` composes `CHOP_START`, `CHOP_D1`, and `CHOP_FINDL` for every final
-  depth at least two.  `chopStart_reaches_compare` then composes the first two search segments and
-  reaches a canonical `CMP_C` configuration for any positive-depth candidate.
+* `stepN_scanRightUntilRight` and `stepN_scanRightUntilLeft` extend the generic scan interface to
+  possibly empty runs followed by a state-changing stop transition.
+* `comparePair_reaches` proves one complete `CMP_C/CMP_TOL/CMP_L/CMP_TOC` pairing circuit with an
+  arbitrary already-marked `D` prefix and arbitrary tape context.
+* `comparePairs_reaches_exhausted` inducts the circuit over the whole positive candidate depth.
+* `compareExhausted_reaches_parent` proves the `CMP_CEXH/CMP_LCHK` finish, and
+  `compareParent_reaches` packages the semantic result: a candidate whose depth is exactly one
+  below the final node reaches `PAR_END`.
 
 All statements quantify over arbitrary left/right tape context, so in particular they preserve
 the operator plan's arbitrary explicit blank tail.  The generated/frozen files and the three
@@ -29,24 +27,28 @@ frozen statements in `Halts.lean` remain unchanged.  The scoped target still has
 * `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
 * `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`
 * `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts`
+* `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.compareParent_reaches`
 
 All are green; the real gate ends `FORMALIZE-TIER GREEN` and reports only the intended
-`halts_of_wf` proof debt.
+`halts_of_wf` proof debt.  The focused axiom gate reports exactly
+`[Classical.choice, Quot.sound, propext]` for `compareParent_reaches`.
 
 ## Current blocker and next attack
 
-The remaining crux is the rest of route items 3–6.  The current front is the comparison loop that
-starts at the canonical `CMP_C` configuration proved this lap.
+The remaining crux is the rest of route items 3–6.  The current front is the comparison rejection
+branch.  For a well-formed preorder level sequence, candidates rejected before the rightmost
+parent are at least as deep as the final node; the successful `depth = finalDepth - 1` case is now
+closed.
 
 Next, in order:
 
-1. Prove one pairing iteration through `CMP_C/CMP_TOL/CMP_L/CMP_TOC`, parameterized by the
-   already-marked `D` prefix.
-2. Induct on candidate depth to split the comparison into: parent found (`CMP_CEXH/CMP_LCHK` to
-   `PAR_END`) and candidate rejected (`CMP_L` to `NOTPARENT`, restore `D`/`C`, retry
-   `CAND_FIND`).
-3. Compose the parent-found branch with `PAR_END/ERASE_L/MARK_END/UNMARK_S` before beginning the
-   copy loop.
+1. Prove the candidate-rejected case: after pairing the entire last-node depth, `CMP_L` reads the
+   first trailing blank and enters `NOTPARENT`.
+2. Prove `NOTPARENT` restores all `D` marks to `d`, restores `C` to `P`, and returns to
+   `CAND_FIND`; then induct over the rejected encoded node blocks until the rightmost parent.
+3. Compose `compareParent_reaches` with `PAR_END/ERASE_L/MARK_END/UNMARK_S` to reach the canonical
+   `REP_START` copy-block configuration.
 
 Do not revisit the hydra order or parser unless a concrete simulation lemma exposes an encoding
 mismatch.  The worktree's untracked `CLAUDE.local.md` predates this track and must not be committed.
