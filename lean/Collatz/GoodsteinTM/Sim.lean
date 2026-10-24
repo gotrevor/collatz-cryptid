@@ -213,6 +213,60 @@ theorem stepN_scanRightUntilRight (M : St → Sy → Option (Sy × Dir × St)) (
         exact hscan a (by simp [ha]))]
       simp
 
+/-- Right-moving counterpart of `stepN_scanLeftMap`, including a distinguished stop transition.
+This is used by `REP_DONE`, whose scan restores every used base counter from `B` to `b`. -/
+theorem stepN_scanRightMapUntilRight (M : St → Sy → Option (Sy × Dir × St))
+    (q q' : St) (f : Sy → Sy) (xs zs : List Sy) (y y' z : Sy) (l r : List Sy)
+    (hscan : ∀ a ∈ xs, M q a = some (f a, .R, q))
+    (hstop : M q y = some (y', .R, q')) :
+    stepN M (xs.length + 1)
+        (scanRightStart q xs y l (zs ++ z :: r)) =
+      some (scanRightStart q' zs z
+        (y' :: (xs.map f).reverse ++ l) r) := by
+  induction xs generalizing l with
+  | nil =>
+      change (step M ⟨q, l, y, zs ++ z :: r⟩).bind (stepN M 0) = _
+      rw [show step M ⟨q, l, y, zs ++ z :: r⟩ =
+          some (scanRightStart q' zs z (y' :: l) r) by
+        cases zs <;> simp [scanRightStart, step, Cfg.move, hstop]]
+      rfl
+  | cons x xs ih =>
+      change (step M ⟨q, l, x, xs ++ y :: (zs ++ z :: r)⟩).bind
+        (stepN M (xs.length + 1)) = _
+      rw [show step M ⟨q, l, x, xs ++ y :: (zs ++ z :: r)⟩ =
+          some (scanRightStart q xs y (f x :: l) (zs ++ z :: r)) by
+        have hx := hscan x (by simp)
+        cases xs <;> simp [scanRightStart, step, Cfg.move, hx]]
+      simp only [Option.bind_some]
+      rw [ih (l := f x :: l) (by
+        intro a ha
+        exact hscan a (by simp [ha]))]
+      simp [List.reverse_cons, List.append_assoc]
+
+/-- Scan a possibly empty run to the right, consume a right-moving stop symbol, and expose an
+arbitrary finite right half.  In particular, an empty right half exposes the implicit blank. -/
+theorem stepN_scanRightUntilRightTail (M : St → Sy → Option (Sy × Dir × St))
+    (q q' : St) (xs : List Sy) (y y' : Sy) (l r : List Sy)
+    (hscan : ∀ a ∈ xs, M q a = some (a, .R, q))
+    (hstop : M q y = some (y', .R, q')) :
+    stepN M (xs.length + 1) (scanRightStart q xs y l r) =
+      some ⟨q', y' :: xs.reverse ++ l, r.headD default, r.tail⟩ := by
+  induction xs generalizing l with
+  | nil =>
+      simp [scanRightStart, stepN, step, Cfg.move, hstop]
+  | cons x xs ih =>
+      change (step M ⟨q, l, x, xs ++ y :: r⟩).bind
+        (stepN M (xs.length + 1)) = _
+      rw [show step M ⟨q, l, x, xs ++ y :: r⟩ =
+          some (scanRightStart q xs y (x :: l) r) by
+        have hx := hscan x (by simp)
+        cases xs <;> simp [scanRightStart, step, Cfg.move, hx]]
+      simp only [Option.bind_some]
+      rw [ih (l := x :: l) (by
+        intro a ha
+        exact hscan a (by simp [ha]))]
+      simp [List.reverse_cons, List.append_assoc]
+
 /-- Right scan through a possibly empty run followed by a stop transition moving left. -/
 theorem stepN_scanRightUntilLeft (M : St → Sy → Option (Sy × Dir × St)) (q q' : St)
     (xs : List Sy) (y y' x : Sy) (l r : List Sy)
@@ -1987,6 +2041,28 @@ theorem copyBlock_reaches_repRet (cells : List Sy) (body l : List Sy) (j : ℕ)
 def markedCopyBody (a : ℕ) (u : List ℕ) : List Sy :=
   (List.replicate (a + 1) Sy.d ++ treeCells u).dropLast
 
+/-- For a positive-depth suffix, restoring the final `z` to `d` reconstructs the exact encoded
+parent block. -/
+theorem markedCopyBody_append_d (a : ℕ) (u : List ℕ)
+    (hpositive : ∀ k ∈ u, 1 ≤ k) :
+    markedCopyBody a u ++ [.d] = List.replicate (a + 1) .d ++ treeCells u := by
+  have hshape : ∃ pre,
+      List.replicate (a + 1) Sy.d ++ treeCells u = pre ++ [.d] := by
+    induction u using List.reverseRecOn with
+    | nil =>
+        refine ⟨List.replicate a .d, ?_⟩
+        simp [List.replicate_succ', replicate_append_cons_self]
+    | append_singleton pre k _ =>
+        have hk : 1 ≤ k := hpositive k (by simp)
+        obtain ⟨q, rfl⟩ : ∃ q, k = q + 1 := ⟨k - 1, by omega⟩
+        refine ⟨List.replicate (a + 1) .d ++ treeCells pre ++
+          .P :: List.replicate q .d, ?_⟩
+        simp [treeCells_append, treeCells_cons, List.replicate_succ',
+          replicate_append_cons_self, List.append_assoc]
+  obtain ⟨pre, hpre⟩ := hshape
+  unfold markedCopyBody
+  rw [hpre, List.dropLast_concat]
+
 theorem markedCopyTail_eq (a : ℕ) (u : List ℕ) :
     markedCopyTail a u = markedCopyBody a u ++ [.z] := rfl
 
@@ -2244,6 +2320,23 @@ theorem repScanSucc_reaches (cells : List Sy) (remaining used : ℕ)
 def copiedBlock (body : List Sy) : List Sy :=
   .P :: body ++ [.d]
 
+/-- The unmarked source block copied by the machine is precisely the tree encoding of the
+rightmost parent and its surviving suffix. -/
+theorem copiedBlock_markedCopyBody (a : ℕ) (u : List ℕ)
+    (hpositive : ∀ k ∈ u, 1 ≤ k) :
+    copiedBlock (markedCopyBody a u) = treeCells ((a + 1) :: u) := by
+  simp only [copiedBlock, treeCells_cons]
+  rw [List.cons_append, markedCopyBody_append_d a u hpositive]
+  simp [List.cons_append]
+
+theorem treeCells_flatten_replicate (n : ℕ) (block : List ℕ) :
+    treeCells (List.replicate n block).flatten =
+      (List.replicate n (treeCells block)).flatten := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simp only [List.replicate_succ, List.flatten_cons, treeCells_append, ih]
+
 theorem mem_copiedBlock {body : List Sy} {x : Sy}
     (hbody : ∀ y ∈ body, y = .P ∨ y = .d) (hx : x ∈ copiedBlock body) :
     x = .P ∨ x = .d := by
@@ -2323,6 +2416,402 @@ theorem repStart_reaches_repScanDone (cells : List Sy) (remaining : ℕ)
     hfrontLb hfrontS hbody (by simp)
   refine ⟨j', ?_⟩
   simpa [Nat.add_comm] using reaches_trans hstart hall
+
+/-! A deep chop leaves one represented blank immediately to the left of the unary base.  The
+next deep chop reaches that blank rather than an implicit one.  The following wrappers retain
+this one-bit padding invariant while reusing the copy-loop lemmas above. -/
+
+def basePad (padded : Bool) : List Sy :=
+  if padded then [.blank] else []
+
+/-- Replication-loop configuration with either no represented blank or one represented blank to
+the left of the base.  Once all counters are used, the two representations coincide at the
+scanned blank. -/
+def repScanConfigPadded (padded : Bool) (remaining used : ℕ)
+    (front body out : List Sy) (j : ℕ) : Cfg St Sy :=
+  let right := List.replicate used Sy.B ++ .lb :: front ++ .S :: body ++ .z :: out ++
+    List.replicate j .blank
+  match remaining with
+  | 0 => ⟨.core .REP_SCAN, [], .blank, right⟩
+  | n + 1 =>
+      ⟨.core .REP_SCAN, List.replicate n .b ++ basePad padded, .b, right⟩
+
+theorem repStart_reaches_repScanPadded (cells : List Sy) (padded : Bool) (remaining : ℕ)
+    (front body out : List Sy) (j : ℕ) (hfront : ∀ x ∈ front, x ≠ .lb) :
+    Reaches (machine cells)
+      ⟨.core .REP_START,
+        front.reverse ++ .lb ::
+          (List.replicate (remaining + 1) .b ++ basePad padded),
+        .S, body ++ .z :: out ++ List.replicate j .blank⟩
+      (repScanConfigPadded padded remaining 1 front body out j) := by
+  have hscan := stepN_scanLeft (machine cells) (.core .REP_START) .S front.reverse
+    (.lb :: (List.replicate (remaining + 1) Sy.b ++ basePad padded))
+    (body ++ .z :: out ++ List.replicate j .blank) (by
+      intro x hx
+      have hx' : x = Sy.S ∨ x ∈ front.reverse := by simpa using hx
+      rcases hx' with rfl | hx'
+      · rfl
+      · have hne : x ≠ Sy.lb := hfront x (by simpa using hx')
+        cases x <;> try rfl
+        exact (hne rfl).elim)
+  have hscan' :
+      Reaches (machine cells)
+        ⟨.core .REP_START,
+          front.reverse ++ .lb ::
+            (List.replicate (remaining + 1) .b ++ basePad padded),
+          .S, body ++ .z :: out ++ List.replicate j .blank⟩
+        ⟨.core .REP_START,
+          List.replicate (remaining + 1) .b ++ basePad padded, .lb,
+          front ++ .S :: body ++ .z :: out ++ List.replicate j .blank⟩ := by
+    refine ⟨front.reverse.length + 1, ?_⟩
+    simpa [List.append_assoc] using hscan
+  have hfirst :
+      Reaches (machine cells)
+        ⟨.core .REP_START,
+          List.replicate (remaining + 1) .b ++ basePad padded, .lb,
+          front ++ .S :: body ++ .z :: out ++ List.replicate j .blank⟩
+        (repScanConfigPadded padded remaining 1 front body out j) := by
+    refine ⟨2, ?_⟩
+    cases remaining <;> cases padded <;> rfl
+  exact reaches_trans hscan' hfirst
+
+theorem goS_reaches_cpScanPadded (cells : List Sy) (padded : Bool)
+    (remaining used : ℕ) (front body out : List Sy) (j : ℕ)
+    (hfront : ∀ x ∈ front, x ≠ .S) :
+    Reaches (machine cells)
+      (scanRightStart (.core .GO_S)
+        (List.replicate used .B ++ .lb :: front) .S
+        (.B :: List.replicate remaining .b ++ basePad padded)
+        (body ++ .z :: out ++ List.replicate j .blank))
+      ⟨.core .CP_SCAN,
+        front.reverse ++ .lb :: List.replicate (used + 1) .B ++
+          List.replicate remaining .b ++ basePad padded,
+        .S, body ++ .z :: out ++ List.replicate j .blank⟩ := by
+  let path := List.replicate used Sy.B ++ .lb :: front
+  have hpath : path ≠ [] := by simp [path]
+  have htoS' :
+      Reaches (machine cells)
+        (scanRightStart (.core .GO_S) path .S
+          (.B :: List.replicate remaining .b ++ basePad padded)
+          (body ++ .z :: out ++ List.replicate j .blank))
+        ⟨.core .GO_S,
+          path.reverse ++ .B :: List.replicate remaining .b ++ basePad padded,
+          .S, body ++ .z :: out ++ List.replicate j .blank⟩ := by
+    cases hp : path with
+    | nil => contradiction
+    | cons first rest =>
+      have htoS := stepN_scanRight (machine cells) (.core .GO_S)
+        first rest (.B :: List.replicate remaining Sy.b ++ basePad padded)
+        (.S :: body ++ .z :: out ++ List.replicate j .blank) (by
+          intro x hx
+          have hxPath : x ∈ path := by simpa [hp] using hx
+          dsimp [path] at hxPath
+          rw [List.mem_append] at hxPath
+          rcases hxPath with hxPath | hxPath
+          · have : x = Sy.B := (List.mem_replicate.mp hxPath).2
+            subst x
+            rfl
+          · rcases List.mem_cons.mp hxPath with rfl | hxPath
+            · rfl
+            · have hne : x ≠ Sy.S := hfront x hxPath
+              cases x <;> try rfl
+              exact (hne rfl).elim)
+      exact reaches_of_stepN (by simpa [hp, scanRightStart] using htoS)
+  have hstay :
+      Reaches (machine cells)
+        ⟨.core .GO_S,
+          path.reverse ++ .B :: List.replicate remaining .b ++ basePad padded,
+          .S, body ++ .z :: out ++ List.replicate j .blank⟩
+        ⟨.core .CP_SCAN,
+          path.reverse ++ .B :: List.replicate remaining .b ++ basePad padded,
+          .S, body ++ .z :: out ++ List.replicate j .blank⟩ := by
+    refine ⟨2, ?_⟩
+    cases body with
+    | nil => rfl
+    | cons x xs => cases x <;> rfl
+  have hboth := reaches_trans htoS' hstay
+  simpa [path, List.reverse_append, List.reverse_replicate,
+    List.replicate_succ', List.append_assoc] using hboth
+
+theorem repRet_reaches_repScanConfigPadded (cells : List Sy) (padded : Bool)
+    (remaining used : ℕ) (front body out : List Sy) (j : ℕ)
+    (hfront : ∀ x ∈ front, x ≠ .lb) :
+    Reaches (machine cells)
+      ⟨.core .REP_RET,
+        (front.reverse ++ Sy.lb :: List.replicate (used + 1) Sy.B ++
+          List.replicate remaining Sy.b ++ basePad padded).tail,
+        (front.reverse ++ Sy.lb :: List.replicate (used + 1) Sy.B ++
+          List.replicate remaining Sy.b ++ basePad padded).headD .blank,
+        .S :: body ++ .z :: out ++ List.replicate j .blank⟩
+      (repScanConfigPadded padded remaining (used + 1) front body out j) := by
+  let base := List.replicate (used + 1) Sy.B ++
+    List.replicate remaining .b ++ basePad padded
+  have hret := repRet_reaches_repScan cells base front
+    (body ++ .z :: out ++ List.replicate j Sy.blank) hfront
+  have hret' :
+      Reaches (machine cells)
+        ⟨.core .REP_RET, (front.reverse ++ .lb :: base).tail,
+          (front.reverse ++ .lb :: base).headD .blank,
+          .S :: body ++ .z :: out ++ List.replicate j .blank⟩
+        ⟨.core .REP_SCAN, base.tail, base.headD .blank,
+          .lb :: front ++ .S :: body ++ .z :: out ++ List.replicate j .blank⟩ := by
+    simpa [List.append_assoc] using hret
+  have hscan := stepN_scanLeft (machine cells) (.core .REP_SCAN) .B
+    (List.replicate used .B)
+    (List.replicate remaining .b ++ basePad padded)
+    (.lb :: front ++ .S :: body ++ .z :: out ++ List.replicate j .blank) (by
+      intro x hx
+      have : x = Sy.B := by
+        rcases List.mem_cons.mp hx with rfl | hx
+        · rfl
+        · exact (List.mem_replicate.mp hx).2
+      subst x
+      rfl)
+  have hscan' :
+      Reaches (machine cells)
+        ⟨.core .REP_SCAN, base.tail, base.headD .blank,
+          .lb :: front ++ .S :: body ++ .z :: out ++ List.replicate j .blank⟩
+        (repScanConfigPadded padded remaining (used + 1) front body out j) := by
+    refine ⟨used + 1, ?_⟩
+    cases remaining <;> cases padded <;>
+      simpa [show (default : Sy) = Sy.blank from rfl, base, basePad,
+        repScanConfigPadded, List.replicate_succ, replicate_append_cons_self,
+        List.append_assoc] using hscan
+  simpa [base, List.append_assoc] using reaches_trans hret' hscan'
+
+theorem repScanSucc_reachesPadded (cells : List Sy) (padded : Bool)
+    (remaining used : ℕ) (front body out : List Sy) (j : ℕ)
+    (hfrontLb : ∀ x ∈ front, x ≠ .lb)
+    (hfrontS : ∀ x ∈ front, x ≠ .S)
+    (hbody : ∀ x ∈ body, x = .P ∨ x = .d)
+    (hout : ∀ x ∈ out, x = .P ∨ x = .d) :
+    Reaches (machine cells)
+      (repScanConfigPadded padded (remaining + 1) used front body out j)
+      (repScanConfigPadded padded remaining (used + 1) front body
+        (out ++ .P :: body ++ [.d]) (j - (body.length + 2))) := by
+  let path := List.replicate used Sy.B ++ .lb :: front
+  have hmark :
+      Reaches (machine cells)
+        (repScanConfigPadded padded (remaining + 1) used front body out j)
+        (scanRightStart (.core .GO_S) path .S
+          (.B :: List.replicate remaining .b ++ basePad padded)
+          (body ++ .z :: out ++ List.replicate j .blank)) := by
+    refine ⟨1, ?_⟩
+    cases used <;>
+      simp [repScanConfigPadded, path, scanRightStart, List.replicate_succ,
+        List.append_assoc] <;> rfl
+  have hgo := goS_reaches_cpScanPadded cells padded remaining used
+    front body out j hfrontS
+  let left := front.reverse ++ .lb :: List.replicate (used + 1) Sy.B ++
+    List.replicate remaining .b ++ basePad padded
+  have hcopy := copyBlockThrough_reaches_repRet cells body out left j hbody hout
+  have hcopy' :
+      Reaches (machine cells)
+        ⟨.core .CP_SCAN, left, .S,
+          body ++ .z :: out ++ List.replicate j .blank⟩
+        ⟨.core .REP_RET, left.tail, left.headD .blank,
+          .S :: body ++ .z :: out ++ .P :: body ++ .d ::
+            List.replicate (j - (body.length + 2)) .blank⟩ := by
+    simpa [List.append_assoc] using hcopy
+  have hreturn := repRet_reaches_repScanConfigPadded cells padded remaining used front body
+    (out ++ .P :: body ++ [.d]) (j - (body.length + 2)) hfrontLb
+  have hreturn' :
+      Reaches (machine cells)
+        ⟨.core .REP_RET, left.tail, left.headD .blank,
+          .S :: body ++ .z :: out ++ .P :: body ++ .d ::
+            List.replicate (j - (body.length + 2)) .blank⟩
+        (repScanConfigPadded padded remaining (used + 1) front body
+          (out ++ .P :: body ++ [.d]) (j - (body.length + 2))) := by
+    simpa [left, List.append_assoc] using hreturn
+  have hall := reaches_trans hmark (reaches_trans hgo (reaches_trans hcopy' hreturn'))
+  simpa [path, left, List.append_assoc] using hall
+
+theorem repScanAll_reachesPadded (cells : List Sy) (padded : Bool)
+    (remaining used : ℕ) (front body out : List Sy) (j : ℕ)
+    (hfrontLb : ∀ x ∈ front, x ≠ .lb)
+    (hfrontS : ∀ x ∈ front, x ≠ .S)
+    (hbody : ∀ x ∈ body, x = .P ∨ x = .d)
+    (hout : ∀ x ∈ out, x = .P ∨ x = .d) :
+    ∃ j', Reaches (machine cells)
+      (repScanConfigPadded padded remaining used front body out j)
+      (repScanConfigPadded padded 0 (used + remaining) front body
+        (out ++ (List.replicate remaining (copiedBlock body)).flatten) j') := by
+  induction remaining generalizing used out j with
+  | zero =>
+      exact ⟨j, by simpa using
+        (reaches_refl (machine cells)
+          (repScanConfigPadded padded 0 used front body out j))⟩
+  | succ n ih =>
+      have hone := repScanSucc_reachesPadded cells padded n used front body out j
+        hfrontLb hfrontS hbody hout
+      have hout' : ∀ x ∈ out ++ copiedBlock body, x = Sy.P ∨ x = Sy.d := by
+        intro x hx
+        rw [List.mem_append] at hx
+        rcases hx with hx | hx
+        · exact hout x hx
+        · exact mem_copiedBlock hbody hx
+      obtain ⟨j', hrest⟩ := ih (used + 1) (out ++ copiedBlock body)
+        (j - (body.length + 2)) hout'
+      refine ⟨j', ?_⟩
+      have hone' :
+          Reaches (machine cells)
+            (repScanConfigPadded padded (n + 1) used front body out j)
+            (repScanConfigPadded padded n (used + 1) front body
+              (out ++ copiedBlock body) (j - (body.length + 2))) := by
+        simpa [copiedBlock] using hone
+      have hall := reaches_trans hone' hrest
+      simpa [copiedBlock, List.replicate_succ, List.flatten_cons,
+        List.append_assoc, Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using hall
+
+/-- Padded version of the complete base-counter replication phase. -/
+theorem repStart_reaches_repScanDonePadded (cells : List Sy) (padded : Bool)
+    (remaining : ℕ) (front body : List Sy) (j : ℕ)
+    (hfrontLb : ∀ x ∈ front, x ≠ .lb)
+    (hfrontS : ∀ x ∈ front, x ≠ .S)
+    (hbody : ∀ x ∈ body, x = .P ∨ x = .d) :
+    ∃ j', Reaches (machine cells)
+      ⟨.core .REP_START,
+        front.reverse ++ .lb ::
+          (List.replicate (remaining + 1) .b ++ basePad padded),
+        .S, body ++ .z :: List.replicate j .blank⟩
+      (repScanConfig 0 (remaining + 1) front body
+        (List.replicate remaining (copiedBlock body)).flatten j') := by
+  have hstart := repStart_reaches_repScanPadded cells padded remaining
+    front body [] j hfrontLb
+  obtain ⟨j', hall⟩ := repScanAll_reachesPadded cells padded remaining 1
+    front body [] j hfrontLb hfrontS hbody (by simp)
+  refine ⟨j', ?_⟩
+  have hboth := reaches_trans hstart hall
+  simpa [repScanConfig, repScanConfigPadded, Nat.add_comm] using hboth
+
+/-- The all-`B` exit of the replicate loop restores the unary base and the two endpoints of the
+source block.  The resulting `GO_CHOP` configuration scans the first appended output cell, or the
+first explicit/implicit blank when the output is empty. -/
+theorem repScanDone_reaches_goChop (cells : List Sy) (used : ℕ)
+    (front body out : List Sy) (j : ℕ)
+    (hfront : ∀ x ∈ front, x ≠ .S)
+    (hbody : ∀ x ∈ body, x ≠ .z) :
+    Reaches (machine cells)
+      (repScanConfig 0 used front body out j)
+      ⟨.core .GO_CHOP,
+        .d :: body.reverse ++ .P :: front.reverse ++ .lb ::
+          List.replicate used .b ++ [.blank],
+        (out ++ List.replicate j Sy.blank).headD Sy.blank,
+        (out ++ List.replicate j Sy.blank).tail⟩ := by
+  let tail := out ++ List.replicate j Sy.blank
+  have henter :
+      Reaches (machine cells)
+        (repScanConfig 0 used front body out j)
+        (scanRightStart (.core .REP_DONE) (List.replicate used .B) .lb [.blank]
+          (front ++ .S :: body ++ .z :: tail)) := by
+    have hstep : machine cells (.core .REP_SCAN) .blank =
+        some (.blank, .R, .core .REP_DONE) := rfl
+    refine ⟨1, ?_⟩
+    cases used <;>
+      simp [repScanConfig, scanRightStart, tail, stepN, step, Cfg.move,
+        hstep, List.replicate_succ, List.append_assoc]
+  have hbaseStep := stepN_scanRightMapUntilRight (machine cells)
+    (.core .REP_DONE) (.core .RD_S) (fun _ : Sy => Sy.b)
+    (List.replicate used .B) front .lb .lb .S [.blank]
+    (body ++ .z :: tail) (by
+      intro x hx
+      have : x = Sy.B := (List.mem_replicate.mp hx).2
+      subst x
+      rfl) rfl
+  have hbase :
+      Reaches (machine cells)
+        (scanRightStart (.core .REP_DONE) (List.replicate used .B) .lb [.blank]
+          (front ++ .S :: body ++ .z :: tail))
+        (scanRightStart (.core .RD_S) front .S
+          (.lb :: List.replicate used .b ++ [.blank]) (body ++ .z :: tail)) := by
+    apply reaches_of_stepN
+    simpa [List.map_replicate, List.reverse_replicate, List.append_assoc] using hbaseStep
+  have hsourceStep := stepN_scanRightUntilRight (machine cells)
+    (.core .RD_S) (.core .RD_Z) front body .S .P .z
+    (.lb :: List.replicate used .b ++ [.blank]) tail (by
+      intro x hx
+      have hne := hfront x hx
+      cases x <;> try rfl
+      exact (hne rfl).elim) rfl
+  have hsource :
+      Reaches (machine cells)
+        (scanRightStart (.core .RD_S) front .S
+          (.lb :: List.replicate used .b ++ [.blank]) (body ++ .z :: tail))
+        (scanRightStart (.core .RD_Z) body .z
+          (.P :: front.reverse ++ .lb :: List.replicate used .b ++ [.blank]) tail) := by
+    exact reaches_of_stepN (by simpa [List.append_assoc] using hsourceStep)
+  have hendStep := stepN_scanRightUntilRightTail (machine cells)
+    (.core .RD_Z) (.core .GO_CHOP) body .z .d
+    (.P :: front.reverse ++ .lb :: List.replicate used .b ++ [.blank]) tail (by
+      intro x hx
+      have hne := hbody x hx
+      cases x <;> try rfl
+      exact (hne rfl).elim) rfl
+  have hend :
+      Reaches (machine cells)
+        (scanRightStart (.core .RD_Z) body .z
+          (.P :: front.reverse ++ .lb :: List.replicate used .b ++ [.blank]) tail)
+        ⟨.core .GO_CHOP,
+          .d :: body.reverse ++ .P :: front.reverse ++ .lb ::
+            List.replicate used .b ++ [.blank],
+          tail.headD Sy.blank, tail.tail⟩ := by
+    exact reaches_of_stepN (by
+      simpa [show (default : Sy) = Sy.blank from rfl, List.append_assoc] using hendStep)
+  simpa [tail] using reaches_trans henter (reaches_trans hbase (reaches_trans hsource hend))
+
+/-- `GO_CHOP` crosses a nonempty nonblank output block and turns around on its first represented
+or implicit blank.  At least one explicit blank is present in the resulting `CHOP_START`
+configuration. -/
+theorem goChop_reaches_chopStart (cells : List Sy) (left out : List Sy) (j : ℕ)
+    (houtNe : out ≠ []) (hout : ∀ x ∈ out, x ≠ .blank) :
+    ∃ j', Reaches (machine cells)
+      ⟨.core .GO_CHOP, left, out.headD .blank,
+        out.tail ++ List.replicate j .blank⟩
+      ⟨.core .CHOP_START, (out.reverse ++ left).tail,
+        (out.reverse ++ left).headD .blank, List.replicate j' .blank⟩ := by
+  cases j with
+  | zero =>
+      have hscan := stepN_scanRightToImplicit (machine cells) (.core .GO_CHOP)
+        out left houtNe (by
+          intro x hx
+          have hne := hout x hx
+          cases x <;> try rfl
+          exact (hne rfl).elim)
+      have hturn :
+          Reaches (machine cells)
+            ⟨.core .GO_CHOP, out.reverse ++ left, .blank, []⟩
+            ⟨.core .CHOP_START, (out.reverse ++ left).tail,
+              (out.reverse ++ left).headD .blank, [.blank]⟩ := ⟨1, rfl⟩
+      refine ⟨1, ?_⟩
+      simpa [show (default : Sy) = Sy.blank from rfl] using
+        reaches_trans (reaches_of_stepN hscan) hturn
+  | succ j =>
+      obtain ⟨first, rest, rfl⟩ := List.exists_cons_of_ne_nil houtNe
+      have hscan := stepN_scanRight (machine cells) (.core .GO_CHOP)
+        first rest left (.blank :: List.replicate j .blank) (by
+          intro x hx
+          have hne := hout x (by simpa using hx)
+          cases x <;> try rfl
+          exact (hne rfl).elim)
+      have hturn :
+          Reaches (machine cells)
+            ⟨.core .GO_CHOP, (first :: rest).reverse ++ left, .blank,
+              List.replicate j .blank⟩
+            ⟨.core .CHOP_START, ((first :: rest).reverse ++ left).tail,
+              ((first :: rest).reverse ++ left).headD .blank,
+              List.replicate (j + 1) .blank⟩ := by
+        refine ⟨1, ?_⟩
+        rfl
+      refine ⟨j + 1, ?_⟩
+      have hscan' :
+          Reaches (machine cells)
+            ⟨.core .GO_CHOP, left, first,
+              rest ++ List.replicate (j + 1) .blank⟩
+        ⟨.core .GO_CHOP, (first :: rest).reverse ++ left, .blank,
+              List.replicate j .blank⟩ := by
+        apply reaches_of_stepN
+        simpa [List.replicate_succ, List.append_assoc] using hscan
+      exact reaches_trans hscan' hturn
 
 /-- Specialization of the erase phase to the canonical parent-search output.  The suffix depths
 are positive, so the final symbol of a nonempty suffix encoding is a depth mark; for an empty
@@ -2414,6 +2903,86 @@ theorem chopStart_reaches_repStart_of_wf (cells : List Sy) (a : ℕ)
   refine ⟨p, u, hsplit, ?_⟩
   simpa [List.cons_append, List.append_assoc] using reaches_trans hparent' herase'
 
+/-- Strengthened search-and-erase theorem retaining the defining rightmost-parent property.  This
+property is what identifies the copied suffix with `parentBlock` in the executable hydra move. -/
+theorem chopStart_reaches_repStart_of_wf_deep (cells : List Sy) (a : ℕ)
+    (s : List ℕ) (l r : List Sy) (ht : WF (s ++ [a + 2])) :
+    ∃ p u, s = p ++ (a + 1) :: u ∧ (∀ k ∈ u, a + 2 ≤ k) ∧
+      Reaches (machine cells)
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells s).reverse ++ l,
+          .d, .blank :: r⟩
+        ⟨.core .REP_START, (treeCells p).reverse ++ l, .S,
+          markedCopyTail a u ++ List.replicate (a + 4) .blank ++ r⟩ := by
+  obtain ⟨p, u, hsplit, hdeep⟩ := exists_parent_split_of_wf ht (by omega)
+  have hsplit' : s = p ++ (a + 1) :: u := by simpa using hsplit
+  have hsearch := chopStartThrough_reaches_parent cells a u
+    ((treeCells p).reverse ++ l) r (by
+      intro k hk
+      have := hdeep k hk
+      omega)
+  have hpositive : ∀ k ∈ u, 1 ≤ k := by
+    intro k hk
+    have := hdeep k hk
+    omega
+  have herase := parentFound_reaches_repStart cells a u
+    ((treeCells p).reverse ++ l) r hpositive
+  have hparent :
+      Reaches (machine cells)
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells s).reverse ++ l,
+          .d, .blank :: r⟩
+        ⟨.core .PAR_END,
+          .d :: List.replicate (a + 1) .D ++ .T ::
+            (treeCells u).reverse ++ List.replicate (a + 1) .D ++
+              .C :: (treeCells p).reverse ++ l,
+          .blank, r⟩ := by
+    rw [hsplit']
+    simpa [List.reverse_append, List.reverse_replicate, List.replicate_succ,
+      replicate_append_cons_self, List.append_assoc] using hsearch
+  refine ⟨p, u, hsplit', hdeep, ?_⟩
+  have hparent' := hparent
+  simp only [List.cons_append, List.append_assoc] at hparent'
+  have herase' := herase
+  simp only [List.cons_append, List.append_assoc] at herase'
+  simpa [List.cons_append, List.append_assoc] using reaches_trans hparent' herase'
+
+private theorem rtakeWhile_append_eq_right_of_nil {α : Type*} (p : α → Bool)
+    (l r : List α) (hl : l.rtakeWhile p = []) (hr : ∀ x ∈ r, p x) :
+    (l ++ r).rtakeWhile p = r := by
+  induction r using List.reverseRecOn with
+  | nil => simpa only [List.append_nil] using hl
+  | append_singleton r x ih =>
+    rw [← List.append_assoc, List.rtakeWhile_concat_pos]
+    · rw [ih]
+      intro y hy
+      exact hr y (List.mem_append_left [x] hy)
+    · exact hr x (by simp)
+
+/-- The semantic rightmost-parent split determines the executable `parentBlock` exactly. -/
+theorem parentBlock_eq_of_deep_split (a : ℕ) (p u : List ℕ)
+    (hdeep : ∀ k ∈ u, a + 2 ≤ k) :
+    parentBlock (p ++ (a + 1) :: u) (a + 2) = (a + 1) :: u := by
+  have htake : (p ++ (a + 1) :: u).rtakeWhile (a + 2 ≤ ·) = u := by
+    rw [show p ++ (a + 1) :: u = (p ++ [a + 1]) ++ u by simp]
+    apply rtakeWhile_append_eq_right_of_nil
+    · exact List.rtakeWhile_concat_neg (p := fun x ↦ decide (a + 2 ≤ x))
+        (l := p) (a + 1) (by simp)
+    · intro k hk
+      simpa only [decide_eq_true_eq] using hdeep k hk
+  simp [parentBlock, htake]
+
+/-- Closed form of a deep executable chop at its rightmost-parent split. -/
+theorem chop_eq_of_deep_split (n a : ℕ) (p u : List ℕ)
+    (hdeep : ∀ k ∈ u, a + 2 ≤ k) :
+    chop n ((p ++ (a + 1) :: u) ++ [a + 2]) =
+      (p ++ (a + 1) :: u) ++
+        (List.replicate n ((a + 1) :: u)).flatten := by
+  rw [chop]
+  simp only [List.getLast?_append, List.getLast?_singleton, Option.some_or,
+    List.dropLast_concat]
+  rw [if_neg (by omega), parentBlock_eq_of_deep_split a p u hdeep]
+
 /-- The complete finite nonblank tape segment at the start of a chop. -/
 def tapeCells (b : ℕ) (t : List ℕ) : List Sy :=
   List.replicate b .b ++ [.lb, .rb] ++ treeCells t
@@ -2424,6 +2993,149 @@ def chopConfig (b : ℕ) (t : List ℕ) (j : ℕ) : Cfg St Sy :=
   let tape := tapeCells b t
   ⟨.core .CHOP_START, tape.dropLast.reverse, tape.getLastD .blank,
     List.replicate j .blank⟩
+
+/-- Chop configuration retaining the one-bit far-left blank invariant exposed by consecutive
+deep chops. -/
+def chopConfigPadded (padded : Bool) (b : ℕ) (t : List ℕ) (j : ℕ) : Cfg St Sy :=
+  let tape := tapeCells b t
+  ⟨.core .CHOP_START, tape.dropLast.reverse ++ basePad padded,
+    tape.getLastD .blank, List.replicate j .blank⟩
+
+@[simp] theorem chopConfigPadded_false (b : ℕ) (t : List ℕ) (j : ℕ) :
+    chopConfigPadded false b t j = chopConfig b t j := by
+  simp [chopConfigPadded, chopConfig, basePad]
+
+private theorem turnOnBlank_eq_paddedChop (tape : List Sy) (j : ℕ) (hne : tape ≠ []) :
+    (⟨St.core .CHOP_START, (tape.reverse ++ [Sy.blank]).tail,
+      (tape.reverse ++ [Sy.blank]).headD Sy.blank,
+      List.replicate j Sy.blank⟩ : Cfg St Sy) =
+    ⟨St.core .CHOP_START, tape.dropLast.reverse ++ [Sy.blank],
+      tape.getLastD Sy.blank, List.replicate j Sy.blank⟩ := by
+  induction tape using List.reverseRecOn with
+  | nil => contradiction
+  | append_singleton pre x _ => simp
+
+/-- One complete deep machine chop.  The unary base is unchanged, the work region becomes the
+executable hydra `chop`, and the far-left padding normalizes to one represented blank. -/
+theorem deepChop_reaches (cells : List Sy) (padded : Bool) (n a : ℕ)
+    (s : List ℕ) (j : ℕ) (hn : 1 ≤ n) (ht : WF (s ++ [a + 2])) :
+    ∃ j', Reaches (machine cells)
+      (chopConfigPadded padded (n + 1) (s ++ [a + 2]) (j + 1))
+      (chopConfigPadded true (n + 1) (chop n (s ++ [a + 2])) j') := by
+  let baseLeft : List Sy :=
+    .rb :: .lb :: (List.replicate (n + 1) .b ++ basePad padded)
+  have hinput :
+      chopConfigPadded padded (n + 1) (s ++ [a + 2]) (j + 1) =
+        ⟨.core .CHOP_START,
+          List.replicate (a + 1) .d ++ .P :: (treeCells s).reverse ++ baseLeft,
+          .d, .blank :: List.replicate j .blank⟩ := by
+    let preTape : List Sy :=
+      (List.replicate (n + 1) Sy.b ++ [Sy.lb, Sy.rb] ++ treeCells s ++
+        (Sy.P :: List.replicate (a + 1) Sy.d))
+    have htape : tapeCells (n + 1) (s ++ [a + 2]) = preTape ++ [.d] := by
+      simp [tapeCells, preTape, treeCells_append, treeCells_cons, List.replicate_succ',
+        List.append_assoc]
+    have hlast : (preTape ++ [Sy.d]).getLastD .blank = .d := by simp
+    change (⟨.core .CHOP_START,
+      (tapeCells (n + 1) (s ++ [a + 2])).dropLast.reverse ++ basePad padded,
+      (tapeCells (n + 1) (s ++ [a + 2])).getLastD .blank,
+      List.replicate (j + 1) .blank⟩ : Cfg St Sy) = _
+    rw [htape, List.dropLast_concat]
+    rw [hlast]
+    simp [preTape, baseLeft, List.reverse_append, List.reverse_replicate,
+      List.replicate_succ, replicate_append_cons_self, List.append_assoc]
+  obtain ⟨p, u, hsplit, hdeep, hsearch⟩ :=
+    chopStart_reaches_repStart_of_wf_deep cells a s baseLeft
+      (List.replicate j .blank) ht
+  let front : List Sy := .rb :: treeCells p
+  let body : List Sy := markedCopyBody a u
+  let out : List Sy := (List.replicate n (copiedBlock body)).flatten
+  have hfrontLb : ∀ x ∈ front, x ≠ Sy.lb := by
+    intro x hx
+    rcases List.mem_cons.mp hx with rfl | hx
+    · decide
+    · rcases mem_treeCells hx with rfl | rfl <;> decide
+  have hfrontS : ∀ x ∈ front, x ≠ Sy.S := by
+    intro x hx
+    rcases List.mem_cons.mp hx with rfl | hx
+    · decide
+    · rcases mem_treeCells hx with rfl | rfl <;> decide
+  have hbody : ∀ x ∈ body, x = Sy.P ∨ x = Sy.d := by
+    intro x hx
+    exact mem_markedCopyBody hx
+  obtain ⟨jCopy, hrep⟩ := repStart_reaches_repScanDonePadded cells padded n
+    front body (a + 4 + j) hfrontLb hfrontS hbody
+  have hrep' :
+      Reaches (machine cells)
+        ⟨.core .REP_START, (treeCells p).reverse ++ baseLeft, .S,
+          markedCopyTail a u ++ List.replicate (a + 4) .blank ++
+            List.replicate j .blank⟩
+        (repScanConfig 0 (n + 1) front body out jCopy) := by
+    simpa [front, body, out, baseLeft, markedCopyTail_eq, List.replicate_add,
+      List.reverse_append, List.append_assoc] using hrep
+  have hbodyZ : ∀ x ∈ body, x ≠ Sy.z := by
+    intro x hx
+    rcases hbody x hx with rfl | rfl <;> decide
+  have hrestore := repScanDone_reaches_goChop cells (n + 1)
+    front body out jCopy hfrontS hbodyZ
+  let left : List Sy :=
+    .d :: body.reverse ++ .P :: front.reverse ++ .lb ::
+      List.replicate (n + 1) .b ++ [.blank]
+  have houtNe : out ≠ [] := by
+    cases n with
+    | zero => omega
+    | succ n => simp [out, copiedBlock]
+  have houtBlank : ∀ x ∈ out, x ≠ Sy.blank := by
+    intro x hx
+    have hx' := mem_flatten_replicate_copiedBlock hbody hx
+    rcases hx' with rfl | rfl <;> decide
+  have hhead : (out ++ List.replicate jCopy Sy.blank).headD .blank =
+      out.headD .blank := by
+    exact headD_append_of_ne_nil out (List.replicate jCopy .blank) houtNe
+  have htail : (out ++ List.replicate jCopy Sy.blank).tail =
+      out.tail ++ List.replicate jCopy .blank :=
+    tail_append_of_ne_nil out (List.replicate jCopy .blank) houtNe
+  have hrestore' :
+      Reaches (machine cells)
+        (repScanConfig 0 (n + 1) front body out jCopy)
+        ⟨.core .GO_CHOP, left, out.headD .blank,
+          out.tail ++ List.replicate jCopy .blank⟩ := by
+    rw [hhead, htail] at hrestore
+    simpa [left] using hrestore
+  obtain ⟨j', hgo⟩ := goChop_reaches_chopStart cells left out jCopy houtNe houtBlank
+  have hpositive : ∀ k ∈ u, 1 ≤ k := by
+    intro k hk
+    have := hdeep k hk
+    omega
+  have hblock : copiedBlock body = treeCells ((a + 1) :: u) := by
+    simpa [body] using copiedBlock_markedCopyBody a u hpositive
+  have houtEq : out = treeCells (List.replicate n ((a + 1) :: u)).flatten := by
+    dsimp [out]
+    rw [hblock]
+    exact (treeCells_flatten_replicate n ((a + 1) :: u)).symm
+  have hchop := chop_eq_of_deep_split n a p u hdeep
+  have hwork : treeCells (chop n (s ++ [a + 2])) =
+      treeCells p ++ copiedBlock body ++ out := by
+    rw [hsplit, hchop]
+    simp only [treeCells_append]
+    rw [hblock, houtEq]
+  have hrev : out.reverse ++ left =
+      (tapeCells (n + 1) (chop n (s ++ [a + 2]))).reverse ++ [.blank] := by
+    simp [left, front, copiedBlock, tapeCells, hwork, List.reverse_append,
+      List.reverse_replicate, List.append_assoc]
+  have htapeNe : tapeCells (n + 1) (chop n (s ++ [a + 2])) ≠ [] := by
+    simp [tapeCells]
+  have htarget :
+      ⟨.core .CHOP_START, (out.reverse ++ left).tail,
+        (out.reverse ++ left).headD .blank, List.replicate j' .blank⟩ =
+      chopConfigPadded true (n + 1) (chop n (s ++ [a + 2])) j' := by
+    rw [hrev, turnOnBlank_eq_paddedChop _ _ htapeNe]
+    rfl
+  refine ⟨j', ?_⟩
+  rw [hinput]
+  have hall := reaches_trans hsearch
+    (reaches_trans hrep' (reaches_trans hrestore' hgo))
+  exact htarget ▸ hall
 
 theorem cellsOf_eq_tapeCells_two (t : List ℕ) : cellsOf t = tapeCells 2 t := by
   simp [cellsOf, tapeCells, treeCells]
