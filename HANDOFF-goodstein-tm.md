@@ -1,55 +1,59 @@
 # Handoff: Goodstein Turing-machine halting
 
-Branch `wip/goodstein-tm-lean`.  Operator plan: `GOODSTEIN-TM-NEXT.md`.  Scoped completion target:
+Branch `wip/goodstein-tm-lean`. Operator plan: `GOODSTEIN-TM-NEXT.md`. Scoped completion target:
 `sorry-free:lean/Collatz/GoodsteinTM`.
 
-## Checkpoint (2026-10-24, lap 10)
+## Checkpoint (2026-10-24, lap 11 review) — objective complete
 
-The complete copy-producing base-counter replication phase is now proved:
+The scoped Goodstein machine tree is sorry-free, and the public theorem
+`GoodsteinTM.halts_of_wf` is kernel-checked with the intended trust base.
 
-* `copyBlockThrough_reaches_repRet` strengthens the lap-9 theorem to preserve an arbitrary
-  already-appended `P`/`d` output.  Each later copy therefore scans through earlier copies and is
-  appended at the genuine first explicit or implicit blank.
-* `repStart_reaches_repScan`, `goS_reaches_cpScan`, and
-  `repRet_reaches_repScanConfig` verify the `REP_START/REP_FIRST`, `GO_S`, and return-to-base
-  control paths, including the generated stay transition and the scan across used `B` counters.
-* `repScanSucc_reaches` composes one complete base-counter/copy circuit while preserving the
-  work prefix, marked source, previous output, and exact remaining represented blanks.
-* `repScanAll_reaches` inducts through all remaining counters.  It proves that `n` counters append
-  exactly `n` copies of `copiedBlock body`; the existential final blank count honestly covers the
-  point where the finite right-half list gives way to implicit blanks.
-* `repStart_reaches_repScanDone` packages the whole phase: a unary base of `n + 1` reserves one
-  counter in `REP_FIRST` and produces exactly `n` copies before reaching the all-`B`
-  `REP_SCAN` configuration.
+The review first found and repaired a load-bearing boundary-invariant gap: a completed deep chop
+can leave one represented blank to the far left of the unary base. Successive deep chops therefore
+cannot all satisfy the former unpadded configuration shape. `basePad` and `chopConfigPadded`
+record that Boolean boundary state, and the restore/turnaround path now proves the exact padded
+successor configuration. The complete `REP_SCAN` exit, `REP_DONE`, `RD_S`, `RD_Z`, and `GO_CHOP`
+path is composed in `deepChop_reaches` and identified with executable `chop`.
 
-The generated/frozen files and the three frozen statements in `Halts.lean` remain unchanged.  The
-scoped target still has exactly one `sorry`, at `halts_of_wf`.
+The rest of the machine-to-mathematics bridge is also complete:
+
+* `shallowChop_reaches` proves deletion of a final depth-one node, the `GSTEP_BUMP` base increment,
+  and return to the next chop configuration.
+* `singletonChop_halts` and `emptyChop_halts` prove the two terminal boundary shapes reach, or
+  already expose, the intended undefined transition.
+* `init_write_prefix`, `init_reaches_bumpBlank`, and `initial_reaches_chop` prove the initializer,
+  the first base bump from 2 to 3, and entry into `CHOP_START` for every seed.
+* `goodsteinBattle` couples the changing unary base with executable `chop`.
+  `goodsteinBattle_terminates` transfers the already-proved arbitrary-schedule hydra termination
+  theorem, while `reaches_goodsteinBattle_or_halts` realizes every finite battle prefix on the
+  concrete table.
+* `halts_from_chop` composes those results, `halts_of_wf_sim` adds initialization, and the frozen
+  statement `halts_of_wf` now delegates to that theorem. Consequently `halt_four_halts` and
+  `halt_sixteen_halts` close without separate proof debt.
+
+The generated/frozen files `Machine.lean`, `Defs.lean`, `Table.lean`, and `Check.lean` are byte-for-
+byte unchanged from scaffold commit `60cfb73`. The three theorem statements in `Halts.lean` are
+unchanged; only the former `sorry` body of `halts_of_wf` was filled. No `native_decide`, new axiom,
+or hidden proof debt was introduced. The untracked `CLAUDE.local.md` predates this track and remains
+intentionally uncommitted.
 
 ## Verification
 
-* `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
-* `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`
-* `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
-  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.repStart_reaches_repScanDone`
+All of the following passed on this checkpoint:
 
-All are green; the real gate ends `FORMALIZE-TIER GREEN`, reports only the intended
-`halts_of_wf` proof debt, and gives exactly `[Classical.choice, Quot.sound, propext]` for the new
-headline.
+* `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
+* `lake build Collatz.GoodsteinTM.Halts` — 3016 jobs
+* `lake build Collatz.GoodsteinTM.Check` — 3009 jobs
+* `rg -n '\bsorry\b|admit|axiom ' lean/Collatz/GoodsteinTM` — no matches
+* `git diff --exit-code 60cfb73 -- lean/Collatz/GoodsteinTM/{Machine,Defs,Table,Check}.lean`
+* `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Halts --axioms GoodsteinTM.halts_of_wf`
+
+The real gate ends `FORMALIZE-TIER GREEN`; `#print axioms GoodsteinTM.halts_of_wf` reports exactly
+`[Classical.choice, Quot.sound, propext]`.
 
 ## Current blocker and next attack
 
-The remaining crux begins at the all-`B` exit of the now-complete replication phase, followed by
-the macro step, init, and headline.  Parent identification, leaf erasure, copy-block marking,
-comparison-mark restoration, arbitrary repeated copying, and base-counter control are proved.
-
-Next, in order:
-
-1. Prove `REP_SCAN` on the left blank enters `REP_DONE`, then induct through all `B`s to restore
-   the unary base.  Compose `RD_S/RD_Z` to restore `S` to `P` and `z` to `d`, entering `GO_CHOP`
-   on the exact nonblank tape produced by `repStart_reaches_repScanDone`.
-2. Specialize the generic body/output formula using `markedCopyBody`, identify the result with
-   `treeCells (chop (b - 1) t)`, and package the deep macro step.
-3. Close the depth-one/base-bump branch and macro step, then prove init and the headline.
-
-Do not revisit the hydra order or parser unless a concrete simulation lemma exposes an encoding
-mismatch.  The worktree's untracked `CLAUDE.local.md` predates this track and must not be committed.
+There is no remaining in-scope blocker or proof obligation. The host should accept the scoped
+completion predicate. No stretch work was requested; the next action is integration/review outside
+this autonomous lap, not another mathematical attack.

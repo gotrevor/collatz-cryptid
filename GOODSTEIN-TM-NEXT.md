@@ -227,3 +227,20 @@ Commit each green checkpoint, and record status at the bottom of this file.
   intended `halts_of_wf` debt remains.  Current blocker: restore the base/source markers and
   identify the resulting tape with executable `chop`.  Next attack: close
   `REP_DONE/RD_S/RD_Z`, specialize the output to `markedCopyBody`, and package the deep macro step.
+- 2026-10-24 lap 11 (review): the objective is complete.  The review caught a boundary-invariant
+  gap: a deep chop leaves a represented blank to the far left of the base, so the old unpadded
+  chop shape was not closed under iteration.  `basePad`/`chopConfigPadded` now track that bit, and
+  `deepChop_reaches` proves the complete restore/turnaround path and exact executable `chop` result.
+  `shallowChop_reaches` handles nonterminal depth-one deletion and the base bump;
+  `singletonChop_halts`/`emptyChop_halts` handle terminal shapes; and
+  `initial_reaches_chop` verifies initialization and the first bump.  Finally `goodsteinBattle`
+  couples the changing base to the arbitrary-schedule hydra theorem,
+  `reaches_goodsteinBattle_or_halts` realizes every finite battle prefix on the table, and
+  `halts_of_wf_sim` closes the frozen `halts_of_wf` statement.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Halts`, `lake build Collatz.GoodsteinTM.Check`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Halts --axioms GoodsteinTM.halts_of_wf` — FORMALIZE-TIER GREEN with no
+  `sorry` in `lean/Collatz/GoodsteinTM/` and exactly `[Classical.choice, Quot.sound, propext]` for
+  the headline.  The generated/frozen files and all three frozen theorem statements are unchanged.
+  There is no remaining scoped blocker or next mathematical attack.

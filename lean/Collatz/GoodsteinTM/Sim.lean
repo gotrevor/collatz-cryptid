@@ -409,6 +409,18 @@ theorem mem_treeCells {t : List ℕ} {x : Sy} (hx : x ∈ treeCells t) :
         · exact .inr (List.mem_replicate.mp hx).2
       · exact ih hx
 
+/-- A nonempty positive-depth tree encoding ends in a depth symbol. -/
+theorem exists_treeCells_append_d {t : List ℕ} (hne : t ≠ [])
+    (hpositive : ∀ k ∈ t, 1 ≤ k) : ∃ pre, treeCells t = pre ++ [.d] := by
+  induction t using List.reverseRecOn with
+  | nil => contradiction
+  | append_singleton pre k _ =>
+      have hk : 1 ≤ k := hpositive k (by simp)
+      obtain ⟨q, rfl⟩ : ∃ q, k = q + 1 := ⟨k - 1, by omega⟩
+      refine ⟨treeCells pre ++ .P :: List.replicate q .d, ?_⟩
+      simp [treeCells_append, treeCells_cons, List.replicate_succ',
+        replicate_append_cons_self, List.append_assoc]
+
 /-- Restore a comparison mark; all other symbols are unchanged. -/
 def restoreD : Sy → Sy
   | .D => .d
@@ -2764,7 +2776,7 @@ or implicit blank.  At least one explicit blank is present in the resulting `CHO
 configuration. -/
 theorem goChop_reaches_chopStart (cells : List Sy) (left out : List Sy) (j : ℕ)
     (houtNe : out ≠ []) (hout : ∀ x ∈ out, x ≠ .blank) :
-    ∃ j', Reaches (machine cells)
+    ∃ j', 1 ≤ j' ∧ Reaches (machine cells)
       ⟨.core .GO_CHOP, left, out.headD .blank,
         out.tail ++ List.replicate j .blank⟩
       ⟨.core .CHOP_START, (out.reverse ++ left).tail,
@@ -2782,7 +2794,7 @@ theorem goChop_reaches_chopStart (cells : List Sy) (left out : List Sy) (j : ℕ
             ⟨.core .GO_CHOP, out.reverse ++ left, .blank, []⟩
             ⟨.core .CHOP_START, (out.reverse ++ left).tail,
               (out.reverse ++ left).headD .blank, [.blank]⟩ := ⟨1, rfl⟩
-      refine ⟨1, ?_⟩
+      refine ⟨1, by omega, ?_⟩
       simpa [show (default : Sy) = Sy.blank from rfl] using
         reaches_trans (reaches_of_stepN hscan) hturn
   | succ j =>
@@ -2802,7 +2814,7 @@ theorem goChop_reaches_chopStart (cells : List Sy) (left out : List Sy) (j : ℕ
               List.replicate (j + 1) .blank⟩ := by
         refine ⟨1, ?_⟩
         rfl
-      refine ⟨j + 1, ?_⟩
+      refine ⟨j + 1, by omega, ?_⟩
       have hscan' :
           Reaches (machine cells)
             ⟨.core .GO_CHOP, left, first,
@@ -3015,11 +3027,20 @@ private theorem turnOnBlank_eq_paddedChop (tape : List Sy) (j : ℕ) (hne : tape
   | nil => contradiction
   | append_singleton pre x _ => simp
 
+private theorem turnOnBlank_eq_chop (tape : List Sy) (j : ℕ) (hne : tape ≠ []) :
+    (⟨St.core .CHOP_START, tape.reverse.tail, tape.reverse.headD Sy.blank,
+      List.replicate j Sy.blank⟩ : Cfg St Sy) =
+    ⟨St.core .CHOP_START, tape.dropLast.reverse,
+      tape.getLastD Sy.blank, List.replicate j Sy.blank⟩ := by
+  induction tape using List.reverseRecOn with
+  | nil => contradiction
+  | append_singleton pre x _ => simp
+
 /-- One complete deep machine chop.  The unary base is unchanged, the work region becomes the
 executable hydra `chop`, and the far-left padding normalizes to one represented blank. -/
 theorem deepChop_reaches (cells : List Sy) (padded : Bool) (n a : ℕ)
     (s : List ℕ) (j : ℕ) (hn : 1 ≤ n) (ht : WF (s ++ [a + 2])) :
-    ∃ j', Reaches (machine cells)
+    ∃ j', 1 ≤ j' ∧ Reaches (machine cells)
       (chopConfigPadded padded (n + 1) (s ++ [a + 2]) (j + 1))
       (chopConfigPadded true (n + 1) (chop n (s ++ [a + 2])) j') := by
   let baseLeft : List Sy :=
@@ -3102,7 +3123,8 @@ theorem deepChop_reaches (cells : List Sy) (padded : Bool) (n a : ℕ)
           out.tail ++ List.replicate jCopy .blank⟩ := by
     rw [hhead, htail] at hrestore
     simpa [left] using hrestore
-  obtain ⟨j', hgo⟩ := goChop_reaches_chopStart cells left out jCopy houtNe houtBlank
+  obtain ⟨j', hj', hgo⟩ :=
+    goChop_reaches_chopStart cells left out jCopy houtNe houtBlank
   have hpositive : ∀ k ∈ u, 1 ≤ k := by
     intro k hk
     have := hdeep k hk
@@ -3131,14 +3153,442 @@ theorem deepChop_reaches (cells : List Sy) (padded : Bool) (n a : ℕ)
       chopConfigPadded true (n + 1) (chop n (s ++ [a + 2])) j' := by
     rw [hrev, turnOnBlank_eq_paddedChop _ _ htapeNe]
     rfl
-  refine ⟨j', ?_⟩
+  refine ⟨j', hj', ?_⟩
   rw [hinput]
   have hall := reaches_trans hsearch
     (reaches_trans hrep' (reaches_trans hrestore' hgo))
   exact htarget ▸ hall
 
+/-- A depth-one chop on a non-singleton tree erases the final node, bumps the unary base, and
+returns to an unpadded chop configuration for the surviving prefix. -/
+theorem shallowChop_reaches (cells : List Sy) (padded : Bool) (b : ℕ)
+    (s : List ℕ) (j : ℕ) (hs : s ≠ []) (ht : WF (s ++ [1])) :
+    ∃ j', 1 ≤ j' ∧ Reaches (machine cells)
+      (chopConfigPadded padded b (s ++ [1]) (j + 1))
+      (chopConfigPadded false (b + 1) s j') := by
+  have hpositive : ∀ k ∈ s, 1 ≤ k := by
+    intro k hk
+    exact wf_mem_lower ht (by simp [hk])
+  obtain ⟨treePre, htree⟩ := exists_treeCells_append_d hs hpositive
+  let preTape : List Sy :=
+    List.replicate b .b ++ [.lb, .rb] ++ treePre
+  have htapeS : tapeCells b s = preTape ++ [.d] := by
+    simp [tapeCells, preTape, htree, List.append_assoc]
+  have hinput :
+      chopConfigPadded padded b (s ++ [1]) (j + 1) =
+        ⟨.core .CHOP_START, .P :: .d :: preTape.reverse ++ basePad padded,
+          .d, .blank :: List.replicate j .blank⟩ := by
+    have hfull : tapeCells b (s ++ [1]) = (preTape ++ [.d, .P]) ++ [.d] := by
+      calc
+        tapeCells b (s ++ [1]) = tapeCells b s ++ [.P, .d] := by
+          simp [tapeCells, treeCells_append, treeCells_cons, List.append_assoc]
+        _ = (preTape ++ [.d, .P]) ++ [.d] := by
+          rw [htapeS]
+          simp [List.append_assoc]
+    change (⟨.core .CHOP_START,
+      (tapeCells b (s ++ [1])).dropLast.reverse ++ basePad padded,
+      (tapeCells b (s ++ [1])).getLastD .blank,
+      List.replicate (j + 1) .blank⟩ : Cfg St Sy) = _
+    rw [hfull, List.dropLast_concat]
+    simp [List.reverse_append, List.replicate_succ, List.append_assoc]
+  let blanks := List.replicate (j + 3) Sy.blank
+  have hfive :
+      Reaches (machine cells)
+        ⟨.core .CHOP_START, .P :: .d :: preTape.reverse ++ basePad padded,
+          .d, .blank :: List.replicate j .blank⟩
+        ⟨.core .GSTEP_BUMP, (preTape.reverse ++ basePad padded).tail,
+          (preTape.reverse ++ basePad padded).headD .blank, .d :: blanks⟩ := by
+    refine ⟨5, ?_⟩
+    cases padded <;> rfl
+  have hpreNe : preTape ≠ [] := by simp [preTape]
+  have hpreSafe : ∀ x ∈ preTape, x ≠ Sy.blank := by
+    intro x hx
+    have hx' : x ∈ List.replicate b Sy.b ∨ x = .lb ∨ x = .rb ∨ x ∈ treePre := by
+      simpa [preTape] using hx
+    rcases hx' with hx' | rfl | rfl | hx'
+    · have : x = Sy.b := (List.mem_replicate.mp hx').2
+      subst x
+      decide
+    · decide
+    · decide
+    · have hxTree : x ∈ treeCells s := by rw [htree]; simp [hx']
+      rcases mem_treeCells hxTree with rfl | rfl <;> decide
+  have hscanRaw := stepN_scanLeftReverse (machine cells) (.core .GSTEP_BUMP)
+    preTape (basePad padded) (.d :: blanks) hpreNe (by
+      intro x hx
+      have hne := hpreSafe x hx
+      cases x <;> try rfl
+      exact (hne rfl).elim)
+  have hscan :
+      Reaches (machine cells)
+        ⟨.core .GSTEP_BUMP, (preTape.reverse ++ basePad padded).tail,
+          (preTape.reverse ++ basePad padded).headD .blank, .d :: blanks⟩
+        ⟨.core .GSTEP_BUMP, [], .blank, tapeCells b s ++ blanks⟩ := by
+    apply reaches_of_stepN
+    have hrevNe : preTape.reverse ≠ [] := by simpa using hpreNe
+    cases padded <;>
+      simpa [basePad, htapeS, show (default : Sy) = Sy.blank from rfl,
+        tail_append_of_ne_nil preTape.reverse _ hrevNe,
+        headD_append_of_ne_nil preTape.reverse _ hrevNe,
+        List.append_assoc] using hscanRaw
+  let oldTape := tapeCells b s
+  have holdNe : oldTape ≠ [] := by simp [oldTape, tapeCells]
+  have holdSafe : ∀ x ∈ oldTape, x ≠ Sy.blank := by
+    intro x hx
+    have hx' : x ∈ List.replicate b Sy.b ∨ x = .lb ∨ x = .rb ∨ x ∈ treeCells s := by
+      simpa [oldTape, tapeCells] using hx
+    rcases hx' with hx' | rfl | rfl | hx'
+    · have : x = Sy.b := (List.mem_replicate.mp hx').2
+      subst x
+      decide
+    · decide
+    · decide
+    · rcases mem_treeCells hx' with rfl | rfl <;> decide
+  have holdHead : (oldTape ++ blanks).headD Sy.blank = oldTape.headD .blank :=
+    headD_append_of_ne_nil oldTape blanks holdNe
+  have holdTail : (oldTape ++ blanks).tail = oldTape.tail ++ blanks :=
+    tail_append_of_ne_nil oldTape blanks holdNe
+  have hbump :
+      Reaches (machine cells)
+        ⟨.core .GSTEP_BUMP, [], .blank, tapeCells b s ++ blanks⟩
+        ⟨.core .GO_CHOP, [.b], oldTape.headD .blank, oldTape.tail ++ blanks⟩ := by
+    have hraw : Reaches (machine cells)
+        ⟨.core .GSTEP_BUMP, [], .blank, oldTape ++ blanks⟩
+        ⟨.core .GO_CHOP, [.b],
+          (oldTape ++ blanks).headD .blank, (oldTape ++ blanks).tail⟩ := ⟨1, rfl⟩
+    rw [holdHead, holdTail] at hraw
+    simpa [oldTape] using hraw
+  obtain ⟨j', hj', hgo⟩ := goChop_reaches_chopStart cells [.b] oldTape
+    (j + 3) holdNe holdSafe
+  have hnewTape : tapeCells (b + 1) s = Sy.b :: oldTape := by
+    simp [oldTape, tapeCells, List.replicate_succ, List.append_assoc]
+  have hrev : oldTape.reverse ++ [Sy.b] = (tapeCells (b + 1) s).reverse := by
+    rw [hnewTape]
+    simp
+  have htapeNe : tapeCells (b + 1) s ≠ [] := by simp [tapeCells]
+  have htarget :
+      ⟨.core .CHOP_START, (oldTape.reverse ++ [Sy.b]).tail,
+        (oldTape.reverse ++ [Sy.b]).headD .blank, List.replicate j' .blank⟩ =
+      chopConfigPadded false (b + 1) s j' := by
+    rw [hrev, turnOnBlank_eq_chop _ _ htapeNe]
+    simp [chopConfigPadded, basePad]
+  refine ⟨j', hj', ?_⟩
+  rw [hinput]
+  have hall := reaches_trans hfive (reaches_trans hscan (reaches_trans hbump hgo))
+  exact htarget ▸ hall
+
+/-- Deleting the sole depth-one node reaches the intended undefined `STEP_DONE_CHECK2/rb`
+transition. -/
+theorem singletonChop_halts (cells : List Sy) (padded : Bool) (b j : ℕ) :
+    Halts (machine cells) (chopConfigPadded padded b [1] (j + 1)) := by
+  let final : Cfg St Sy :=
+    ⟨.core .STEP_DONE_CHECK2,
+      .lb :: List.replicate b .b ++ basePad padded,
+      .rb, List.replicate (j + 3) .blank⟩
+  have hinput : chopConfigPadded padded b [1] (j + 1) =
+      ⟨.core .CHOP_START,
+        .P :: .rb :: .lb :: List.replicate b .b ++ basePad padded,
+        .d, .blank :: List.replicate j .blank⟩ := by
+    simp [chopConfigPadded, tapeCells, treeCells, List.reverse_append,
+      List.reverse_replicate, List.replicate_succ, List.append_assoc]
+  refine ⟨4, final, ?_, ?_⟩
+  · rw [hinput]
+    cases padded <;> rfl
+  · rfl
+
+/-- The initializer has written any proper prefix while scanning the next implicit blank. -/
+theorem init_write_prefix (cells pref : List Sy)
+    (hprefix : ∃ suffix, suffix ≠ [] ∧ cells = pref ++ suffix) :
+    stepN (machine cells) pref.length start =
+      some ⟨.init pref.length, pref.reverse, .blank, []⟩ := by
+  induction pref using List.reverseRecOn with
+  | nil => rfl
+  | append_singleton pre x ih =>
+      obtain ⟨suffix, hsuffix, hcells⟩ := hprefix
+      have hpre : ∃ suffix', suffix' ≠ [] ∧ cells = pre ++ suffix' := by
+        refine ⟨x :: suffix, by simp, ?_⟩
+        simpa [List.append_assoc] using hcells
+      have hi := ih hpre
+      have hget : cells.getD pre.length Sy.blank = x := by
+        rw [hcells]
+        simp [List.append_assoc]
+      have hlt : pre.length + 1 < cells.length := by
+        have hslen : 0 < suffix.length := by
+          cases suffix with
+          | nil => contradiction
+          | cons y ys => simp
+        rw [hcells]
+        simp only [List.length_append, List.length_singleton]
+        omega
+      have htrans : machine cells (.init pre.length) .blank =
+          some (x, .R, .init (pre.length + 1)) := by
+        simp only [machine]
+        rw [if_pos hlt, hget]
+      rw [List.length_append, List.length_singleton, stepN_add, hi]
+      simp [stepN, step, Cfg.move, htrans, List.reverse_append,
+        show (default : Sy) = Sy.blank from rfl]
+
+/-- After initialization, `GSTEP_BUMP` has scanned the written tape back to the blank immediately
+left of it. -/
+theorem init_reaches_bumpBlank (cells : List Sy) (hlen : 2 ≤ cells.length)
+    (hsafe : ∀ x ∈ cells, x ≠ .blank) :
+    Reaches (machine cells) start ⟨.core .GSTEP_BUMP, [], .blank, cells⟩ := by
+  have hne : cells ≠ [] := by
+    intro h
+    simp [h] at hlen
+  let pre := cells.dropLast
+  let last := cells.getLast hne
+  have hsplit : pre ++ [last] = cells := by
+    exact List.dropLast_append_getLast hne
+  have hpreNe : pre ≠ [] := by
+    intro hp
+    have hlenPre : pre.length = cells.length - 1 := by simp [pre]
+    rw [hp] at hlenPre
+    simp at hlenPre
+    omega
+  have hwrite := init_write_prefix cells pre ⟨[last], by simp, hsplit.symm⟩
+  have hget : cells.getD pre.length Sy.blank = last := by
+    rw [← hsplit]
+    simp
+  have hnot : ¬ (pre.length + 1 < cells.length) := by
+    have hlenPre : pre.length = cells.length - 1 := by simp [pre]
+    omega
+  have htrans : machine cells (.init pre.length) .blank =
+      some (last, .L, .core .GSTEP_BUMP) := by
+    simp only [machine]
+    rw [if_neg hnot, hget]
+  have hlast :
+      Reaches (machine cells)
+        ⟨.init pre.length, pre.reverse, .blank, []⟩
+        ⟨.core .GSTEP_BUMP, pre.reverse.tail,
+          pre.reverse.headD .blank, [last]⟩ := by
+    refine ⟨1, ?_⟩
+    simp [stepN, step, Cfg.move, htrans,
+      show (default : Sy) = Sy.blank from rfl]
+  have hpreSafe : ∀ x ∈ pre, x ≠ Sy.blank := by
+    intro x hx
+    apply hsafe x
+    rw [← hsplit]
+    simp [hx]
+  have hscan := stepN_scanLeftReverse (machine cells) (.core .GSTEP_BUMP)
+    pre [] [last] hpreNe (by
+      intro x hx
+      have hneBlank := hpreSafe x hx
+      cases x <;> try rfl
+      exact (hneBlank rfl).elim)
+  have hscan' :
+      Reaches (machine cells)
+        ⟨.core .GSTEP_BUMP, pre.reverse.tail,
+          pre.reverse.headD .blank, [last]⟩
+        ⟨.core .GSTEP_BUMP, [], .blank, cells⟩ := by
+    apply reaches_of_stepN
+    simpa [hsplit, show (default : Sy) = Sy.blank from rfl] using hscan
+  exact reaches_trans (reaches_of_stepN hwrite) (reaches_trans hlast hscan')
+
 theorem cellsOf_eq_tapeCells_two (t : List ℕ) : cellsOf t = tapeCells 2 t := by
   simp [cellsOf, tapeCells, treeCells]
+
+/-- Initialization writes the seed, creates the third base counter, and enters the first chop. -/
+theorem initial_reaches_chop (t : List ℕ) :
+    ∃ j, 1 ≤ j ∧ Reaches (machine (cellsOf t)) start
+      (chopConfigPadded false 3 t j) := by
+  let cells := cellsOf t
+  have hlen : 2 ≤ cells.length := by simp [cells, cellsOf]
+  have hsafe : ∀ x ∈ cells, x ≠ Sy.blank := by
+    intro x hx
+    have hx' : x = Sy.b ∨ x = .lb ∨ x = .rb ∨ x ∈ treeCells t := by
+      simpa [cells, cellsOf, treeCells] using hx
+    rcases hx' with rfl | rfl | rfl | hx'
+    · decide
+    · decide
+    · decide
+    · rcases mem_treeCells hx' with rfl | rfl <;> decide
+  have hinit := init_reaches_bumpBlank cells hlen hsafe
+  have hcellsNe : cells ≠ [] := by simp [cells, cellsOf]
+  have hbump :
+      Reaches (machine cells)
+        ⟨.core .GSTEP_BUMP, [], .blank, cells⟩
+        ⟨.core .GO_CHOP, [.b], cells.headD .blank, cells.tail⟩ := ⟨1, by rfl⟩
+  obtain ⟨j, hj, hgo⟩ :=
+    goChop_reaches_chopStart cells [.b] cells 0 hcellsNe hsafe
+  have hgo' :
+      Reaches (machine cells)
+        ⟨.core .GO_CHOP, [.b], cells.headD .blank, cells.tail⟩
+        ⟨.core .CHOP_START, (cells.reverse ++ [Sy.b]).tail,
+          (cells.reverse ++ [Sy.b]).headD .blank, List.replicate j .blank⟩ := by
+    simpa using hgo
+  have hnewTape : tapeCells 3 t = Sy.b :: cells := by
+    simp [cells, cellsOf_eq_tapeCells_two, tapeCells, List.replicate_succ,
+      List.append_assoc]
+  have hrev : cells.reverse ++ [Sy.b] = (tapeCells 3 t).reverse := by
+    rw [hnewTape]
+    simp
+  have htapeNe : tapeCells 3 t ≠ [] := by simp [tapeCells]
+  have htarget :
+      ⟨.core .CHOP_START, (cells.reverse ++ [Sy.b]).tail,
+        (cells.reverse ++ [Sy.b]).headD .blank, List.replicate j .blank⟩ =
+      chopConfigPadded false 3 t j := by
+    rw [hrev, turnOnBlank_eq_chop _ _ htapeNe]
+    simp [chopConfigPadded, basePad]
+  refine ⟨j, hj, ?_⟩
+  have hall := reaches_trans hinit (reaches_trans hbump hgo')
+  exact htarget ▸ (by simpa [cells] using hall)
+
+/-- Mathematical state after `k` machine-level hydra chops.  A depth-one chop increments the
+base; every chop uses the current `base - 1` copy count. -/
+def goodsteinBattle (b : ℕ) (t : List ℕ) : ℕ → ℕ × List ℕ
+  | 0 => (b, t)
+  | k + 1 =>
+      let current := goodsteinBattle b t k
+      let nextTree := chop (current.1 - 1) current.2
+      if current.2.getLast? = some 1 then (current.1 + 1, nextTree)
+      else (current.1, nextTree)
+
+def goodsteinTurn (b : ℕ) (t : List ℕ) (k : ℕ) : ℕ :=
+  (goodsteinBattle b t k).1 - 1
+
+theorem goodsteinBattle_tree (b : ℕ) (t : List ℕ) : ∀ k,
+    (goodsteinBattle b t k).2 = chopBattle (goodsteinTurn b t) t k := by
+  intro k
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+      simp only [goodsteinBattle, chopBattle, goodsteinTurn]
+      rw [ih]
+      split <;> rfl
+
+theorem goodsteinBattle_base_ge {b : ℕ} {t : List ℕ} (hb : 2 ≤ b) : ∀ k,
+    2 ≤ (goodsteinBattle b t k).1 := by
+  intro k
+  induction k with
+  | zero => simpa [goodsteinBattle] using hb
+  | succ k ih =>
+      simp only [goodsteinBattle]
+      split <;> simp <;> omega
+
+theorem goodsteinBattle_wf {b : ℕ} {t : List ℕ} (ht : WF t) : ∀ k,
+    WF (goodsteinBattle b t k).2 := by
+  intro k
+  induction k with
+  | zero => simpa [goodsteinBattle] using ht
+  | succ k ih =>
+      simp only [goodsteinBattle]
+      split <;> simp only [Prod.snd]
+      all_goals exact chop_preserves_wf _ _ ih
+
+theorem goodsteinBattle_terminates (b : ℕ) (t : List ℕ) (ht : WF t) :
+    ∃ N, (goodsteinBattle b t N).2 = [] := by
+  obtain ⟨N, hN⟩ := chopBattle_terminates (goodsteinTurn b t) t ht
+  refine ⟨N, ?_⟩
+  rw [goodsteinBattle_tree]
+  exact hN
+
+theorem halts_of_reaches {M : St → Sy → Option (Sy × Dir × St)} {c c' : Cfg St Sy}
+    (hr : Reaches M c c') (hh : Halts M c') : Halts M c := by
+  obtain ⟨m, hm⟩ := hr
+  obtain ⟨n, final, hn, hhalt⟩ := hh
+  refine ⟨m + n, final, ?_, hhalt⟩
+  rw [stepN_add, hm]
+  exact hn
+
+theorem emptyChop_halts (cells : List Sy) (padded : Bool) (b j : ℕ) :
+    Halts (machine cells) (chopConfigPadded padded b [] j) := by
+  let c := chopConfigPadded padded b [] j
+  refine ⟨0, c, rfl, ?_⟩
+  change machine cells (.core .CHOP_START) ((tapeCells b []).getLastD .blank) = none
+  have hhead : (tapeCells b []).getLastD Sy.blank = .rb := by simp [tapeCells]
+  rw [hhead]
+  rfl
+
+/-- After any finite number of mathematical battle steps, the machine has either halted already
+or reaches the corresponding chop configuration. -/
+theorem reaches_goodsteinBattle_or_halts (cells : List Sy) (b : ℕ) (t : List ℕ)
+    (padded : Bool) (j : ℕ) (hb : 2 ≤ b) (ht : WF t) (hj : 1 ≤ j) : ∀ N,
+    Halts (machine cells) (chopConfigPadded padded b t j) ∨
+      ∃ padded' j', 1 ≤ j' ∧
+        Reaches (machine cells) (chopConfigPadded padded b t j)
+          (chopConfigPadded padded' (goodsteinBattle b t N).1
+            (goodsteinBattle b t N).2 j') := by
+  intro N
+  induction N with
+  | zero =>
+      right
+      refine ⟨padded, j, hj, ?_⟩
+      simpa [goodsteinBattle] using
+        (reaches_refl (machine cells) (chopConfigPadded padded b t j))
+  | succ N ih =>
+      rcases ih with hhalt | ⟨currentPad, currentJ, hcurrentJ, hreach⟩
+      · exact .inl hhalt
+      · cases hcurrent : goodsteinBattle b t N with
+        | mk currentBase currentTree =>
+          have hreach' :
+              Reaches (machine cells) (chopConfigPadded padded b t j)
+                (chopConfigPadded currentPad currentBase currentTree currentJ) := by
+            simpa [hcurrent] using hreach
+          have hbase : 2 ≤ currentBase := by
+            have := goodsteinBattle_base_ge (b := b) (t := t) hb N
+            simpa [hcurrent] using this
+          have htree : WF currentTree := by
+            have := goodsteinBattle_wf (b := b) (t := t) ht N
+            simpa [hcurrent] using this
+          by_cases htreeNil : currentTree = []
+          · exact .inl (halts_of_reaches hreach'
+              (by simpa [htreeNil] using emptyChop_halts cells currentPad currentBase currentJ))
+          · obtain ⟨s, k, hsplit⟩ : ∃ s k, currentTree = s ++ [k] := by
+              exact ⟨currentTree.dropLast, currentTree.getLast htreeNil,
+                (List.dropLast_append_getLast htreeNil).symm⟩
+            subst currentTree
+            have hshape : WF (s ++ [k]) := htree
+            have hkPos : 1 ≤ k := by
+              apply wf_mem_lower htree
+              simp
+            obtain ⟨q, rfl⟩ : ∃ q, currentJ = q + 1 :=
+              ⟨currentJ - 1, by omega⟩
+            by_cases hk : k = 1
+            · subst k
+              by_cases hs : s = []
+              · subst s
+                have hsingle := singletonChop_halts cells currentPad currentBase q
+                exact .inl (halts_of_reaches hreach' hsingle)
+              · obtain ⟨jNext, hjNext, hstep⟩ :=
+                  shallowChop_reaches cells currentPad currentBase s q hs hshape
+                have hnext : goodsteinBattle b t (N + 1) = (currentBase + 1, s) := by
+                  simp [goodsteinBattle, hcurrent, chop_append_one]
+                refine .inr ⟨false, jNext, hjNext, ?_⟩
+                simpa [hnext] using reaches_trans hreach' hstep
+            · have hkTwo : 2 ≤ k := by omega
+              obtain ⟨a, rfl⟩ : ∃ a, k = a + 2 := ⟨k - 2, by omega⟩
+              obtain ⟨n, rfl⟩ : ∃ n, currentBase = n + 1 :=
+                ⟨currentBase - 1, by omega⟩
+              have hn : 1 ≤ n := by omega
+              obtain ⟨jNext, hjNext, hstep⟩ :=
+                deepChop_reaches cells currentPad n a s q hn hshape
+              have hnext : goodsteinBattle b t (N + 1) =
+                  (n + 1, chop n (s ++ [a + 2])) := by
+                simp [goodsteinBattle, hcurrent]
+              refine .inr ⟨true, jNext, hjNext, ?_⟩
+              simpa [hnext] using reaches_trans hreach' hstep
+
+/-- Every well-formed chop configuration halts: mathematical hydra termination supplies a finite
+number of chops, and `reaches_goodsteinBattle_or_halts` realizes that battle on the machine. -/
+theorem halts_from_chop (cells : List Sy) (b : ℕ) (t : List ℕ) (padded : Bool) (j : ℕ)
+    (hb : 2 ≤ b) (ht : WF t) (hj : 1 ≤ j) :
+    Halts (machine cells) (chopConfigPadded padded b t j) := by
+  obtain ⟨N, hN⟩ := goodsteinBattle_terminates b t ht
+  rcases reaches_goodsteinBattle_or_halts cells b t padded j hb ht hj N with
+    hhalt | ⟨finalPad, finalJ, _hfinalJ, hreach⟩
+  · exact hhalt
+  · apply halts_of_reaches hreach
+    simpa [hN] using
+      (emptyChop_halts cells finalPad (goodsteinBattle b t N).1 finalJ)
+
+/-- Simulation theorem used by the public headline: initialization reaches the first chop, after
+which the well-founded mathematical battle forces the machine to halt. -/
+theorem halts_of_wf_sim (t : List ℕ) (ht : WF t) :
+    Halts (machine (cellsOf t)) start := by
+  obtain ⟨j, hj, hinit⟩ := initial_reaches_chop t
+  apply halts_of_reaches hinit
+  exact halts_from_chop (cellsOf t) 3 t false j (by omega) ht hj
 
 /-- The empty well-formed seed reaches the undefined `CHOP_START`/`]` entry after 13 steps. -/
 theorem empty_halts : Halts (machine (cellsOf [])) start := by

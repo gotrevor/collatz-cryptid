@@ -15,7 +15,7 @@ instances for `[1, 2, 3]` and `[1, 2, 3, 4]`.  The route is in `GOODSTEIN-TM-NEX
 namespace GoodsteinTM
 
 theorem halts_of_wf (t : List ℕ) (ht : WF t) : Halts (machine (cellsOf t)) start := by
-  sorry
+  exact halts_of_wf_sim t ht
 
 theorem halt_four_halts : Halts (machine (cellsOf [1, 2, 3])) start :=
   halts_of_wf _ (by decide)
