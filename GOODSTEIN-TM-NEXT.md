@@ -212,3 +212,18 @@ Commit each green checkpoint, and record status at the bottom of this file.
   Current blocker: the base-counter replicate wrapper.  Next attack: prove
   `REP_START/REP_FIRST/REP_SCAN/GO_S`, apply the one-copy theorem, return through `REP_RET`, and
   induct on the remaining unmarked `b` counters before closing `REP_DONE/RD_S/RD_Z`.
+- 2026-10-24 lap 10: the complete copy-producing base-counter replication phase is proved.
+  `copyBlockThrough_reaches_repRet` preserves arbitrary earlier output, so later copies append at
+  the real first explicit or implicit blank.  `repStart_reaches_repScan`,
+  `goS_reaches_cpScan`, and `repRet_reaches_repScanConfig` verify the entry, source seek, generated
+  stay, return, and used-counter scans.  `repScanSucc_reaches` composes one counter/copy circuit;
+  `repScanAll_reaches` inducts over every remaining counter; and
+  `repStart_reaches_repScanDone` proves a base of `n + 1` produces exactly `n` copies.
+  Verification: `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.repStart_reaches_repScanDone` — FORMALIZE-TIER
+  GREEN; the new headline uses exactly `[Classical.choice, Quot.sound, propext]`, and only the
+  intended `halts_of_wf` debt remains.  Current blocker: restore the base/source markers and
+  identify the resulting tape with executable `chop`.  Next attack: close
+  `REP_DONE/RD_S/RD_Z`, specialize the output to `markedCopyBody`, and package the deep macro step.

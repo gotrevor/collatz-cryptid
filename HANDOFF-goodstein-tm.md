@@ -3,23 +3,24 @@
 Branch `wip/goodstein-tm-lean`.  Operator plan: `GOODSTEIN-TM-NEXT.md`.  Scoped completion target:
 `sorry-free:lean/Collatz/GoodsteinTM`.
 
-## Checkpoint (2026-10-24, lap 9)
+## Checkpoint (2026-10-24, lap 10)
 
-The complete copy loop is now proved and specialized to the actual marked parent block:
+The complete copy-producing base-counter replication phase is now proved:
 
-* `copyCell_reaches` verifies one mark/carry/append/return circuit when the first blank is explicit;
-  `copyCellImplicit_reaches` covers the genuine finite-list edge where copying has reached the
-  implicit blank beyond the represented tape.  `copyCellBlanks_reaches` packages both cases.
-* `copyBody_reaches` inducts through an arbitrary `P`/`d` source body while tracking the marked
-  source, appended output, and exact remaining explicit-blank count.
-* `copyFinal_reaches_cpUnm` verifies the special `z/y`, `CARRY_DL`, and `CP_END` exit, and
-  `copyUnmark_reaches_repRet` restores every `p/e/s` mark.
-* `copyBlock_reaches_repRet` is the complete
-  `CP_SCAN/CARRY_*/CP_RET/CP_END/CP_UNM` loop: it preserves `[S] ++ body ++ [z]`, appends
-  `[P] ++ body ++ [d]`, and enters `REP_RET`.
-* `markedCopyTail_reaches_repRet` specializes that theorem to the canonical block produced by
-  lap 8's parent-search/erase prefix.  `mem_markedCopyBody` proves the required `P`/`d` alphabet
-  invariant from `treeCells`.
+* `copyBlockThrough_reaches_repRet` strengthens the lap-9 theorem to preserve an arbitrary
+  already-appended `P`/`d` output.  Each later copy therefore scans through earlier copies and is
+  appended at the genuine first explicit or implicit blank.
+* `repStart_reaches_repScan`, `goS_reaches_cpScan`, and
+  `repRet_reaches_repScanConfig` verify the `REP_START/REP_FIRST`, `GO_S`, and return-to-base
+  control paths, including the generated stay transition and the scan across used `B` counters.
+* `repScanSucc_reaches` composes one complete base-counter/copy circuit while preserving the
+  work prefix, marked source, previous output, and exact remaining represented blanks.
+* `repScanAll_reaches` inducts through all remaining counters.  It proves that `n` counters append
+  exactly `n` copies of `copiedBlock body`; the existential final blank count honestly covers the
+  point where the finite right-half list gives way to implicit blanks.
+* `repStart_reaches_repScanDone` packages the whole phase: a unary base of `n + 1` reserves one
+  counter in `REP_FIRST` and produces exactly `n` copies before reaching the all-`B`
+  `REP_SCAN` configuration.
 
 The generated/frozen files and the three frozen statements in `Halts.lean` remain unchanged.  The
 scoped target still has exactly one `sorry`, at `halts_of_wf`.
@@ -29,7 +30,7 @@ scoped target still has exactly one `sorry`, at `halts_of_wf`.
 * `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
 * `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`
 * `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
-  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.markedCopyTail_reaches_repRet`
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.repStart_reaches_repScanDone`
 
 All are green; the real gate ends `FORMALIZE-TIER GREEN`, reports only the intended
 `halts_of_wf` proof debt, and gives exactly `[Classical.choice, Quot.sound, propext]` for the new
@@ -37,18 +38,17 @@ headline.
 
 ## Current blocker and next attack
 
-The remaining crux is the replicate/base-counter wrapper around the completed one-copy theorem,
-followed by the macro step, init, and headline.  Parent identification, leaf erasure, copy-block
-marking, comparison-mark restoration, and one complete copy are proved.
+The remaining crux begins at the all-`B` exit of the now-complete replication phase, followed by
+the macro step, init, and headline.  Parent identification, leaf erasure, copy-block marking,
+comparison-mark restoration, arbitrary repeated copying, and base-counter control are proved.
 
 Next, in order:
 
-1. Prove the `REP_START/REP_FIRST/REP_SCAN/GO_S` entry and `REP_RET` return, then induct on the
-   remaining unmarked base counters using `markedCopyTail_reaches_repRet`.  Preserve the already
-   appended copies immediately after the marked source block and use the theorem's explicit/implicit
-   blank accounting rather than assuming arbitrary padding.
-2. Compose `REP_DONE` and `RD_S/RD_Z` to restore the base and source markers and obtain the exact
-   executable `chop (b - 1) t` tape.
+1. Prove `REP_SCAN` on the left blank enters `REP_DONE`, then induct through all `B`s to restore
+   the unary base.  Compose `RD_S/RD_Z` to restore `S` to `P` and `z` to `d`, entering `GO_CHOP`
+   on the exact nonblank tape produced by `repStart_reaches_repScanDone`.
+2. Specialize the generic body/output formula using `markedCopyBody`, identify the result with
+   `treeCells (chop (b - 1) t)`, and package the deep macro step.
 3. Close the depth-one/base-bump branch and macro step, then prove init and the headline.
 
 Do not revisit the hydra order or parser unless a concrete simulation lemma exposes an encoding
