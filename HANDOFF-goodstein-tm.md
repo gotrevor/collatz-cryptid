@@ -3,23 +3,23 @@
 Branch `wip/goodstein-tm-lean`.  Operator plan: `GOODSTEIN-TM-NEXT.md`.  Scoped completion target:
 `sorry-free:lean/Collatz/GoodsteinTM`.
 
-## Checkpoint (2026-10-18, lap 8)
+## Checkpoint (2026-10-24, lap 9)
 
-The complete parent-search and erase prefix now reaches the replicate loop on the actual
-well-formed tape:
+The complete copy loop is now proved and specialized to the actual marked parent block:
 
-* `parEnd_reaches_markEnd` crosses the explicit blank tail and erases the marked last node with
-  the exact `a + 4` blank accounting.
-* `unmarkStart_reaches_repStart` traverses an arbitrary copy-block prefix right-to-left, restores
-  every `D`, changes `C` to `S`, and verifies the generated two-step stay move into `REP_START`.
-* `eraseLeaf_reaches_repStart` packages the generic nonempty block whose last symbol is `d` or
-  `D`.  `parentFound_reaches_repStart` specializes it to the real parent block, including the
-  genuine split between an empty suffix (mark the parent's final `D`) and a nonempty suffix (mark
-  the suffix's final `d`).
-* `markedCopyTail` is the canonical marked forward encoding presented to `CP_SCAN`.
-* `chopStart_reaches_repStart_of_wf` composes lap 7's rightmost-parent search with the erase phase:
-  from the real `CHOP_START` configuration for `WF (s ++ [a + 2])`, it reaches `REP_START` with
-  the prefix `p` left of the head and the exact marked parent-plus-suffix block to its right.
+* `copyCell_reaches` verifies one mark/carry/append/return circuit when the first blank is explicit;
+  `copyCellImplicit_reaches` covers the genuine finite-list edge where copying has reached the
+  implicit blank beyond the represented tape.  `copyCellBlanks_reaches` packages both cases.
+* `copyBody_reaches` inducts through an arbitrary `P`/`d` source body while tracking the marked
+  source, appended output, and exact remaining explicit-blank count.
+* `copyFinal_reaches_cpUnm` verifies the special `z/y`, `CARRY_DL`, and `CP_END` exit, and
+  `copyUnmark_reaches_repRet` restores every `p/e/s` mark.
+* `copyBlock_reaches_repRet` is the complete
+  `CP_SCAN/CARRY_*/CP_RET/CP_END/CP_UNM` loop: it preserves `[S] ++ body ++ [z]`, appends
+  `[P] ++ body ++ [d]`, and enters `REP_RET`.
+* `markedCopyTail_reaches_repRet` specializes that theorem to the canonical block produced by
+  lap 8's parent-search/erase prefix.  `mem_markedCopyBody` proves the required `P`/`d` alphabet
+  invariant from `treeCells`.
 
 The generated/frozen files and the three frozen statements in `Halts.lean` remain unchanged.  The
 scoped target still has exactly one `sorry`, at `halts_of_wf`.
@@ -29,7 +29,7 @@ scoped target still has exactly one `sorry`, at `halts_of_wf`.
 * `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`
 * `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`
 * `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
-  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.chopStart_reaches_repStart_of_wf`
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.markedCopyTail_reaches_repRet`
 
 All are green; the real gate ends `FORMALIZE-TIER GREEN`, reports only the intended
 `halts_of_wf` proof debt, and gives exactly `[Classical.choice, Quot.sound, propext]` for the new
@@ -37,20 +37,19 @@ headline.
 
 ## Current blocker and next attack
 
-The remaining crux is the copy/replicate half of route item 3, followed by the macro step, init,
-and headline.  Parent identification, leaf erasure, copy-block marking, and comparison-mark
-restoration are complete.
+The remaining crux is the replicate/base-counter wrapper around the completed one-copy theorem,
+followed by the macro step, init, and headline.  Parent identification, leaf erasure, copy-block
+marking, comparison-mark restoration, and one complete copy are proved.
 
 Next, in order:
 
-1. Prove the `CP_SCAN/CARRY_*/CP_RET` copy loop by induction on `markedCopyTail a u`.  The useful
-   invariant has a processed prefix marked `s/p/e`, an unprocessed suffix ending in `z`, and one
-   copied output prefix immediately before the blank tail.  The `z` case exits via `CARRY_DL` to
-   `CP_END`.
-2. Prove the
-   `REP_*/GO_S/CP_END/CP_UNM/REP_RET` loop by induction on remaining unmarked base counters.
-3. Compose `REP_DONE` and `RD_S/RD_Z` to obtain the executable `chop (b - 1) t` tape, then close
-   the depth-one/base-bump branch and macro step.
+1. Prove the `REP_START/REP_FIRST/REP_SCAN/GO_S` entry and `REP_RET` return, then induct on the
+   remaining unmarked base counters using `markedCopyTail_reaches_repRet`.  Preserve the already
+   appended copies immediately after the marked source block and use the theorem's explicit/implicit
+   blank accounting rather than assuming arbitrary padding.
+2. Compose `REP_DONE` and `RD_S/RD_Z` to restore the base and source markers and obtain the exact
+   executable `chop (b - 1) t` tape.
+3. Close the depth-one/base-bump branch and macro step, then prove init and the headline.
 
 Do not revisit the hydra order or parser unless a concrete simulation lemma exposes an encoding
 mismatch.  The worktree's untracked `CLAUDE.local.md` predates this track and must not be committed.

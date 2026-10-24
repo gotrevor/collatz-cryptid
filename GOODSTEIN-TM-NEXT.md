@@ -196,3 +196,19 @@ Commit each green checkpoint, and record status at the bottom of this file.
   Current blocker: copy and replicate loops.  Next attack: induct over the marked block in
   `CP_SCAN/CARRY_*/CP_RET`, ending at `CARRY_DL/CP_END`, then lift one completed copy through the
   remaining base counters.
+- 2026-10-24 lap 9: the complete copy loop is proved.  `copyCell_reaches` and
+  `copyCellImplicit_reaches` separately verify appending at a represented blank and at the implicit
+  blank beyond a finite right half; `copyCellBlanks_reaches` unifies their exact blank accounting.
+  `copyBody_reaches` inducts across the `P`/`d` source body, `copyFinal_reaches_cpUnm` closes the
+  `z/CARRY_DL/CP_END` exit, and `copyUnmark_reaches_repRet` restores `p/e/s` marks.
+  `copyBlock_reaches_repRet` packages the whole loop, while `markedCopyTail_reaches_repRet`
+  specializes it to the canonical parent block from lap 8.  Verification:
+  `lake env lean lean/Collatz/GoodsteinTM/Sim.lean`,
+  `lake build Collatz.GoodsteinTM.Sim Collatz.GoodsteinTM.Halts`, and
+  `~/personal/bin/lean-green . --target Collatz.GoodsteinTM.Halts --import
+  Collatz.GoodsteinTM.Sim --axioms GoodsteinTM.markedCopyTail_reaches_repRet` —
+  FORMALIZE-TIER GREEN; the new headline uses exactly
+  `[Classical.choice, Quot.sound, propext]`, and only the intended `halts_of_wf` debt remains.
+  Current blocker: the base-counter replicate wrapper.  Next attack: prove
+  `REP_START/REP_FIRST/REP_SCAN/GO_S`, apply the one-copy theorem, return through `REP_RET`, and
+  induct on the remaining unmarked `b` counters before closing `REP_DONE/RD_S/RD_Z`.
