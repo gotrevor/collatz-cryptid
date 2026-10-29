@@ -75,6 +75,8 @@ Commit each green checkpoint, and record status at the bottom of this file.
 
 ## Status
 
+- 2026-10-28: DONE.  `halts_of_wf` proved; axioms [propext, Classical.choice, Quot.sound]; module imported into `Collatz.lean`.
+
 - 2026-10-17: skeleton builds green; one `sorry` (`halts_of_wf`).
 - 2026-10-17 lap 1: route item 1 is underway in `GoodsteinTM/Hydra.lean`.  Added the executable
   rightmost move `chop`, with four kernel-computed controls matching `tools/goodstein_tm/check.py`,

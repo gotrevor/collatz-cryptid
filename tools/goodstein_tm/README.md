@@ -51,12 +51,19 @@ The table's other `---` entries are (state, symbol) pairs the construction never
 halt the machine reaches is `STEP_DONE_CHECK2` reading `]`.  That claim is argued from the
 construction and observed in these runs; it is not proved.
 
-## Proof of halting: status
+## Proof of halting: proved in Lean
 
-1. The tree process terminates for every finite tree: this is the hydra theorem, by ordinal (or
-   multiset) descent.  For the Goodstein reading, it is Goodstein's theorem.
-2. The machine simulates the tree process step for step.  Tested above, not proved.
+`lean/Collatz/GoodsteinTM/Halts.lean` proves that the machine for every well-formed seed tree
+halts:
 
-A Lean proof of (2) plus (1) would make the halting a theorem.  `beeping.json` is a related
-69-state machine that runs every seed tree in turn and passes through state `BEEP` after each.
+    theorem halts_of_wf (t : List ℕ) (ht : WF t) : Halts (machine (cellsOf t)) start
+
+`halt_four_halts` and `halt_sixteen_halts` are its instances for `halt_4.json` and `halt_16.json`.
+`Check.lean` proves by computation that the Lean machines equal the JSON machines entry by entry.
+`#print axioms` gives `[propext, Classical.choice, Quot.sound]` for all three (checked
+2026-10-28).  The proof has two parts.  `Hydra.lean` and `HydraTree.lean` show that every hydra
+move descends in a well-founded order on trees (`treeLt_wf`), whatever the copy count.  `Sim.lean` shows that the machine performs one
+hydra move per loop.
+
+`beeping.json` is a related 69-state machine that runs every seed tree in turn and passes through state `BEEP` after each.
 "It beeps infinitely often" implies Goodstein's theorem for every `n`, so PA cannot prove it.
