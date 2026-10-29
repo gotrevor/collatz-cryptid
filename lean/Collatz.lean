@@ -21,3 +21,4 @@ import Collatz.HydraFoils.BigfootLift
 import Collatz.Holdout153
 import Collatz.FatCoyote
 import Collatz.WilyCoyote
+import Collatz.GoodsteinTM
